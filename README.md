@@ -1,0 +1,1 @@
+Run: npm install then npm run dev\nBuild for Cloudflare: npm run build\nOutput folder: dist
