@@ -1,6 +1,6 @@
 const nav=document.getElementById('nav');
 const glow=document.querySelector('.cursor-glow');
-const words=['Relax zone.','sofa moments.','coffee time.','quiet living.'];
+const words=['Relax zone.','Sofa mood.','Coffee time.','Quiet living.'];
 let i=0;
 setInterval(()=>{i=(i+1)%words.length;document.getElementById('word').textContent=words[i]},1500);
 window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>30);document.querySelectorAll('.parallax').forEach(el=>{el.style.translate=`0 ${scrollY*-0.04}px`})});
