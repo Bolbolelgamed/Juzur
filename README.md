@@ -1,12 +1,31 @@
-﻿# Juzur SofaTray Website
+# Juzur Website
 
-Static website for Juzur SofaTray.
+Full editable Vite/React project for the Juzur SofaTray website.
 
-## Deploy on GitHub Pages
+## Project Structure
 
-1. Create a new GitHub repository.
-2. Upload all files in this folder.
-3. Go to Settings > Pages.
-4. Choose Deploy from a branch.
-5. Select main branch and /root.
-6. Save.
+- `package.json` - project scripts and dependencies
+- `vite.config.js` - Vite configuration
+- `index.html` - Vite app entry
+- `src/` - React source code
+- `src/components/` - website sections/components
+- `src/hooks/` - website behavior and form logic
+- `src/styles/` - main and latest styles
+- `public/` - public files copied directly into the website
+- `public/assets/` - product photos and brand images
+- `google-apps-script-order-email.gs` - Google Apps Script helper for order emails
+- `legacy-static-index.html` - backup of the original static HTML version
+
+## Commands
+
+```bash
+npm install
+npm run dev
+npm run build
+```
+
+Manual check URL while the dev server is running:
+
+```text
+http://127.0.0.1:5173/
+```
