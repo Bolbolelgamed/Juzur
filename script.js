@@ -63,11 +63,21 @@ heroPhotoThumbs.forEach(btn=>btn.addEventListener('mouseleave',()=>{
 
 const GOOGLE_SHEETS_ENDPOINT='https://script.google.com/macros/s/AKfycbyfy0Vg_do24-zK24TP_ilF_fooe8DNRWGKB1ODhYeU-y7SQL7YvhiIjg4HYy8puDXisg/exec';
 const checkoutForm=document.getElementById('checkoutForm');
+let checkoutIsSubmitting=false;
 checkoutForm?.addEventListener('submit',async event=>{
   event.preventDefault();
+  if(checkoutIsSubmitting)return;
+  checkoutIsSubmitting=true;
   const note=document.getElementById('checkoutNote');
+  const submitButton=checkoutForm.querySelector('button[type="submit"]');
+  if(submitButton){
+    submitButton.disabled=true;
+    submitButton.textContent='Submitting...';
+  }
   const formData=new FormData(checkoutForm);
+  const orderId=`JUZUR-${Date.now()}-${Math.random().toString(36).slice(2,8).toUpperCase()}`;
   const payload={
+    orderId,
     name:(formData.get('name')||'').toString().trim(),
     address:(formData.get('address')||'').toString().trim(),
     phone:(formData.get('phone')||'').toString().trim(),
@@ -83,11 +93,13 @@ checkoutForm?.addEventListener('submit',async event=>{
   const endpointIsReady=GOOGLE_SHEETS_ENDPOINT&&GOOGLE_SHEETS_ENDPOINT.startsWith('https://');
   try{
     if(endpointIsReady){
-      await fetch(GOOGLE_SHEETS_ENDPOINT,{
+      const sheetsRequest=fetch(GOOGLE_SHEETS_ENDPOINT,{
         method:'POST',
         mode:'no-cors',
         body:JSON.stringify(payload)
       });
+      const sendTimeout=new Promise(resolve=>setTimeout(resolve,4500));
+      await Promise.race([sheetsRequest,sendTimeout]);
     }
     if(note){
       note.textContent=endpointIsReady
@@ -100,6 +112,12 @@ checkoutForm?.addEventListener('submit',async event=>{
     if(note){
       note.textContent='The order could not be sent. Please try again or contact us directly.';
       note.classList.remove('success');
+    }
+  }finally{
+    checkoutIsSubmitting=false;
+    if(submitButton){
+      submitButton.disabled=false;
+      submitButton.textContent='Submit Order';
     }
   }
 });
