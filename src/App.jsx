@@ -1,7 +1,6 @@
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import VideoSection from './components/VideoSection.jsx';
-import Reviews from './components/Reviews.jsx';
 import GiftSection from './components/GiftSection.jsx';
 import MaterialSection from './components/MaterialSection.jsx';
 import ProductShowcase from './components/ProductShowcase.jsx';
@@ -22,7 +21,6 @@ export default function App() {
       <main id="top">
         <Hero />
         <VideoSection />
-        <Reviews />
         <GiftSection />
         <MaterialSection />
         <ProductShowcase />

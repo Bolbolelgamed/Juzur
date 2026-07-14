@@ -5,6 +5,8 @@ const videos = [
 ];
 
 export default function VideoSection() {
+  const [videoNotice, setVideoNotice] = useState('');
+
   return (
     <section className="video-section" id="video">
       <div className="section-head reveal">
@@ -12,20 +14,31 @@ export default function VideoSection() {
         <h2>See SofaTray in action.</h2>
         <p>
           Watch how SofaTray by Juzur keeps your coffee, phone, remote and snacks beside you beautifully and
-          without clutter.
+          neatly and within easy reach.
         </p>
       </div>
       <div className="video-grid reveal">
         {videos.map(([title, subtitle, extraClass]) => (
           <div key={title} className={`video-card ${extraClass}`.trim()}>
             <div className="video-placeholder">
-              <span className="play-icon">Play</span>
+              <button
+                className="play-icon"
+                type="button"
+                aria-label={`${title} video coming soon`}
+                onClick={() => setVideoNotice(`${title} video will be added soon.`)}
+              >
+                Play
+              </button>
               <strong>{title}</strong>
               <small>{subtitle}</small>
             </div>
           </div>
         ))}
       </div>
+      <p className="video-status" aria-live="polite">
+        {videoNotice}
+      </p>
     </section>
   );
 }
+import { useState } from 'react';

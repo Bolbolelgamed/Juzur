@@ -1,12 +1,9 @@
 const navItems = [
+  ['#collection', 'Product'],
   ['#video', 'Video'],
-  ['#reviews', 'Reviews'],
-  ['#gift', 'Gift'],
   ['#material', 'Zan Wood'],
-  ['#collection', 'Features'],
-  ['#gallery', 'Gallery'],
+  ['#gift', 'Gift'],
   ['#faq', 'FAQ'],
-  ['#checkout', 'Checkout'],
 ];
 
 export default function Header() {
@@ -15,7 +12,7 @@ export default function Header() {
       <a className="brand" href="#top">
         <img className="brand-logo" src="/assets/juzur-logo-header.png" alt="Juzur" />
       </a>
-      <nav>
+      <nav aria-label="Primary navigation">
         {navItems.map(([href, label]) => (
           <a key={href} href={href}>
             {label}

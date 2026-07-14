@@ -1,9 +1,10 @@
 const galleryImages = [
-  ['/assets/product-1.jpg', 'Wooden tray detail', 'gallery-a'],
-  ['/assets/product-6.jpg', 'SofaTray by Juzur side view', 'gallery-b tall'],
-  ['/assets/product-3.jpg', 'Wooden product detail', 'gallery-c'],
-  ['/assets/product-5.jpg', 'SofaTray by Juzur with storage', 'gallery-d'],
-  ['/assets/product-4.jpg', 'SofaTray by Juzur', 'gallery-e'],
+  ['/assets/juzur-tray-studio.jpg', 'SofaTray product details on a clean studio background', ''],
+  ['/assets/juzur-tray-lifestyle.jpg', 'SofaTray with coffee, phone and remote in a cozy living room', 'gallery-portrait'],
+  ['/assets/juzur-packaging-open.jpg', 'Open Juzur gift box with the SofaTray inside', ''],
+  ['/assets/juzur-tray-sofa-real.jpg', 'SofaTray opened across a sofa arm', 'gallery-portrait'],
+  ['/assets/juzur-packaging-closed.jpg', 'Closed eco-friendly Juzur product box', ''],
+  ['/assets/juzur-packaging-natural.jpg', 'Juzur product packaging in a natural living space', ''],
 ];
 
 export default function Gallery() {
@@ -15,7 +16,16 @@ export default function Gallery() {
       </div>
       <div className="gallery-grid">
         {galleryImages.map(([src, alt, className]) => (
-          <img key={src} className={`reveal lightbox ${className}`} src={src} alt={alt} />
+          <button
+            key={src}
+            className={`gallery-image-button reveal lightbox ${className}`}
+            type="button"
+            data-lightbox-src={src}
+            data-lightbox-alt={alt}
+            aria-label={`Enlarge ${alt}`}
+          >
+            <img src={src} alt={alt} loading="lazy" decoding="async" />
+          </button>
         ))}
       </div>
     </section>

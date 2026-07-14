@@ -1,8 +1,10 @@
+import { formatPrice, product } from '../config/product.js';
+
 const heroPhotos = [
-  ['/assets/product-2.jpg', 'SofaTray side view'],
-  ['/assets/product-3.jpg', 'SofaTray low side view'],
-  ['/assets/product-4.jpg', 'SofaTray top view'],
-  ['/assets/product-5.jpg', 'SofaTray compartments view'],
+  ['/assets/juzur-tray-studio.jpg', 'SofaTray studio product view', '50% 50%'],
+  ['/assets/product-2.jpg', 'SofaTray handcrafted side view', '50% 50%'],
+  ['/assets/juzur-tray-lifestyle.jpg', 'SofaTray arranged for a cozy sofa moment', '50% 72%'],
+  ['/assets/product-4.jpg', 'SofaTray top view', '50% 50%'],
 ];
 
 export default function Hero() {
@@ -13,10 +15,10 @@ export default function Hero() {
         <h1>
           Everything you need.
           <br />
-          <span id="word">Right beside you.</span>
+          <span>Right beside you.</span>
         </h1>
         <p className="hero-support">Designed to make life easier.</p>
-        <p className="hero-text">☕ Coffee. 📱 Phone. 📺 Remote.</p>
+        <p className="hero-text">Coffee. Phone. Remote. Beautifully organized.</p>
       </div>
 
       <div className="hero-product-gallery reveal delay" id="heroGallery">
@@ -24,26 +26,37 @@ export default function Hero() {
           <img
             id="heroPreviousImage"
             className="hero-gallery-layer hero-gallery-layer-previous"
-            src="/assets/product-2.jpg"
+            src="/assets/juzur-tray-studio.jpg"
             alt=""
             aria-hidden="true"
+            style={{ objectPosition: '50% 50%' }}
           />
           <img
             id="heroCurrentImage"
             className="hero-gallery-layer hero-gallery-layer-current is-visible"
-            src="/assets/product-2.jpg"
-            alt="SofaTray by Juzur main product view"
+            src="/assets/juzur-tray-studio.jpg"
+            alt="SofaTray studio product view"
+            fetchPriority="high"
+            style={{ objectPosition: '50% 50%' }}
           />
         </div>
         <div className="hero-photo-thumbs" aria-label="Choose hero product photo">
-          {heroPhotos.map(([src, alt], index) => (
+          {heroPhotos.map(([src, alt, position], index) => (
             <button
               key={src}
               className={`hero-photo-thumb${index === 0 ? ' active' : ''}`}
               type="button"
               data-img={src}
+              data-alt={alt}
+              data-position={position}
             >
-              <img src={src} alt={alt} />
+              <img
+                src={src}
+                alt={alt}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+                style={{ objectPosition: position }}
+              />
             </button>
           ))}
         </div>
@@ -58,15 +71,15 @@ export default function Hero() {
         <div className="hero-price" aria-label="Product price">
           <div>
             <span>Special price</span>
-            <strong>EGP 1,999</strong>
+            <strong>{formatPrice(product.finalUnitPrice)}</strong>
           </div>
-          <span className="old-price">EGP 2,499</span>
-          <span className="discount-badge">20% off</span>
+          <span className="old-price">{formatPrice(product.originalUnitPrice)}</span>
+          <span className="discount-badge">{product.discountLabel}</span>
         </div>
         <div className="hero-trust" aria-label="Product trust signals">
           <span>Handcrafted Zan Wood</span>
-          <span>Delivery in 4-7 Days</span>
-          <span>Secure Checkout</span>
+          <span>{product.paymentMethod}</span>
+          <span>Delivery {product.deliveryTime}</span>
         </div>
       </div>
 

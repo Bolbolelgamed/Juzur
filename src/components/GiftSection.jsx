@@ -20,17 +20,35 @@ export default function GiftSection() {
       </div>
       <div className="gift-media reveal delay" aria-label="Gift presentation photos">
         <div className="gift-video-tile">
-          <img src="/assets/product-2.jpg" alt="SofaTray gift presentation" />
+          <img
+            src="/assets/juzur-packaging-closed.jpg"
+            alt="SofaTray in its branded Juzur gift box"
+            loading="lazy"
+            decoding="async"
+          />
           <div className="gift-video-caption">
-            <span className="play-icon">Play</span>
-            <strong>Gift unboxing moment</strong>
-            <small>Show the product, the wooden details, and how it fits beside the sofa.</small>
+            <span className="gift-label">Gift ready</span>
+            <strong>Presented with care</strong>
+            <small>Branded packaging makes the first impression feel as thoughtful as the product inside.</small>
           </div>
         </div>
         <div className="gift-photo-strip">
-          <img className="lightbox" src="/assets/product-3.jpg" alt="SofaTray gift side view" />
-          <img className="lightbox" src="/assets/product-4.jpg" alt="SofaTray top view as a gift" />
-          <img className="lightbox" src="/assets/product-5.jpg" alt="SofaTray storage gift detail" />
+          {[
+            ['/assets/juzur-packaging-open.jpg', 'Open Juzur box with SofaTray inside'],
+            ['/assets/juzur-packaging-natural.jpg', 'Closed Juzur box in a natural living space'],
+            ['/assets/juzur-tray-lifestyle.jpg', 'SofaTray ready for a relaxed home moment'],
+          ].map(([src, alt]) => (
+            <button
+              className="gift-photo-button lightbox"
+              type="button"
+              key={src}
+              data-lightbox-src={src}
+              data-lightbox-alt={alt}
+              aria-label={`Enlarge ${alt}`}
+            >
+              <img src={src} alt={alt} loading="lazy" decoding="async" />
+            </button>
+          ))}
         </div>
       </div>
     </section>
