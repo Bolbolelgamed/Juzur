@@ -114,7 +114,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #07130d;
+  background: #07130d url('/assets/juzur-tray-lifestyle.jpg') center / contain no-repeat;
   opacity: 0;
   pointer-events: none;
   transition: opacity 400ms ease;
