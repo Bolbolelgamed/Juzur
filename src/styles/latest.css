@@ -138,6 +138,21 @@
   text-align: center;
 }
 
+.video-card.main-video {
+  display: grid;
+  place-items: center;
+  background: #07130d;
+}
+
+.main-video-player {
+  display: block;
+  width: 100%;
+  height: 518px;
+  min-height: 518px;
+  object-fit: contain;
+  background: #07130d;
+}
+
 .gallery-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-auto-rows: 300px;
@@ -548,6 +563,11 @@ textarea:focus-visible {
   .video-placeholder {
     min-height: 210px;
     border-radius: 20px;
+  }
+
+  .main-video-player {
+    height: min(68svh, 560px);
+    min-height: 420px;
   }
 
   .gallery-grid {

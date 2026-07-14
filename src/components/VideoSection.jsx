@@ -1,5 +1,6 @@
-const videos = [
-  ['Product demo', 'Opening, tray layout, and daily use', 'main-video'],
+import { useState } from 'react';
+
+const supportingVideos = [
   ['Coffee setup', 'Short demo video', ''],
   ['Daily essentials', 'Phone, remote, snacks, and cup', ''],
 ];
@@ -18,7 +19,19 @@ export default function VideoSection() {
         </p>
       </div>
       <div className="video-grid reveal">
-        {videos.map(([title, subtitle, extraClass]) => (
+        <div className="video-card main-video">
+          <video
+            className="main-video-player"
+            controls
+            playsInline
+            preload="auto"
+            aria-label="SofaTray product demonstration"
+          >
+            <source src="/assets/juzur-sofatray-demo.mp4" type="video/mp4" />
+            Your browser does not support embedded video.
+          </video>
+        </div>
+        {supportingVideos.map(([title, subtitle, extraClass]) => (
           <div key={title} className={`video-card ${extraClass}`.trim()}>
             <div className="video-placeholder">
               <button
@@ -41,4 +54,3 @@ export default function VideoSection() {
     </section>
   );
 }
-import { useState } from 'react';
