@@ -4,6 +4,7 @@ const navItems = [
   ['#material', 'Zan Wood'],
   ['#gift', 'Gift'],
   ['#faq', 'FAQ'],
+  ['tel:+201095306518', '01095306518'],
 ];
 
 export default function Header() {

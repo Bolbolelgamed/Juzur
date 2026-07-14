@@ -23,6 +23,17 @@ export default function Hero() {
 
       <div className="hero-product-gallery reveal delay" id="heroGallery">
         <div className="hero-main-photo">
+          <video
+            id="heroVideo"
+            className="hero-gallery-video is-visible"
+            src="/assets/juzur-hero-video.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label="SofaTray by Juzur in use"
+          />
           <img
             id="heroPreviousImage"
             className="hero-gallery-layer hero-gallery-layer-previous"
@@ -33,19 +44,28 @@ export default function Hero() {
           />
           <img
             id="heroCurrentImage"
-            className="hero-gallery-layer hero-gallery-layer-current is-visible"
+            className="hero-gallery-layer hero-gallery-layer-current"
             src="/assets/juzur-tray-studio.jpg"
             alt="SofaTray studio product view"
             fetchPriority="high"
             style={{ objectPosition: '50% 50%' }}
           />
         </div>
-        <div className="hero-photo-thumbs" aria-label="Choose hero product photo">
+        <div className="hero-photo-thumbs" aria-label="Choose hero product media">
+          <button
+            className="hero-photo-thumb hero-media-thumb active"
+            type="button"
+            data-kind="video"
+            aria-label="Play SofaTray hero video"
+          >
+            <video src="/assets/juzur-hero-video.mp4" muted playsInline preload="metadata" aria-hidden="true" />
+          </button>
           {heroPhotos.map(([src, alt, position], index) => (
             <button
               key={src}
-              className={`hero-photo-thumb${index === 0 ? ' active' : ''}`}
+              className="hero-photo-thumb hero-media-thumb"
               type="button"
+              data-kind="image"
               data-img={src}
               data-alt={alt}
               data-position={position}

@@ -76,8 +76,9 @@ export function useSiteEffects() {
 }
 
 function setupHeroGallery(cleanups) {
-  const heroPhotoThumbs = [...document.querySelectorAll('.hero-photo-thumb')];
+  const heroPhotoThumbs = [...document.querySelectorAll('.hero-media-thumb')];
   const heroGallery = document.getElementById('heroGallery');
+  const heroVideo = document.getElementById('heroVideo');
   const heroPreviousImage = document.getElementById('heroPreviousImage');
   const heroCurrentImage = document.getElementById('heroCurrentImage');
   const heroImageCache = new Map();
@@ -115,6 +116,7 @@ function setupHeroGallery(cleanups) {
   function scheduleHeroAutoplay() {
     stopHeroAutoplay();
     if (heroPhotoThumbs.length < 2 || motionQuery.matches) return;
+    if (heroPhotoThumbs[heroPhotoIndex]?.dataset.kind === 'video') return;
     heroPhotoIdleTimer = window.setTimeout(
       () => showHeroPhoto(heroPhotoIndex + 1),
       HERO_PHOTO_ROTATION_MS,
@@ -136,10 +138,25 @@ function setupHeroGallery(cleanups) {
       return;
     }
     const btn = heroPhotoThumbs[normalizedIndex];
+    const isVideo = btn.dataset.kind === 'video';
+    if (isVideo) {
+      stopHeroAutoplay();
+      queuedHeroPhotoIndex = null;
+      heroPhotoAnimating = false;
+      heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous';
+      heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current';
+      heroVideo?.classList.add('is-visible');
+      heroVideo?.play().catch(() => {});
+      heroPhotoIndex = normalizedIndex;
+      setHeroThumbState(heroPhotoIndex, 'active');
+      heroGallery?.classList.remove('is-transitioning');
+      return;
+    }
     const nextSrc = btn.dataset.img;
     const nextAlt = btn.dataset.alt || 'SofaTray by Juzur product view';
     const nextPosition = btn.dataset.position || '50% 50%';
-    if (!nextSrc || heroCurrentImage.src.endsWith(nextSrc)) {
+    const videoWasVisible = heroVideo?.classList.contains('is-visible');
+    if (!nextSrc || (!videoWasVisible && heroCurrentImage.src.endsWith(nextSrc))) {
       scheduleHeroAutoplay();
       return;
     }
@@ -156,10 +173,14 @@ function setupHeroGallery(cleanups) {
     }
 
     heroPhotoAnimating = true;
+    heroVideo?.pause();
+    heroVideo?.classList.remove('is-visible');
     const oldSrc = heroCurrentImage.getAttribute('src');
-    heroPreviousImage.src = oldSrc;
-    heroPreviousImage.style.objectPosition = heroCurrentImage.style.objectPosition || '50% 50%';
-    heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous is-visible';
+    if (!videoWasVisible) {
+      heroPreviousImage.src = oldSrc;
+      heroPreviousImage.style.objectPosition = heroCurrentImage.style.objectPosition || '50% 50%';
+      heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous is-visible';
+    }
     heroCurrentImage.src = nextSrc;
     heroCurrentImage.alt = nextAlt;
     heroCurrentImage.style.objectPosition = nextPosition;
@@ -169,7 +190,7 @@ function setupHeroGallery(cleanups) {
 
     requestAnimationFrame(() => {
       heroGallery?.classList.add('is-transitioning');
-      heroPreviousImage.classList.add('is-leaving');
+      if (!videoWasVisible) heroPreviousImage.classList.add('is-leaving');
       heroCurrentImage.classList.add('is-visible');
     });
 
@@ -195,6 +216,7 @@ function setupHeroGallery(cleanups) {
   }
 
   heroPhotoThumbs.forEach((btn) => {
+    if (btn.dataset.kind === 'video') return;
     const src = btn.dataset.img;
     if (src) preloadHeroImage(src).catch(() => {});
   });
@@ -202,7 +224,8 @@ function setupHeroGallery(cleanups) {
   heroPhotoThumbs.forEach((btn, index) => {
     const onClick = () => {
       stopHeroAutoplay();
-      if (index === heroPhotoIndex) scheduleHeroAutoplay();
+      if (index === heroPhotoIndex && btn.dataset.kind === 'video') heroVideo?.play().catch(() => {});
+      else if (index === heroPhotoIndex) scheduleHeroAutoplay();
       else showHeroPhoto(index);
     };
     btn.addEventListener('click', onClick);
@@ -218,6 +241,28 @@ function setupHeroGallery(cleanups) {
   if (heroPhotoThumbs.length > 1 && !motionQuery.matches) {
     scheduleHeroAutoplay();
     cleanups.push(stopHeroAutoplay);
+  }
+
+  if (heroVideo) {
+    heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
+
+    const startHeroVideo = () => {
+      if (heroPhotoThumbs[heroPhotoIndex]?.dataset.kind !== 'video') return;
+      heroVideo.play().catch(() => {});
+    };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') startHeroVideo();
+    };
+
+    startHeroVideo();
+    heroVideo.addEventListener('canplay', startHeroVideo);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    cleanups.push(() => {
+      heroVideo.removeEventListener('canplay', startHeroVideo);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      heroVideo.pause();
+    });
   }
 
   const onMotionPreferenceChange = () => {
