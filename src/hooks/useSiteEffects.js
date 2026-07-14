@@ -83,6 +83,7 @@ function setupHeroGallery(cleanups) {
   const heroCurrentImage = document.getElementById('heroCurrentImage');
   const heroImageCache = new Map();
   const HERO_PHOTO_ROTATION_MS = 3000;
+  const HERO_VIDEO_START_SECONDS = 0.25;
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let heroPhotoIndex = heroPhotoThumbs.findIndex((btn) => btn.classList.contains('active'));
   let heroPhotoIdleTimer;
@@ -146,6 +147,7 @@ function setupHeroGallery(cleanups) {
       heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous';
       heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current';
       heroVideo?.classList.add('is-visible');
+      if (heroVideo?.readyState >= 2) heroVideo.classList.add('is-ready');
       heroVideo?.play().catch(() => {});
       heroPhotoIndex = normalizedIndex;
       setHeroThumbState(heroPhotoIndex, 'active');
@@ -247,8 +249,17 @@ function setupHeroGallery(cleanups) {
     heroVideo.muted = true;
     heroVideo.defaultMuted = true;
 
+    const skipOpeningBlackFrame = () => {
+      if (heroVideo.currentTime >= HERO_VIDEO_START_SECONDS || Number.isNaN(heroVideo.duration)) return;
+      heroVideo.currentTime = Math.min(HERO_VIDEO_START_SECONDS, Math.max(0, heroVideo.duration - 0.1));
+    };
+    const markHeroVideoReady = () => {
+      skipOpeningBlackFrame();
+      heroVideo.classList.add('is-ready');
+    };
     const startHeroVideo = () => {
       if (heroPhotoThumbs[heroPhotoIndex]?.dataset.kind !== 'video') return;
+      if (heroVideo.readyState >= 2) markHeroVideoReady();
       heroVideo.play().catch(() => {});
     };
     const onVisibilityChange = () => {
@@ -256,9 +267,13 @@ function setupHeroGallery(cleanups) {
     };
 
     startHeroVideo();
+    heroVideo.addEventListener('loadedmetadata', skipOpeningBlackFrame);
+    heroVideo.addEventListener('loadeddata', markHeroVideoReady);
     heroVideo.addEventListener('canplay', startHeroVideo);
     document.addEventListener('visibilitychange', onVisibilityChange);
     cleanups.push(() => {
+      heroVideo.removeEventListener('loadedmetadata', skipOpeningBlackFrame);
+      heroVideo.removeEventListener('loadeddata', markHeroVideoReady);
       heroVideo.removeEventListener('canplay', startHeroVideo);
       document.removeEventListener('visibilitychange', onVisibilityChange);
       heroVideo.pause();

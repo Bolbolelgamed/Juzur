@@ -7,8 +7,6 @@ const heroPhotos = [
   ['/assets/product-4.jpg', 'SofaTray top view', '50% 50%'],
 ];
 
-const heroVideoPoster = '/assets/juzur-tray-lifestyle.jpg';
-
 export default function Hero() {
   return (
     <section className="hero hero-carousel" aria-label="SofaTray by Juzur hero">
@@ -29,7 +27,6 @@ export default function Hero() {
             id="heroVideo"
             className="hero-gallery-video is-visible"
             src="/assets/juzur-hero-video.mp4"
-            poster={heroVideoPoster}
             autoPlay
             muted
             loop
@@ -63,7 +60,6 @@ export default function Hero() {
           >
             <video
               src="/assets/juzur-hero-video.mp4"
-              poster={heroVideoPoster}
               muted
               playsInline
               preload="metadata"
