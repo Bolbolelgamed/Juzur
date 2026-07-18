@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export function useSiteEffects() {
+export function useSiteEffects(language, imagePreviewFallback) {
   useEffect(() => {
     const cleanups = [];
     const nav = document.getElementById('nav');
@@ -44,7 +44,7 @@ export function useSiteEffects() {
       const previewImage = modal.querySelector('img');
       previousModalFocus = event.currentTarget;
       previewImage.src = event.currentTarget.dataset.lightboxSrc;
-      previewImage.alt = event.currentTarget.dataset.lightboxAlt || 'SofaTray image preview';
+      previewImage.alt = event.currentTarget.dataset.lightboxAlt || imagePreviewFallback;
       modal.classList.add('open');
       modal.querySelector('.modal-close')?.focus();
     };
@@ -72,7 +72,7 @@ export function useSiteEffects() {
     setupStickyCta(cleanups);
 
     return () => cleanups.forEach((cleanup) => cleanup());
-  }, []);
+  }, [language, imagePreviewFallback]);
 }
 
 function setupHeroGallery(cleanups) {

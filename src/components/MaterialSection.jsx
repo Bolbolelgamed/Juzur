@@ -1,14 +1,2 @@
-export default function MaterialSection() {
-  return (
-    <section className="intro split reveal" id="material">
-      <div>
-        <p className="eyebrow dark">Why Zan wood</p>
-        <h2>Natural strength with a warm furniture finish.</h2>
-      </div>
-      <p>
-        Made from Zan wood, SofaTray brings a naturally rich feel to everyday living-room routines while keeping
-        the warm look of real furniture.
-      </p>
-    </section>
-  );
-}
+import { useLanguage } from '../i18n/LanguageContext.jsx';
+export default function MaterialSection() { const { t } = useLanguage(); return <section className="intro split reveal" id="material"><div><p className="eyebrow dark">{t.material.eyebrow}</p><h2>{t.material.title}</h2></div><p>{t.material.text}</p></section>; }

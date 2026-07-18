@@ -10,9 +10,11 @@ import CheckoutSection from './components/CheckoutSection.jsx';
 import Footer from './components/Footer.jsx';
 import Modal from './components/Modal.jsx';
 import { useSiteEffects } from './hooks/useSiteEffects.js';
+import { useLanguage } from './i18n/LanguageContext.jsx';
 
 export default function App() {
-  useSiteEffects();
+  const { language, t } = useLanguage();
+  useSiteEffects(language, t.images.preview);
 
   return (
     <>
@@ -30,7 +32,7 @@ export default function App() {
       </main>
       <Footer />
       <a className="mobile-sticky-cta" href="#checkout">
-        Order Now
+        {t.nav.order}
       </a>
       <Modal />
     </>
