@@ -789,7 +789,14 @@ html[lang='ar'] .scroll-hint {
   font-weight: 800;
 }
 
-.language-switch { padding: 8px 14px; }
+.language-switch {
+  min-width: 40px;
+  min-height: 36px;
+  padding: 5px 9px;
+  border-radius: 11px;
+  font-size: 12px;
+  line-height: 1;
+}
 .mobile-language-switch,
 .menu-toggle { display: none; }
 
@@ -945,7 +952,7 @@ html[dir='rtl'] .launch-price .price-comparison {
   .hero-price.launch-price .price-comparison strong { font-size: 36px; }
   .hero-price.launch-price del { font-size: 16px; }
   .hero-price.launch-price > .discount-badge { min-height: 34px; padding: 7px 10px; font-size: 12px; }
-  .language-switch { min-width: 42px; min-height: 38px; padding: 6px 9px; border-radius: 12px; font-size: 12px; line-height: 1; }
+  .language-switch { min-width: 36px; min-height: 34px; padding: 4px 7px; border-radius: 10px; font-size: 11px; }
   .checkout-price-panel.launch-price { width: 100%; padding: 15px 16px; border-radius: 18px; }
   .checkout-price-panel.launch-price .price-main { gap: 6px; }
   .checkout-price-panel.launch-price .price-comparison { gap: 8px; }
