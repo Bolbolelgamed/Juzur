@@ -960,3 +960,39 @@ html[dir='rtl'] .launch-price .price-comparison {
   .checkout-price-panel.launch-price .price-comparison::after { padding: 6px 9px; font-size: 11px; }
   html[lang='ar'] .hero-carousel h1 { font-size: 39px; }
 }
+
+/* Tighter section rhythm: avoid stacking large bottom and top paddings. */
+.video-section,
+.feedback-section,
+.gift-section,
+.intro,
+.product-showcase,
+.gallery,
+.faq-section,
+.checkout-section {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.video-section { padding-bottom: 40px; }
+.feedback-section { padding-top: 40px; }
+.product-showcase { padding-top: 36px; }
+.reveal { transform: translateY(18px); }
+
+@media (max-width: 680px) {
+  .video-section,
+  .feedback-section,
+  .gift-section,
+  .intro,
+  .product-showcase,
+  .gallery,
+  .faq-section,
+  .checkout-section {
+    padding-top: 38px;
+    padding-bottom: 38px;
+  }
+
+  .video-section { padding-bottom: 32px; }
+  .feedback-section { padding-top: 32px; }
+  .product-showcase { padding-top: 30px; }
+}
