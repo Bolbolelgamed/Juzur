@@ -120,7 +120,7 @@
   transition: opacity 400ms ease;
 }
 
-#heroGallery .hero-gallery-video.is-visible.is-ready {
+#heroGallery .hero-gallery-video.is-visible {
   opacity: 1;
   pointer-events: auto;
 }

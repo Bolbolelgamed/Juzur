@@ -4,7 +4,7 @@ import { useLanguage } from '../i18n/LanguageContext.jsx';
 export default function Header() {
   const { language, t, toggleLanguage } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
-  const navItems = [['#collection', t.nav.product], ['#video', t.nav.video], ['#material', t.nav.wood], ['#gift', t.nav.gift], ['#faq', t.nav.faq], ['tel:+201095306518', '01095306518']];
+  const navItems = [['#collection', t.nav.product], ['#video', t.nav.video], ['#material', t.nav.wood], ['#gift', t.nav.gift], ['#faq', t.nav.faq]];
   const closeMenu = () => setMenuOpen(false);
   return (
     <header className="nav" id="nav">
