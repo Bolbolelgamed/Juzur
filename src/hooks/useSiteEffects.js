@@ -145,7 +145,7 @@ function setupHeroGallery(cleanups) {
       queuedHeroPhotoIndex = null;
       heroPhotoAnimating = false;
       heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous';
-      heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current is-visible';
+      heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current';
       heroVideo?.classList.add('is-visible');
       if (heroVideo?.readyState >= 2) heroVideo.classList.add('is-ready');
       heroVideo?.play().catch(() => {});
@@ -155,7 +155,7 @@ function setupHeroGallery(cleanups) {
       return;
     }
     const nextSrc = btn.dataset.img;
-    const nextAlt = btn.dataset.alt || 'Juzur Sofa tray product view';
+    const nextAlt = btn.dataset.alt || 'SofaTray by Juzur product view';
     const nextPosition = btn.dataset.position || '50% 50%';
     const videoWasVisible = heroVideo?.classList.contains('is-visible');
     if (!nextSrc || (!videoWasVisible && heroCurrentImage.src.endsWith(nextSrc))) {
