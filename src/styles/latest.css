@@ -837,7 +837,7 @@ html[dir='rtl'] .showcase-copy { text-align: right; }
 .checkout-price-panel.launch-price .price-comparison { display: flex; align-items: baseline; gap: 11px; flex-wrap: wrap; }
 .checkout-price-panel.launch-price .price-comparison strong { order: -1; margin: 0; font-size: clamp(32px, 4vw, 40px); color: var(--green); }
 .checkout-price-panel.launch-price .price-comparison::after { content: 'Save EGP 500'; width: fit-content; margin-inline-start: auto; padding: 7px 11px; border: 1px solid rgba(13, 43, 29, 0.1); border-radius: 11px; background: rgba(13, 43, 29, 0.08); color: var(--green); font-size: 12px; font-weight: 900; }
-html[lang='ar'] .checkout-price-panel.launch-price .price-comparison::after { content: '\0648\0641\0631 \0665\0660\0660 \062C\0646\064A\0647'; }
+html[lang='ar'] .checkout-price-panel.launch-price .price-comparison::after { content: '\0648\0641\0631\0020\0665\0660\0660\0020\062C\0646\064A\0647'; }
 
 html[dir='rtl'] .launch-price .price-comparison {
   justify-content: flex-start;
