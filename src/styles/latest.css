@@ -125,68 +125,6 @@
   pointer-events: auto;
 }
 
-/* Launch-price presentation mirrored from the published ChatGPT site. */
-.launch-price del {
-  color: rgba(234, 223, 206, 0.68);
-  font-size: 0.72em;
-  font-weight: 700;
-  text-decoration-thickness: 2px;
-}
-
-.hero-price.launch-price > div {
-  display: grid;
-  align-content: start;
-  gap: 7px;
-  width: auto;
-  min-width: 0;
-  margin: 0;
-}
-
-.hero-price.launch-price .price-comparison {
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-  flex-wrap: wrap;
-}
-
-.hero-price.launch-price del { font-size: 16px; }
-.hero-price.launch-price > .discount-badge { align-self: center; }
-
-.checkout-price-panel.launch-price {
-  width: min(100%, 460px);
-  max-width: none;
-  padding: 18px 20px;
-  border: 1px solid rgba(199, 151, 87, 0.48);
-  border-radius: 20px;
-  background: linear-gradient(145deg, #fffdf8, #f3ead9);
-  box-shadow: 0 16px 42px rgba(13, 43, 29, 0.12), inset 0 1px #fff;
-}
-
-.checkout-price-panel.launch-price .price-main { gap: 6px; }
-.checkout-price-panel.launch-price .price-comparison {
-  display: flex;
-  align-items: baseline;
-  gap: 11px;
-  flex-wrap: wrap;
-}
-.checkout-price-panel.launch-price .price-comparison strong { font-size: 32px; }
-.checkout-price-panel.launch-price .price-comparison::after {
-  content: 'Save EGP 500';
-  width: fit-content;
-  margin-inline-start: auto;
-  padding: 7px 11px;
-  border: 1px solid rgba(13, 43, 29, 0.1);
-  border-radius: 11px;
-  background: rgba(13, 43, 29, 0.08);
-  color: var(--green);
-  font-size: 12px;
-  font-weight: 900;
-}
-
-html[dir='rtl'] .launch-price .price-comparison { justify-content: flex-start; }
-html[lang='ar'] .checkout-price-panel.launch-price .price-comparison::after { content: 'وفر ٥٠٠ جنيه'; }
-html[dir='rtl'] .showcase-copy { text-align: right; }
-
 .hero-photo-thumbs {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
@@ -851,7 +789,14 @@ html[lang='ar'] .scroll-hint {
   font-weight: 800;
 }
 
-.language-switch { padding: 8px 14px; }
+.language-switch {
+  min-width: 40px;
+  min-height: 36px;
+  padding: 5px 9px;
+  border-radius: 11px;
+  font-size: 12px;
+  line-height: 1;
+}
 .mobile-language-switch,
 .menu-toggle { display: none; }
 
@@ -860,6 +805,110 @@ html[dir='rtl'] .showcase-copy ul { padding-left: 0; padding-right: 20px; }
 html[dir='rtl'] .modal-close { right: auto; left: 10px; }
 html[dir='rtl'] .checkout-price-panel .price-main { text-align: right; }
 html[dir='rtl'] input[type='number'] { direction: rtl; }
+html[dir='rtl'] .showcase-copy { text-align: right; }
+
+.launch-price .price-comparison {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.launch-price del {
+  color: rgba(234, 223, 206, 0.68);
+  font-size: 0.72em;
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+}
+
+.checkout-price-panel.launch-price del {
+  color: var(--muted);
+}
+.checkout-price-panel.launch-price {
+  width: min(100%, 460px);
+  max-width: none;
+  padding: 18px 20px;
+  border: 1px solid rgba(199, 151, 87, 0.48);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fffdf8, #f3ead9);
+  box-shadow: 0 16px 42px rgba(13, 43, 29, 0.12), inset 0 1px 0 #fff;
+}
+.checkout-price-panel.launch-price .price-main { display: grid; align-items: start; gap: 8px; }
+.checkout-price-panel.launch-price .price-comparison { display: flex; align-items: baseline; gap: 11px; flex-wrap: wrap; }
+.checkout-price-panel.launch-price .price-comparison strong { order: -1; margin: 0; font-size: clamp(32px, 4vw, 40px); color: var(--green); }
+.checkout-price-panel.launch-price .price-comparison::after { content: 'Save EGP 500'; width: fit-content; margin-inline-start: auto; padding: 7px 11px; border: 1px solid rgba(13, 43, 29, 0.1); border-radius: 11px; background: rgba(13, 43, 29, 0.08); color: var(--green); font-size: 12px; font-weight: 900; }
+html[lang='ar'] .checkout-price-panel.launch-price .price-comparison::after { content: 'وفر ٥٠٠ جنيه'; }
+
+html[dir='rtl'] .launch-price .price-comparison {
+  justify-content: flex-start;
+}
+
+/* Wide hero offer card: compact, premium and easy to scan. */
+.hero-price.launch-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: min(100%, 520px);
+  aspect-ratio: auto;
+  margin-top: 18px;
+  padding: 20px 22px;
+  border: 1px solid rgba(199, 151, 87, 0.48);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #fffdf8, #f3ead9);
+  color: var(--green);
+  box-shadow: 0 18px 48px rgba(13, 43, 29, 0.13), inset 0 1px 0 #fff;
+}
+.hero-price.launch-price > div {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+}
+.hero-price.launch-price > div > span:first-child {
+  color: #657268;
+  font-size: 15px;
+  font-weight: 900;
+}
+.hero-price.launch-price .price-comparison {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 14px;
+}
+.hero-price.launch-price .price-comparison strong {
+  order: -1;
+  display: block;
+  margin: 0;
+  color: var(--green);
+  font-size: clamp(38px, 4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+.hero-price.launch-price del {
+  width: fit-content;
+  color: #7b817b;
+  font-size: 21px;
+  font-weight: 800;
+  text-decoration-color: #b77c34;
+  text-decoration-thickness: 3px;
+}
+.hero-price.launch-price > .discount-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 1px solid rgba(13, 43, 29, 0.12);
+  border-radius: 12px;
+  background: var(--green);
+  color: #f4d99f;
+  font-size: 14px;
+  font-weight: 900;
+}
+
 
 .showcase-copy .feature-list {
   padding-inline-start: 0;
@@ -871,7 +920,6 @@ html[dir='rtl'] input[type='number'] { direction: rtl; }
 }
 
 @media (max-width: 920px) {
-  .desktop-language-switch { display: none; }
   .menu-toggle { display: grid; place-content: center; gap: 4px; width: 44px; padding: 10px; }
   .menu-toggle span { display: block; width: 19px; height: 2px; border-radius: 2px; background: #fff; }
   .nav nav.mobile-menu-open {
@@ -899,5 +947,16 @@ html[dir='rtl'] input[type='number'] { direction: rtl; }
   .nav-actions { gap: 6px; }
   .nav-cta { padding: 9px 11px; font-size: 12px; }
   .brand-logo { max-width: 94px; object-fit: contain; }
+  .hero-price.launch-price { width: 100%; gap: 14px; padding: 17px 16px; border-radius: 18px; }
+  .hero-price.launch-price .price-comparison { gap: 9px; }
+  .hero-price.launch-price .price-comparison strong { font-size: 36px; }
+  .hero-price.launch-price del { font-size: 16px; }
+  .hero-price.launch-price > .discount-badge { min-height: 34px; padding: 7px 10px; font-size: 12px; }
+  .language-switch { min-width: 36px; min-height: 34px; padding: 4px 7px; border-radius: 10px; font-size: 11px; }
+  .checkout-price-panel.launch-price { width: 100%; padding: 15px 16px; border-radius: 18px; }
+  .checkout-price-panel.launch-price .price-main { gap: 6px; }
+  .checkout-price-panel.launch-price .price-comparison { gap: 8px; }
+  .checkout-price-panel.launch-price .price-comparison strong { font-size: 32px; }
+  .checkout-price-panel.launch-price .price-comparison::after { padding: 6px 9px; font-size: 11px; }
   html[lang='ar'] .hero-carousel h1 { font-size: 39px; }
 }

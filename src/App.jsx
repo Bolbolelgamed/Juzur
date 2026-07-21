@@ -18,8 +18,9 @@ export default function App() {
 
   return (
     <>
+      <div className="cursor-glow" />
       <Header />
-      <main>
+      <main id="top">
         <Hero />
         <VideoSection />
         <GiftSection />
@@ -30,7 +31,9 @@ export default function App() {
         <CheckoutSection />
       </main>
       <Footer />
-      <a className="mobile-sticky-cta" href="#checkout">{t.floatingOrder}</a>
+      <a className="mobile-sticky-cta" href="#checkout">
+        {t.nav.order}
+      </a>
       <Modal />
     </>
   );

@@ -1,167 +1,70 @@
-export const governorates = [
-  { value: 'Alexandria', en: 'Alexandria', ar: 'الإسكندرية' },
-  { value: 'Aswan', en: 'Aswan', ar: 'أسوان' },
-  { value: 'Asyut', en: 'Asyut', ar: 'أسيوط' },
-  { value: 'Beheira', en: 'Beheira', ar: 'البحيرة' },
-  { value: 'Beni Suef', en: 'Beni Suef', ar: 'بني سويف' },
-  { value: 'Cairo', en: 'Cairo', ar: 'القاهرة' },
-  { value: 'Dakahlia', en: 'Dakahlia', ar: 'الدقهلية' },
-  { value: 'Damietta', en: 'Damietta', ar: 'دمياط' },
-  { value: 'Faiyum', en: 'Faiyum', ar: 'الفيوم' },
-  { value: 'Gharbia', en: 'Gharbia', ar: 'الغربية' },
-  { value: 'Giza', en: 'Giza', ar: 'الجيزة' },
-  { value: 'Ismailia', en: 'Ismailia', ar: 'الإسماعيلية' },
-  { value: 'Kafr El Sheikh', en: 'Kafr El Sheikh', ar: 'كفر الشيخ' },
-  { value: 'Luxor', en: 'Luxor', ar: 'الأقصر' },
-  { value: 'Matrouh', en: 'Matrouh', ar: 'مطروح' },
-  { value: 'Minya', en: 'Minya', ar: 'المنيا' },
-  { value: 'Monufia', en: 'Monufia', ar: 'المنوفية' },
-  { value: 'New Valley', en: 'New Valley', ar: 'الوادي الجديد' },
-  { value: 'North Sinai', en: 'North Sinai', ar: 'شمال سيناء' },
-  { value: 'Port Said', en: 'Port Said', ar: 'بورسعيد' },
-  { value: 'Qalyubia', en: 'Qalyubia', ar: 'القليوبية' },
-  { value: 'Qena', en: 'Qena', ar: 'قنا' },
-  { value: 'Red Sea', en: 'Red Sea', ar: 'البحر الأحمر' },
-  { value: 'Sharqia', en: 'Sharqia', ar: 'الشرقية' },
-  { value: 'Sohag', en: 'Sohag', ar: 'سوهاج' },
-  { value: 'South Sinai', en: 'South Sinai', ar: 'جنوب سيناء' },
-  { value: 'Suez', en: 'Suez', ar: 'السويس' },
-];
-
 export const locales = {
   en: {
-    meta: {
-      title: 'Juzur | Wooden Sofa Tray for the Modern Home',
-      description: 'Juzur creates a premium wooden sofa tray that keeps coffee, phones, remotes and snacks organized for relaxed moments at home.',
-    },
-    nav: {
-      label: 'Primary navigation', product: 'Product', video: 'Video', wood: 'Zan Wood', gift: 'Gift', faq: 'FAQ', order: 'Order Now',
-      menuOpen: 'Open menu', menuClose: 'Close menu', switchLanguage: 'Switch to Arabic',
-    },
-    hero: {
-      label: 'Juzur Sofa tray', eyebrow: 'Premium Wooden Juzur Sofa tray', title1: 'Everything you need.', title2: 'Right beside you.',
-      support: 'Designed to make life easier.', text: 'Coffee. Phone. Remote. Beautifully organized.', view: 'View Product',
-      current: 'Current price', save: 'Save EGP 500', priceLabel: 'Current price EGP 2,000, previously EGP 2,500. Save EGP 500.',
-      trustLabel: 'Product trust signals', wood: 'Handcrafted Zan Wood', payment: 'Cash on Delivery', delivery: 'Delivery within 4–7 days',
-      scroll: 'Discover', mediaLabel: 'Choose hero product media', videoPlay: 'Play Juzur Sofa tray hero video', playVideo: 'Play video', videoAlt: 'Juzur Sofa tray in use', videoBadge: 'Hero video · 0:08',
-    },
-    images: {
-      studio: 'Juzur Sofa tray studio product view', side: 'Juzur Sofa tray handcrafted side view', lifestyle: 'Juzur Sofa tray arranged for a cozy sofa moment',
-      top: 'Juzur Sofa tray top view', details: 'Studio product details of the Juzur Sofa tray', cozy: 'Juzur Sofa tray with coffee, phone and remote in a cozy living room',
-      boxOpen: 'Open Juzur gift box with the sofa tray inside', sofa: 'Juzur Sofa tray opened across a sofa arm', boxClosed: 'Closed Juzur branded gift box',
-      packaging: 'Juzur packaging in a natural living space', enlarge: 'Enlarge', preview: 'Juzur Sofa tray image preview',
-    },
-    video: {
-      eyebrow: 'Video', title: 'See Juzur Sofa tray in action.',
-      text: 'Watch how Juzur Sofa tray keeps your coffee, phone, remote and snacks beside you beautifully, neatly and within easy reach.',
-      demoLabel: 'Juzur Sofa tray product demonstration', unsupported: 'Your browser does not support embedded video.', play: 'Play',
-      soonLabel: 'Coming soon', soon: 'This supporting video is coming soon.', items: [['Coffee setup', 'Short demo video'], ['Daily essentials', 'Phone, remote, snacks, and cup']],
-    },
-    gift: {
-      eyebrow: 'Gift idea', title: 'A practical gift that feels personal.',
-      text: 'Juzur Sofa tray is easy to understand the moment it is opened: a warm wooden piece for coffee, phone, remote and relaxed sofa time. It works beautifully for new homes, birthdays, Ramadan gatherings and thoughtful everyday gifting.',
-      reasons: 'Gift benefits', points: ['Useful every day', 'Premium wooden feel', 'Ready for home moments'], cta: 'Order as a Gift', photos: 'Gift presentation photos',
-      ready: 'Gift ready', presented: 'Presented with care', caption: 'Branded packaging makes the first impression feel as thoughtful as the product inside.',
-      boxAlt: 'Juzur Sofa tray in its branded gift box',
-    },
-    material: {
-      eyebrow: 'Why Zan wood', title: 'Natural strength with a warm furniture finish.',
-      text: 'Made from Zan wood, Juzur Sofa tray brings a naturally rich feel to everyday living-room routines while keeping the warm look of real furniture.',
-    },
-    product: {
-      eyebrow: 'Product features', title: 'Daily essentials, beautifully organized.',
-      text: 'A smart wooden sofa tray designed to keep your coffee, phone, remote, snacks and small daily essentials beside you neatly and within easy reach.',
-      features: ['Sliding / folding tray design', 'Cup holder, phone slot and essentials area', 'Premium Zan wood feel with rounded edges'], cta: 'Order Now',
-    },
+    meta: { title: 'Juzur | SofaTray for Modern Homes', description: 'Juzur creates premium wooden SofaTray pieces for coffee, phones, remotes, snacks and relaxed sofa moments in modern homes.' },
+    nav: { label: 'Primary navigation', product: 'Product', video: 'Video', wood: 'Zan Wood', gift: 'Gift', faq: 'FAQ', order: 'Order Now', menuOpen: 'Open menu', menuClose: 'Close menu', switchLanguage: 'Switch to Arabic' },
+    hero: { label: 'SofaTray by Juzur hero', eyebrow: 'Premium Wooden Sofa Tray', title1: 'Everything you need.', title2: 'Right beside you.', support: 'Designed to make life easier.', text: 'Coffee. Phone. Remote. Beautifully organized.', view: 'View Product', special: 'Launch price', priceLabel: 'Launch price: EGP 1,999, previously EGP 2,499', trustLabel: 'Product trust signals', wood: 'Handcrafted Zan Wood', payment: 'Cash on Delivery', delivery: 'Delivery within 4–7 days', scroll: 'Scroll', mediaLabel: 'Choose hero product media', videoPlay: 'Play SofaTray hero video', videoAlt: 'SofaTray by Juzur in use' },
+    images: { studio: 'SofaTray studio product view', side: 'SofaTray handcrafted side view', lifestyle: 'SofaTray arranged for a cozy sofa moment', top: 'SofaTray top view', details: 'SofaTray product details on a clean studio background', cozy: 'SofaTray with coffee, phone and remote in a cozy living room', boxOpen: 'Open Juzur gift box with the SofaTray inside', sofa: 'SofaTray opened across a sofa arm', boxClosed: 'Closed eco-friendly Juzur product box', packaging: 'Juzur product packaging in a natural living space', enlarge: 'Enlarge', preview: 'SofaTray image preview' },
+    video: { eyebrow: 'Video', title: 'See SofaTray in action.', text: 'Watch how SofaTray by Juzur keeps your coffee, phone, remote and snacks beside you beautifully, neatly and within easy reach.', demoLabel: 'SofaTray product demonstration', unsupported: 'Your browser does not support embedded video.', play: 'Play', soonLabel: 'video coming soon', soon: 'video will be added soon.', items: [['Coffee setup', 'Short demo video'], ['Daily essentials', 'Phone, remote, snacks, and cup']] },
+    gift: { eyebrow: 'Gift idea', title: 'A practical gift that feels personal.', text: 'SofaTray by Juzur is easy to understand the moment it is opened: a warm wooden piece for coffee, phone, remote and relaxed sofa time. It works beautifully for new homes, birthdays, Ramadan gatherings and thoughtful everyday gifting.', reasons: 'Gift reasons', points: ['Useful every day', 'Premium wooden feel', 'Ready for home moments'], cta: 'Order as a Gift', photos: 'Gift presentation photos', ready: 'Gift ready', presented: 'Presented with care', caption: 'Branded packaging makes the first impression feel as thoughtful as the product inside.', boxAlt: 'SofaTray in its branded Juzur gift box' },
+    material: { eyebrow: 'Why Zan wood', title: 'Natural strength with a warm furniture finish.', text: 'Made from Zan wood, SofaTray brings a naturally rich feel to everyday living-room routines while keeping the warm look of real furniture.' },
+    product: { eyebrow: 'Product features', title: 'Daily essentials, beautifully organized.', text: 'A smart wooden sofa tray designed to keep your coffee, phone, remote, snacks and small daily essentials beside you neatly and within easy reach.', features: ['Sliding / folding tray design', 'Cup holder, phone slot and essentials area', 'Premium Zan wood feel with rounded edges'], dimensions: 'Product dimensions' },
     gallery: { eyebrow: 'Gallery', title: 'Handmade details with a premium natural feel.' },
-    faq: {
-      eyebrow: 'FAQ', title: 'Quick answers before you order.',
-      items: [
-        ['How long does delivery take?', 'Delivery usually takes 4–7 days from the time your order is registered.'],
-        ['What wood is used?', 'Juzur Sofa tray is made from Zan wood for a warm, premium furniture feel.'],
-        ['What can it hold?', 'It is made for coffee, phones, remotes, snacks, and small daily essentials beside the sofa.'],
-        ['How do I pay?', 'Payment is Cash on Delivery when your order is delivered.'],
-        ['How is the delivery fee calculated?', 'The delivery fee is calculated by governorate without a confirmation call.'],
-      ],
-    },
-    checkout: {
-      eyebrow: 'Cash on Delivery', title: 'Complete your order.', delivery: 'Delivery within 4–7 days',
-      current: 'Current price', save: 'Save EGP 500', offerLabel: 'Current price EGP 2,000, previously EGP 2,500. Save EGP 500.',
-      intro: 'Enter your details and confirm your order. It will be registered automatically.',
-      labels: { fullName: 'Full name', phone: 'Mobile number', governorate: 'Governorate', areaCity: 'Area or city', detailedAddress: 'Detailed delivery address', landmark: 'Landmark (optional)', quantity: 'Number of pieces' },
-      select: 'Select governorate', submit: 'Confirm Cash on Delivery Order', sending: 'Sending order…',
-      errors: { fullName: 'Enter your full name.', phoneEmpty: 'Enter your mobile number.', phoneInvalid: 'Enter a valid Egyptian mobile number beginning with 010, 011, 012, or 015.', governorate: 'Select your governorate.', areaCity: 'Enter your area or city.', detailedAddress: 'Enter the detailed delivery address.', quantity: 'Enter a quantity of 1 or more.', summary: 'Please correct the highlighted fields and try again.' },
-      statuses: { sending: 'Sending your order request…', success: 'Your order has been registered successfully.', failure: 'We could not send your order. Please check your connection and try again.' },
-    },
+    faq: { eyebrow: 'FAQ', title: 'Quick answers before you order.', items: [['How long does delivery take?', 'Delivery usually takes 4–7 days after we confirm your order details.'], ['What wood is used?', 'SofaTray is made from Zan wood for a warm, premium furniture feel.'], ['What can it hold?', 'It is made for coffee, phones, remotes, snacks, and small daily essentials beside the sofa.'], ['How do I pay?', 'Payment is Cash on Delivery when your order is delivered.'], ['How is the delivery fee calculated?', 'It is confirmed by phone based on the governorate before delivery.']] },
+    checkout: { eyebrow: 'Cash on Delivery', title: 'Complete your order.', delivery: 'Delivery within 4–7 days', offerLabel: 'Launch price: EGP 1,999, previously EGP 2,499', price: 'Launch price', intro: 'Enter your details and we will call you to confirm delivery and the final delivery fee.', labels: { fullName: 'Full name', phone: 'Mobile number', governorate: 'Governorate', areaCity: 'Area / city', detailedAddress: 'Detailed delivery address', landmark: 'Landmark (optional)', quantity: 'Number of pieces' }, select: 'Select governorate', submit: 'Confirm Cash on Delivery Order', sending: 'Sending order...', errors: { fullName: 'Enter your full name.', phoneEmpty: 'Enter your mobile number.', phoneInvalid: 'Enter a valid Egyptian mobile number beginning with 010, 011, 012, or 015.', governorate: 'Select your governorate.', areaCity: 'Enter your area or city.', detailedAddress: 'Enter the detailed delivery address.', quantity: 'Enter a quantity of 1 or more.', summary: 'Please correct the highlighted fields and try again.' }, statuses: { sending: 'Sending your order request...', success: 'Your order request has been sent. We will call you to confirm the delivery details and final delivery fee.', failure: 'We could not send your order. Please check your connection and try again.' } },
     modal: { label: 'Product image preview', close: 'Close image preview' },
     footer: { tagline: 'Rooted in natural living. Crafted by Techwood-Art.', contact: 'Contact: 01095306518', call: 'Call Juzur at 01095306518' },
-    floatingOrder: 'Order Now',
+    governorates: ['Alexandria','Aswan','Asyut','Beheira','Beni Suef','Cairo','Dakahlia','Damietta','Faiyum','Gharbia','Giza','Ismailia','Kafr El Sheikh','Luxor','Matrouh','Minya','Monufia','New Valley','North Sinai','Port Said','Qalyubia','Qena','Red Sea','Sharqia','Sohag','South Sinai','Suez'],
   },
   ar: {
-    meta: {
-      title: 'Juzur | طرابيزة أريكة خشبية للبيت العصري',
-      description: 'تقدم Juzur طرابيزة أريكة خشبية فاخرة لتنظيم القهوة والهاتف والريموت والتسالي في لحظات الراحة بالمنزل.',
-    },
-    nav: {
-      label: 'التنقل الرئيسي', product: 'المنتج', video: 'الفيديو', wood: 'خشب الزان', gift: 'الهدايا', faq: 'الأسئلة', order: 'اطلب الآن',
-      menuOpen: 'افتح القائمة', menuClose: 'أغلق القائمة', switchLanguage: 'Switch to English',
-    },
-    hero: {
-      label: 'طرابيزة SofaTray من Juzur', eyebrow: 'طرابيزة أريكة خشبية فاخرة', title1: 'كل اللي هتحتاجه...', title2: 'جنبك دايمًا',
-      support: 'مصممة لتكون في متناول يدك', text: 'قهوتك. هاتفك. الريموت. كل شيء في مكانه بأناقة.', view: 'شوفها وهي بتستخدم',
-      current: 'السعر الحالي', save: 'وفر ٥٠٠ جنيه', priceLabel: 'السعر الحالي 2,000 جنيه، بدلًا من 2,500 جنيه. وفر ٥٠٠ جنيه.',
-      trustLabel: 'مميزات الشراء', wood: 'مصنوعة يدويًا من خشب الزان', payment: 'الدفع عند الاستلام', delivery: 'التوصيل خلال 4–7 أيام',
-      scroll: 'اكتشف', mediaLabel: 'اختر صورة أو فيديو للمنتج', videoPlay: 'شغّل فيديو طرابيزة Juzur', playVideo: 'شغّل الفيديو', videoAlt: 'استخدام طرابيزة SofaTray من Juzur', videoBadge: 'فيديو المنتج · 0:08',
-    },
-    images: {
-      studio: 'صورة طرابيزة SofaTray في الاستوديو', side: 'تفاصيل طرابيزة SofaTray المصنوعة يدويًا من الجانب', lifestyle: 'طرابيزة SofaTray مجهزة للحظات الراحة على الأريكة',
-      top: 'طرابيزة SofaTray من الأعلى', details: 'تفاصيل طرابيزة SofaTray على خلفية استوديو بسيطة', cozy: 'طرابيزة SofaTray مع القهوة والهاتف والريموت في غرفة معيشة دافئة',
-      boxOpen: 'علبة هدايا Juzur مفتوحة وبداخلها طرابيزة SofaTray', sofa: 'طرابيزة SofaTray مفتوحة على ذراع الأريكة', boxClosed: 'علبة Juzur الأنيقة مغلقة',
-      packaging: 'تغليف Juzur في أجواء منزلية طبيعية', enlarge: 'كبّر الصورة', preview: 'معاينة صورة طرابيزة SofaTray',
-    },
-    video: {
-      eyebrow: 'شاهدها وهي بتستخدم', title: 'شاهد طرابيزة ذراع الأريكة أثناء الاستخدام.',
-      text: 'شاهد كيف تجمع طرابيزة ذراع الأريكة من جذور قهوتك وهاتفك والريموت والتسالي بجوارك بترتيب أنيق وسهل الوصول.',
-      demoLabel: 'فيديو توضيحي لمنتج طرابيزة SofaTray', unsupported: 'متصفحك لا يدعم تشغيل الفيديو المدمج.', play: 'تشغيل',
-      soonLabel: 'قريبًا', soon: 'سيُضاف هذا الفيديو قريبًا.', items: [['تجهيز القهوة', 'فيديو توضيحي قصير'], ['احتياجاتك اليومية', 'الهاتف والريموت والتسالي والكوب']],
-    },
-    gift: {
-      eyebrow: 'فكرة لهدية', title: 'هدية أنيقة هتستخدم كل يوم', text: '', reasons: 'مميزات الهدية',
-      points: ['مفيدة كل يوم', 'إحساس خشبي فاخر', 'جاهزة للحظات البيت'], cta: 'اطلبها كهدية', photos: 'صور تقديم الهدية',
-      ready: 'جاهزة للإهداء', presented: 'عناية في كل تفصيلة', caption: 'تغليف Juzur الأنيق يجعل الانطباع الأول بنفس روعة القطعة في الداخل.',
-      boxAlt: 'طرابيزة SofaTray داخل علبة هدايا Juzur',
-    },
-    material: {
-      eyebrow: 'لماذا خشب الزان؟', title: 'متانة طبيعية بلمسة أثاث دافئة.',
-      text: 'صنعنا طرابيزة ذراع الأريكة من جذور باستخدام خشب الزان المعروف بقوته وجمال تفاصيله، علشان تعيش معاك وتضيف لمسة دافئة وأنيقة لديكور بيتك.',
-    },
-    product: {
-      eyebrow: 'مميزات المنتج', title: 'احتياجاتك اليومية مرتبة بأناقة.',
-      text: 'طرابيزة أريكة خشبية ذكية تحفظ القهوة والهاتف والريموت والتسالي واحتياجاتك الصغيرة بجوارك، بترتيب أنيق وسهولة في الوصول.',
-      features: ['تصميم قابل للفتح والطي', 'مكان مخصص للكوب وحامل للموبايل', 'خشب زان فاخر بحواف ناعمة'], cta: 'اطلب الآن',
-    },
-    gallery: { eyebrow: 'معرض الصور', title: 'تفاصيل مصنوعة يدويًا بإحساس طبيعي فاخر.' },
-    faq: {
-      eyebrow: 'الأسئلة الشائعة', title: 'إجابات سريعة قبل الطلب.',
-      items: [
-        ['كم يستغرق التوصيل؟', 'التوصيل بيتم عادة خلال ٤–٧ أيام من وقت تسجيل الطلب.'],
-        ['ما نوع الخشب المستخدم؟', 'تُصنع طرابيزة ذراع الأريكة من خشب الزان لتمنحك إحساسًا دافئًا وفاخرًا مثل قطع الأثاث.'],
-        ['إيه اللي ممكن أرتبه عليها؟', 'مكانها معمول للكوب، الموبايل، الريموت، التسالي والحاجات الصغيرة اللي بتحب تفضل جنبك.'],
-        ['كيف أدفع؟', 'الدفع نقدًا عند استلام طلبك.'],
-        ['كيف تُحسب تكلفة التوصيل؟', 'تكلفة التوصيل بتتحسب حسب المحافظة، من غير مكالمة لتأكيد الطلب.'],
-      ],
-    },
-    checkout: {
-      eyebrow: 'الدفع عند الاستلام', title: 'أكمل طلبك.', delivery: 'التوصيل خلال 4–7 أيام',
-      current: 'السعر الحالي', save: 'وفر ٥٠٠ جنيه', offerLabel: 'السعر الحالي 2,000 جنيه، بدلًا من 2,500 جنيه. وفر ٥٠٠ جنيه.',
-      intro: 'اكتب بياناتك واضغط تأكيد الطلب، وطلبك هيتسجل تلقائيًا.',
-      labels: { fullName: 'الاسم بالكامل', phone: 'رقم الموبايل', governorate: 'المحافظة', areaCity: 'المنطقة / المدينة', detailedAddress: 'عنوان التوصيل بالتفصيل', landmark: 'علامة مميزة (اختياري)', quantity: 'عدد القطع' },
-      select: 'اختر المحافظة', submit: 'تأكيد الطلب والدفع عند الاستلام', sending: 'جارٍ إرسال الطلب…',
-      errors: { fullName: 'من فضلك اكتب اسمك بالكامل.', phoneEmpty: 'من فضلك اكتب رقم الموبايل.', phoneInvalid: 'اكتب رقم موبايل مصري صحيح يبدأ بـ 010 أو 011 أو 012 أو 015.', governorate: 'اختر محافظتك.', areaCity: 'اكتب المنطقة أو المدينة.', detailedAddress: 'اكتب عنوان التوصيل بالتفصيل.', quantity: 'اختر قطعة واحدة أو أكثر.', summary: 'راجع الخانات الموضحة وحاول مرة أخرى.' },
-      statuses: { sending: 'جارٍ إرسال طلبك…', success: 'تم تسجيل طلبك بنجاح.', failure: 'تعذر إرسال طلبك. تحقق من اتصال الإنترنت وحاول مرة أخرى.' },
-    },
+    meta: { title: 'Juzur | طرابيزة أريكة خشبية للبيت العصري', description: 'تقدم Juzur طرابيزة أريكة خشبية فاخرة لتنظيم القهوة والهاتف والريموت والتسالي في لحظات الراحة بالمنزل.' },
+    nav: { label: 'التنقل الرئيسي', product: 'المنتج', video: 'شاهدها وهي بتتستخدم', wood: 'خشب الزان', gift: 'هدية مميزة', faq: 'الأسئلة الشائعة', order: 'اطلب الآن', menuOpen: 'افتح القائمة', menuClose: 'أغلق القائمة', switchLanguage: 'Switch to English' },
+    hero: { label: 'منتج SofaTray من Juzur', eyebrow: 'طرابيزة أريكة خشبية بتصميم عملي وأنيق', title1: 'كل حاجة بتحبها...', title2: 'جنبك', support: 'راحة أكتر في كل لحظة', text: 'قهوتك، موبايلك والريموت في مكان واحد مرتب وسهل الوصول.', view: 'شوفها وهي بتتستخدم', special: 'سعر الإطلاق', priceLabel: 'سعر الإطلاق ١٬٩٩٩ جنيه بدلًا من ٢٬٤٩٩ جنيه', trustLabel: 'مميزات الشراء', wood: 'مصنوعة يدويًا من خشب الزان', payment: 'الدفع عند الاستلام', delivery: 'التوصيل خلال ٤–٧ أيام', scroll: 'اكتشف', mediaLabel: 'اختر صورة أو فيديو للمنتج', videoPlay: 'شغّل فيديو SofaTray', videoAlt: 'استخدام SofaTray من Juzur' },
+    images: { studio: 'صورة SofaTray في الاستوديو', side: 'تفاصيل SofaTray المصنوعة يدويًا من الجانب', lifestyle: 'SofaTray مجهزة للحظات الراحة على الأريكة', top: 'SofaTray من الأعلى', details: 'تفاصيل SofaTray على خلفية استوديو بسيطة', cozy: 'SofaTray مع القهوة والهاتف والريموت في غرفة معيشة دافئة', boxOpen: 'علبة هدايا Juzur مفتوحة وبداخلها SofaTray', sofa: 'SofaTray مفتوحة على ذراع الأريكة', boxClosed: 'علبة Juzur الصديقة للبيئة مغلقة', packaging: 'تغليف Juzur في أجواء منزلية طبيعية', enlarge: 'كبّر الصورة', preview: 'معاينة صورة SofaTray' },
+    video: { eyebrow: 'شاهدها وهي بتتستخدم', title: 'راحة أكتر... وكل حاجة في مكانها', text: 'شوف إزاي SofaTray بتنظّم قهوتك وموبايلك والريموت والتسالي جنبك، من غير زحمة ومن غير ما تقوم كل شوية.', demoLabel: 'فيديو توضيحي لمنتج SofaTray', unsupported: 'متصفحك لا يدعم تشغيل الفيديو المدمج.', play: 'تشغيل', soonLabel: 'قريبًا', soon: 'سيُضاف الفيديو قريبًا.', items: [['وقت القهوة', 'فيديو توضيحي قصير'], ['كل احتياجاتك جنبك', 'الموبايل والريموت والتسالي والكوب']] },
+    gift: { eyebrow: 'هدية عملية ومميزة', title: 'هدية أنيقة هتتستخدم كل يوم', text: 'مش مجرد قطعة شكلها حلو؛ SofaTray هدية عملية تضيف راحة وأناقة لكل لحظة في البيت.', reasons: 'مميزات الهدية', points: ['عملية للاستخدام اليومي', 'خشب طبيعي بإحساس فاخر', 'تغليف أنيق وجاهز للإهداء'], cta: 'اطلبها كهدية', photos: 'صور تقديم الهدية', ready: 'جاهزة للإهداء', presented: 'عناية في كل تفصيلة', caption: 'تغليف Juzur الأنيق يخلي أول انطباع عن الهدية بنفس جمال القطعة اللي جواه.', boxAlt: 'SofaTray داخل علبة هدايا Juzur' },
+    material: { eyebrow: 'ليه اخترنا خشب الزان؟', title: 'متانة طبيعية وشكل يليق ببيتك', text: 'صنعنا SofaTray من خشب الزان المعروف بقوته وجمال تفاصيله، علشان تعيش معاك وتضيف لمسة دافئة وأنيقة لديكور بيتك.' },
+    product: { eyebrow: 'عملية في كل تفصيلة', title: 'كل احتياجاتك مرتبة وفي متناول إيدك', text: 'تصميم ذكي يثبت على ذراع الأريكة ويجمع احتياجاتك اليومية في مكان واحد، علشان تستمتع بوقت راحتك من غير فوضى.', features: ['تصميم منزلق وقابل للطي', 'مكان مخصص للكوب وفتحة للموبايل', 'مساحة للريموت والتسالي والاحتياجات الصغيرة', 'خشب زان فاخر بحواف ناعمة وتشطيب يدوي'], dimensions: 'أبعاد المنتج' },
+    gallery: { eyebrow: 'شوف التفاصيل', title: 'مصنوعة يدويًا بعناية في كل لمسة' },
+    faq: { eyebrow: 'كل اللي محتاج تعرفه قبل الطلب', title: 'إجابات سريعة تساعدك تقرر', items: [['التوصيل بياخد وقت قد إيه؟', 'التوصيل بيتم عادة خلال ٤–٧ أيام بعد تأكيد بيانات الطلب.'], ['SofaTray مصنوعة من إيه؟', 'مصنوعة يدويًا من خشب الزان الطبيعي، بتشطيب ناعم وشكل أنيق يناسب أثاث البيت.'], ['أقدر أحط عليها إيه؟', 'مصممة للكوب والموبايل والريموت والتسالي والاحتياجات اليومية الصغيرة اللي بتحب تكون جنبك.'], ['طريقة الدفع إيه؟', 'الدفع نقدًا عند الاستلام.'], ['تكلفة التوصيل كام؟', 'تكلفة التوصيل بتختلف حسب المحافظة، وهنأكدها معاك في مكالمة تأكيد الطلب.']] },
+    checkout: { eyebrow: 'الدفع عند الاستلام', title: 'اطلب SofaTray دلوقتي', delivery: 'التوصيل خلال ٤–٧ أيام', offerLabel: 'سعر الإطلاق ١٬٩٩٩ جنيه بدلًا من ٢٬٤٩٩ جنيه', price: 'سعر الإطلاق', intro: 'اكتب بياناتك، وفريقنا هيتواصل معاك لتأكيد الطلب وتكلفة التوصيل قبل الشحن.', labels: { fullName: 'الاسم بالكامل', phone: 'رقم الموبايل', governorate: 'المحافظة', areaCity: 'المنطقة أو المدينة', detailedAddress: 'عنوان التوصيل بالتفصيل', landmark: 'علامة مميزة قريبة — اختياري', quantity: 'عدد القطع' }, select: 'اختر المحافظة', submit: 'تأكيد الطلب — الدفع عند الاستلام', sending: 'جارٍ إرسال الطلب...', errors: { fullName: 'من فضلك اكتب اسمك بالكامل.', phoneEmpty: 'من فضلك اكتب رقم الموبايل.', phoneInvalid: 'اكتب رقم موبايل مصري صحيح يبدأ بـ 010 أو 011 أو 012 أو 015.', governorate: 'اختر محافظتك.', areaCity: 'اكتب المنطقة أو المدينة.', detailedAddress: 'اكتب عنوان التوصيل بالتفصيل.', quantity: 'اختر قطعة واحدة أو أكثر.', summary: 'راجع الخانات الموضحة وحاول مرة أخرى.' }, statuses: { sending: 'جارٍ إرسال طلبك...', success: 'تم إرسال طلبك. سنتصل بك لتأكيد تفاصيل التوصيل وتكلفته النهائية.', failure: 'تعذر إرسال طلبك. تحقق من اتصال الإنترنت وحاول مرة أخرى.' } },
     modal: { label: 'معاينة صورة المنتج', close: 'أغلق معاينة الصورة' },
-    footer: { tagline: 'متجذرة في أسلوب حياة طبيعي. Crafted by Techwood-Art.', contact: 'للتواصل: 01095306518', call: 'اتصل بـ Juzur على 01095306518' },
-    floatingOrder: 'اطلب الآن',
+    footer: { tagline: 'منتجات خشبية بتصميم طبيعي، مصنوعة بعناية علشان تضيف راحة وأناقة لكل يوم. Crafted by Techwood-Art.', contact: 'للتواصل: 01095306518', call: 'اتصل بـ Juzur على 01095306518' },
+    governorates: ['الإسكندرية','أسوان','أسيوط','البحيرة','بني سويف','القاهرة','الدقهلية','دمياط','الفيوم','الغربية','الجيزة','الإسماعيلية','كفر الشيخ','الأقصر','مطروح','المنيا','المنوفية','الوادي الجديد','شمال سيناء','بورسعيد','القليوبية','قنا','البحر الأحمر','الشرقية','سوهاج','جنوب سيناء','السويس'],
   },
 };
+
+// Current premium offer copy.
+locales.en.hero.special = 'Current price';
+locales.en.hero.priceLabel = 'Current price EGP 2,000, previously EGP 2,500. Save EGP 500.';
+locales.en.checkout.price = 'Current price';
+locales.en.checkout.offerLabel = 'Current price EGP 2,000, previously EGP 2,500. Save EGP 500.';
+locales.ar.hero.special = 'السعر الحالي';
+locales.ar.hero.priceLabel = 'السعر الحالي ٢٬٠٠٠ جنيه، بدلًا من ٢٬٥٠٠ جنيه. وفر ٥٠٠ جنيه.';
+locales.ar.checkout.price = 'السعر الحالي';
+locales.ar.checkout.offerLabel = 'السعر الحالي ٢٬٠٠٠ جنيه، بدلًا من ٢٬٥٠٠ جنيه. وفر ٥٠٠ جنيه.';
+
+function replaceProductName(value, replacements) {
+  if (typeof value === 'string') return replacements.reduce((copy, [from, to]) => copy.replaceAll(from, to), value);
+  if (Array.isArray(value)) return value.map((item) => replaceProductName(item, replacements));
+  if (value && typeof value === 'object') Object.keys(value).forEach((key) => { value[key] = replaceProductName(value[key], replacements); });
+  return value;
+}
+
+replaceProductName(locales.en, [['SofaTray by Juzur', 'Juzur Sofa tray'], ['SofaTray', 'Juzur Sofa tray'], ['Sofa Tray', 'Juzur Sofa tray']]);
+replaceProductName(locales.ar, [['SofaTray', 'ذراع الأريكة من چزور']]);
+locales.ar.hero.view = 'شوفها وهي بتستخدم';
+locales.ar.video.eyebrow = 'شاهدها وهي بتستخدم';
+locales.ar.gift.title = 'هدية أنيقة هتستخدم كل يوم';
+locales.ar.product.features[0] = 'تصميم قابل للفتح والطي';
+locales.ar.product.features[1] = 'مكان مخصص للكوب وحامل للموبيل';
+locales.ar.faq.items[2][0] = 'إيه اللي ممكن أرتبه عليها؟';
+locales.ar.faq.items[2][1] = 'مكانها معمول للكوب، الموبيل، الريموت، التسالي والحاجات الصغيرة اللي بتحب تفضل جنبك.';
+locales.ar.material.text = 'صنعنا ذراع الأريكة من چزور باستخدام خشب الزان المعروف بقوته وجمال تفاصيله، علشان تعيش معاك وتضيف لمسة دافئة وأنيقة لديكور بيتك.';
+locales.ar.checkout.intro = 'اكتب بياناتك واضغط تأكيد الطلب، وطلبك هيتسجل تلقائيًا.';
+locales.ar.checkout.statuses.success = 'تم تسجيل طلبك بنجاح، ومش محتاج تعمل أي خطوة تانية.';
+locales.ar.faq.items[0][1] = 'التوصيل بيتم عادة خلال ٤–٧ أيام من وقت تسجيل الطلب.';
+locales.ar.faq.items[4][1] = 'تكلفة التوصيل بتتحسب حسب المحافظة، من غير مكالمة لتأكيد الطلب.';
+locales.en.checkout.intro = 'Enter your details and confirm your order. It will be registered automatically.';
+locales.en.checkout.statuses.success = 'Your order has been registered successfully. No confirmation call is required.';
+locales.en.faq.items[0][1] = 'Delivery usually takes 4–7 days from the time your order is registered.';
+locales.en.faq.items[4][1] = 'The delivery fee is calculated by governorate without a confirmation call.';
