@@ -1,24 +1,185 @@
 import { useRef, useState } from 'react';
 import { formatPrice, product } from '../config/product.js';
+import { governorates } from '../i18n/locales.js';
 import { isValidEgyptianMobile, normalizeEgyptianMobile } from '../utils/order.js';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
+
 const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwSe1QGurJhBKVmZCCwlsrltcZ6PTHpZlpQkqvt2sCAxdMQxjoCifCeC0ZDAqx9JEGxLA/exec';
-const governorateValues = ['Alexandria','Aswan','Asyut','Beheira','Beni Suef','Cairo','Dakahlia','Damietta','Faiyum','Gharbia','Giza','Ismailia','Kafr El Sheikh','Luxor','Matrouh','Minya','Monufia','New Valley','North Sinai','Port Said','Qalyubia','Qena','Red Sea','Sharqia','Sohag','South Sinai','Suez'];
-const initialForm = { fullName:'', phone:'', governorate:'', areaCity:'', detailedAddress:'', landmark:'', quantity:'1' };
-function fieldError(name, value, errors) { const valueText = String(value).trim(); if (name === 'fullName' && !valueText) return errors.fullName; if (name === 'phone') { if (!valueText) return errors.phoneEmpty; if (!isValidEgyptianMobile(valueText)) return errors.phoneInvalid; } if (name === 'governorate' && !valueText) return errors.governorate; if (name === 'areaCity' && !valueText) return errors.areaCity; if (name === 'detailedAddress' && !valueText) return errors.detailedAddress; if (name === 'quantity' && (!Number.isInteger(Number(value)) || Number(value) < 1)) return errors.quantity; return ''; }
-function FormField({ id, label, error, children, className='' }) { return <div className={`form-field ${className}`.trim()}><label htmlFor={id}>{label}</label>{children}{error && <p className="field-error" id={`${id}-error`}>{error}</p>}</div>; }
+const initialForm = { fullName: '', phone: '', governorate: '', areaCity: '', detailedAddress: '', landmark: '', quantity: '1' };
+
+function getFieldError(name, value, errors) {
+  const valueText = String(value).trim();
+  if (name === 'fullName' && !valueText) return errors.fullName;
+  if (name === 'phone') {
+    if (!valueText) return errors.phoneEmpty;
+    if (!isValidEgyptianMobile(valueText)) return errors.phoneInvalid;
+  }
+  if (name === 'governorate' && !valueText) return errors.governorate;
+  if (name === 'areaCity' && !valueText) return errors.areaCity;
+  if (name === 'detailedAddress' && !valueText) return errors.detailedAddress;
+  if (name === 'quantity' && (!Number.isInteger(Number(value)) || Number(value) < 1)) return errors.quantity;
+  return '';
+}
+
+function FormField({ id, label, error, children, className = '' }) {
+  return (
+    <div className={`form-field ${className}`.trim()}>
+      <label htmlFor={id}>{label}</label>
+      {children}
+      {error && <p className="field-error" id={`${id}-error`}>{error}</p>}
+    </div>
+  );
+}
+
 export default function CheckoutSection() {
-  const { language, t } = useLanguage(); const [form,setForm] = useState(initialForm); const [errors,setErrors] = useState({}); const [status,setStatus] = useState({message:'',type:''}); const [isSubmitting,setIsSubmitting] = useState(false); const submittingRef = useRef(false); const quantity = Math.max(1,Number(form.quantity)||1); const subtotal = product.finalUnitPrice*quantity;
-  const updateField = ({target:{name,value}}) => { setForm((current)=>({...current,[name]:value})); if(errors[name]) setErrors((current)=>({...current,[name]:fieldError(name,value,t.checkout.errors)})); };
-  const validateField = ({target:{name,value}}) => setErrors((current)=>({...current,[name]:fieldError(name,value,t.checkout.errors)}));
-  const fieldProps = (name) => ({id:name,name,value:form[name],onChange:updateField,onBlur:validateField,'aria-invalid':Boolean(errors[name]),'aria-describedby':errors[name]?`${name}-error`:undefined});
-  async function handleSubmit(event) { event.preventDefault(); if(submittingRef.current)return; const nextErrors=Object.fromEntries(Object.entries(form).filter(([name])=>name!=='landmark').map(([name,value])=>[name,fieldError(name,value,t.checkout.errors)]).filter(([,error])=>error)); if(Object.keys(nextErrors).length){setErrors(nextErrors);setStatus({message:t.checkout.errors.summary,type:'error'});document.getElementById(Object.keys(nextErrors)[0])?.focus();return;} submittingRef.current=true;setIsSubmitting(true);setStatus({message:t.checkout.statuses.sending,type:''}); const submissionTimestamp=new Date().toISOString(); const payload={orderId:`JUZUR-${Date.now()}-${Math.random().toString(36).slice(2,8).toUpperCase()}`,productName:product.name,fullName:form.fullName.trim(),phone:normalizeEgyptianMobile(form.phone),governorate:form.governorate,areaCity:form.areaCity.trim(),detailedAddress:form.detailedAddress.trim(),landmark:form.landmark.trim(),quantity,unitPrice:product.finalUnitPrice,subtotal,paymentMethod:product.paymentMethod,deliveryNote:product.deliveryFeeMessage,submissionTimestamp,name:form.fullName.trim(),address:`${form.detailedAddress}, ${form.areaCity}, ${form.governorate}`,pieces:String(quantity),finalPrice:formatPrice(product.finalUnitPrice,'en'),submittedAt:submissionTimestamp,language}; try {await fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});setForm(initialForm);setErrors({});setStatus({message:t.checkout.statuses.success,type:'success'});} catch {setStatus({message:t.checkout.statuses.failure,type:'error'});} finally{submittingRef.current=false;setIsSubmitting(false);} }
-  return <section className="checkout-section" id="checkout"><div className="checkout-copy reveal"><p className="eyebrow dark">{t.checkout.eyebrow}</p><h2>{t.checkout.title}</h2><p className="checkout-reassurance">{t.checkout.delivery}</p><div className="checkout-price-panel launch-price" aria-label={t.checkout.offerLabel}><div className="price-main"><span>{t.checkout.price}</span><span className="price-comparison"><del><bdi>{formatPrice(product.listUnitPrice,language)}</bdi></del><strong><bdi>{formatPrice(product.finalUnitPrice,language)}</bdi></strong></span></div></div><p>{t.checkout.intro}</p></div><form className="checkout-form reveal delay" id="checkoutForm" onSubmit={handleSubmit} noValidate><div className="checkout-fields">
-    <FormField id="fullName" label={t.checkout.labels.fullName} error={errors.fullName}><input {...fieldProps('fullName')} type="text" autoComplete="name" required /></FormField>
-    <FormField id="phone" label={t.checkout.labels.phone} error={errors.phone}><input {...fieldProps('phone')} type="tel" autoComplete="tel" inputMode="tel" placeholder="010 1234 5678" dir="ltr" required /></FormField>
-    <FormField id="governorate" label={t.checkout.labels.governorate} error={errors.governorate}><select {...fieldProps('governorate')} autoComplete="address-level1" required><option value="" disabled>{t.checkout.select}</option>{governorateValues.map((value,index)=><option value={value} key={value}>{t.governorates[index]}</option>)}</select></FormField>
-    <FormField id="areaCity" label={t.checkout.labels.areaCity} error={errors.areaCity}><input {...fieldProps('areaCity')} type="text" autoComplete="address-level2" required /></FormField>
-    <FormField id="detailedAddress" label={t.checkout.labels.detailedAddress} error={errors.detailedAddress} className="full-width"><textarea {...fieldProps('detailedAddress')} rows="3" autoComplete="street-address" required /></FormField>
-    <FormField id="landmark" label={t.checkout.labels.landmark} error={errors.landmark} className="full-width"><input {...fieldProps('landmark')} type="text" autoComplete="address-line2" /></FormField>
-    <FormField id="quantity" label={t.checkout.labels.quantity} error={errors.quantity}><input {...fieldProps('quantity')} type="number" min="1" step="1" inputMode="numeric" required /></FormField></div><button className="btn primary checkout-submit" type="submit" disabled={isSubmitting}>{isSubmitting?t.checkout.sending:t.checkout.submit}</button><p className={`form-note ${status.type}`.trim()} aria-live="polite" role="status">{status.message}</p></form></section>;
+  const { language, t } = useLanguage();
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState({ message: '', type: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false);
+  const quantity = Math.max(1, Number(form.quantity) || 1);
+  const subtotal = product.finalUnitPrice * quantity;
+
+  const updateField = ({ target: { name, value } }) => {
+    setForm((current) => ({ ...current, [name]: value }));
+    if (errors[name]) setErrors((current) => ({ ...current, [name]: getFieldError(name, value, t.checkout.errors) }));
+  };
+
+  const validateField = ({ target: { name, value } }) => {
+    setErrors((current) => ({ ...current, [name]: getFieldError(name, value, t.checkout.errors) }));
+  };
+
+  const fieldProps = (name) => ({
+    id: name,
+    name,
+    value: form[name],
+    onChange: updateField,
+    onBlur: validateField,
+    'aria-invalid': Boolean(errors[name]),
+    'aria-describedby': errors[name] ? `${name}-error` : undefined,
+  });
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    if (submittingRef.current) return;
+
+    const nextErrors = Object.fromEntries(
+      Object.entries(form)
+        .filter(([name]) => name !== 'landmark')
+        .map(([name, value]) => [name, getFieldError(name, value, t.checkout.errors)])
+        .filter(([, error]) => error),
+    );
+
+    if (Object.keys(nextErrors).length) {
+      setErrors(nextErrors);
+      setStatus({ message: t.checkout.errors.summary, type: 'error' });
+      document.getElementById(Object.keys(nextErrors)[0])?.focus();
+      return;
+    }
+
+    submittingRef.current = true;
+    setIsSubmitting(true);
+    setStatus({ message: t.checkout.statuses.sending, type: 'sending' });
+    const submissionTimestamp = new Date().toISOString();
+    const payload = {
+      orderId: `JUZUR-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+      productName: product.name,
+      fullName: form.fullName.trim(),
+      phone: normalizeEgyptianMobile(form.phone),
+      governorate: form.governorate,
+      areaCity: form.areaCity.trim(),
+      detailedAddress: form.detailedAddress.trim(),
+      landmark: form.landmark.trim(),
+      quantity,
+      unitPrice: product.finalUnitPrice,
+      subtotal,
+      paymentMethod: product.paymentMethod,
+      deliveryNote: product.deliveryFeeMessage,
+      submissionTimestamp,
+      name: form.fullName.trim(),
+      address: `${form.detailedAddress}, ${form.areaCity}, ${form.governorate}`,
+      pieces: String(quantity),
+      finalPrice: formatPrice(product.finalUnitPrice, 'en'),
+      submittedAt: submissionTimestamp,
+      language,
+    };
+
+    try {
+      await fetch(ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      });
+      setForm(initialForm);
+      setErrors({});
+      setStatus({ message: t.checkout.statuses.success, type: 'success' });
+    } catch {
+      setStatus({ message: t.checkout.statuses.failure, type: 'error' });
+    } finally {
+      submittingRef.current = false;
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <section className="checkout-section" id="checkout">
+      <div className="site-container checkout-layout">
+        <div className="checkout-copy reveal">
+          <p className="eyebrow">{t.checkout.eyebrow}</p>
+          <h2>{t.checkout.title}</h2>
+          <p className="checkout-reassurance">{t.checkout.delivery}</p>
+          <div className="price-card checkout-price-card" aria-label={t.checkout.offerLabel}>
+            <div className="price-copy">
+              <span className="price-label">{t.checkout.current}</span>
+              <div className="price-values">
+                <strong><bdi>{formatPrice(product.finalUnitPrice, language)}</bdi></strong>
+                <del><bdi>{formatPrice(product.listUnitPrice, language)}</bdi></del>
+              </div>
+            </div>
+            <span className="save-badge">{t.checkout.save}</span>
+          </div>
+          <p className="checkout-intro">{t.checkout.intro}</p>
+        </div>
+
+        <form className="checkout-form reveal delay" id="checkoutForm" onSubmit={handleSubmit} noValidate>
+          <div className="checkout-fields">
+            <FormField id="fullName" label={t.checkout.labels.fullName} error={errors.fullName}>
+              <input {...fieldProps('fullName')} type="text" autoComplete="name" required />
+            </FormField>
+            <FormField id="phone" label={t.checkout.labels.phone} error={errors.phone}>
+              <input {...fieldProps('phone')} type="tel" autoComplete="tel" inputMode="tel" placeholder="010 1234 5678" dir="ltr" required />
+            </FormField>
+            <FormField id="governorate" label={t.checkout.labels.governorate} error={errors.governorate}>
+              <select {...fieldProps('governorate')} autoComplete="address-level1" required>
+                <option value="" disabled>{t.checkout.select}</option>
+                {governorates.map((item) => (
+                  <option value={item.value} key={item.value}>
+                    {language === 'ar' ? `${item.ar} — ${item.en}` : `${item.en} — ${item.ar}`}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <FormField id="areaCity" label={t.checkout.labels.areaCity} error={errors.areaCity}>
+              <input {...fieldProps('areaCity')} type="text" autoComplete="address-level2" required />
+            </FormField>
+            <FormField id="detailedAddress" label={t.checkout.labels.detailedAddress} error={errors.detailedAddress} className="full-width">
+              <textarea {...fieldProps('detailedAddress')} rows="3" autoComplete="street-address" required />
+            </FormField>
+            <FormField id="landmark" label={t.checkout.labels.landmark} error={errors.landmark} className="full-width">
+              <input {...fieldProps('landmark')} type="text" autoComplete="address-line2" />
+            </FormField>
+            <FormField id="quantity" label={t.checkout.labels.quantity} error={errors.quantity}>
+              <input {...fieldProps('quantity')} type="number" min="1" step="1" inputMode="numeric" required />
+            </FormField>
+          </div>
+          <button className="btn primary checkout-submit" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? t.checkout.sending : t.checkout.submit}
+          </button>
+          <p className={`form-note ${status.type}`.trim()} aria-live="polite" role="status">{status.message}</p>
+        </form>
+      </div>
+    </section>
+  );
 }

@@ -4,403 +4,245 @@ export function useSiteEffects(language, imagePreviewFallback) {
   useEffect(() => {
     const cleanups = [];
     const nav = document.getElementById('nav');
-    const glow = document.querySelector('.cursor-glow');
-    const modal = document.getElementById('modal');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let previousModalFocus = null;
 
-    const onScroll = () => {
-      nav?.classList.toggle('scrolled', window.scrollY > 30);
-      if (!reducedMotion) {
-        document.querySelectorAll('.parallax').forEach((el) => {
-          el.style.translate = `0 ${window.scrollY * -0.04}px`;
-        });
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    cleanups.push(() => window.removeEventListener('scroll', onScroll));
+    const updateNav = () => nav?.classList.toggle('scrolled', window.scrollY > 30);
+    updateNav();
+    window.addEventListener('scroll', updateNav, { passive: true });
+    cleanups.push(() => window.removeEventListener('scroll', updateNav));
 
-    const onMouseMove = (event) => {
-      if (!glow) return;
-      glow.style.left = `${event.clientX}px`;
-      glow.style.top = `${event.clientY}px`;
-    };
-    window.addEventListener('mousemove', onMouseMove);
-    cleanups.push(() => window.removeEventListener('mousemove', onMouseMove));
-
-    if (reducedMotion) {
-      document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+    if (reducedMotion || !('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal').forEach((element) => element.classList.add('visible'));
     } else {
       const revealObserver = new IntersectionObserver(
-        (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add('visible')),
-        { threshold: 0.15 },
+        (entries) => entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        }),
+        { threshold: 0.12, rootMargin: '0px 0px -40px' },
       );
-      document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+      document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
       cleanups.push(() => revealObserver.disconnect());
     }
 
-    const openLightbox = (event) => {
-      if (!modal) return;
-      const previewImage = modal.querySelector('img');
-      previousModalFocus = event.currentTarget;
-      previewImage.src = event.currentTarget.dataset.lightboxSrc;
-      previewImage.alt = event.currentTarget.dataset.lightboxAlt || imagePreviewFallback;
-      modal.classList.add('open');
-      modal.querySelector('.modal-close')?.focus();
-    };
-    document.querySelectorAll('.lightbox').forEach((button) => {
-      button.addEventListener('click', openLightbox);
-      cleanups.push(() => button.removeEventListener('click', openLightbox));
-    });
-
-    const closeModal = () => {
-      modal?.classList.remove('open');
-      previousModalFocus?.focus();
-    };
-    const onModalClick = (event) => {
-      if (event.target === modal || event.target.closest('.modal-close')) closeModal();
-    };
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape' && modal?.classList.contains('open')) closeModal();
-    };
-    modal?.addEventListener('click', onModalClick);
-    window.addEventListener('keydown', onKeyDown);
-    cleanups.push(() => modal?.removeEventListener('click', onModalClick));
-    cleanups.push(() => window.removeEventListener('keydown', onKeyDown));
-
-    setupHeroGallery(cleanups);
+    setupHeroGallery(cleanups, reducedMotion, imagePreviewFallback);
+    setupLightbox(cleanups, imagePreviewFallback);
     setupStickyCta(cleanups);
 
     return () => cleanups.forEach((cleanup) => cleanup());
   }, [language, imagePreviewFallback]);
 }
 
-function setupHeroGallery(cleanups) {
-  const heroPhotoThumbs = [...document.querySelectorAll('.hero-media-thumb')];
-  const heroGallery = document.getElementById('heroGallery');
-  const heroVideo = document.getElementById('heroVideo');
-  const heroPreviousImage = document.getElementById('heroPreviousImage');
-  const heroCurrentImage = document.getElementById('heroCurrentImage');
-  const heroImageCache = new Map();
-  const HERO_PHOTO_ROTATION_MS = 3000;
-  const HERO_VIDEO_START_SECONDS = 0.25;
-  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let heroPhotoIndex = heroPhotoThumbs.findIndex((btn) => btn.classList.contains('active'));
-  let heroPhotoIdleTimer;
-  let heroPhotoAnimating = false;
-  let queuedHeroPhotoIndex = null;
-  let pointerId = null;
-  let startX = 0;
-  let startY = 0;
-  let dragX = 0;
-  let isDragging = false;
+function setupHeroGallery(cleanups, reducedMotion, imagePreviewFallback) {
+  const gallery = document.getElementById('heroGallery');
+  const hero = document.getElementById('top');
+  const video = document.getElementById('heroVideo');
+  const image = document.getElementById('heroCurrentImage');
+  const videoBadge = document.getElementById('heroVideoBadge');
+  const videoPlayButton = document.getElementById('heroVideoPlay');
+  const thumbs = [...document.querySelectorAll('.hero-media-thumb')];
+  if (!gallery || !video || !image || !thumbs.length) return;
 
-  if (heroPhotoIndex < 0) heroPhotoIndex = 0;
+  let activeIndex = Math.max(0, thumbs.findIndex((button) => button.classList.contains('active')));
+  let heroInView = true;
+  let transitionTimer;
 
-  function preloadHeroImage(src) {
-    if (heroImageCache.has(src)) return heroImageCache.get(src);
-    const request = new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(src);
-      img.onerror = reject;
-      img.decoding = 'async';
-      img.src = src;
-    });
-    heroImageCache.set(src, request);
-    return request;
-  }
+  video.muted = true;
+  video.defaultMuted = true;
 
-  function stopHeroAutoplay() {
-    window.clearTimeout(heroPhotoIdleTimer);
-  }
-
-  function scheduleHeroAutoplay() {
-    stopHeroAutoplay();
-    if (heroPhotoThumbs.length < 2 || motionQuery.matches) return;
-    if (heroPhotoThumbs[heroPhotoIndex]?.dataset.kind === 'video') return;
-    heroPhotoIdleTimer = window.setTimeout(
-      () => showHeroPhoto(heroPhotoIndex + 1),
-      HERO_PHOTO_ROTATION_MS,
-    );
-  }
-
-  function setHeroThumbState(index, state) {
-    heroPhotoThumbs.forEach((item, itemIndex) => {
-      item.classList.toggle('active', itemIndex === index && state === 'active');
-      item.classList.toggle('is-pending', itemIndex === index && state === 'pending');
-    });
-  }
-
-  async function showHeroPhoto(index) {
-    if (!heroPreviousImage || !heroCurrentImage || !heroPhotoThumbs.length) return;
-    const normalizedIndex = (index + heroPhotoThumbs.length) % heroPhotoThumbs.length;
-    if (heroPhotoAnimating) {
-      queuedHeroPhotoIndex = normalizedIndex;
-      return;
-    }
-    const btn = heroPhotoThumbs[normalizedIndex];
-    const isVideo = btn.dataset.kind === 'video';
-    if (isVideo) {
-      stopHeroAutoplay();
-      queuedHeroPhotoIndex = null;
-      heroPhotoAnimating = false;
-      heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous';
-      heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current';
-      heroVideo?.classList.add('is-visible');
-      if (heroVideo?.readyState >= 2) heroVideo.classList.add('is-ready');
-      heroVideo?.play().catch(() => {});
-      heroPhotoIndex = normalizedIndex;
-      setHeroThumbState(heroPhotoIndex, 'active');
-      heroGallery?.classList.remove('is-transitioning');
-      return;
-    }
-    const nextSrc = btn.dataset.img;
-    const nextAlt = btn.dataset.alt || 'SofaTray by Juzur product view';
-    const nextPosition = btn.dataset.position || '50% 50%';
-    const videoWasVisible = heroVideo?.classList.contains('is-visible');
-    if (!nextSrc || (!videoWasVisible && heroCurrentImage.src.endsWith(nextSrc))) {
-      scheduleHeroAutoplay();
-      return;
-    }
-
-    stopHeroAutoplay();
-    setHeroThumbState(normalizedIndex, 'pending');
-
-    try {
-      await preloadHeroImage(nextSrc);
-    } catch {
-      setHeroThumbState(heroPhotoIndex, 'active');
-      scheduleHeroAutoplay();
-      return;
-    }
-
-    heroPhotoAnimating = true;
-    heroVideo?.pause();
-    heroVideo?.classList.remove('is-visible');
-    const oldSrc = heroCurrentImage.getAttribute('src');
-    if (!videoWasVisible) {
-      heroPreviousImage.src = oldSrc;
-      heroPreviousImage.style.objectPosition = heroCurrentImage.style.objectPosition || '50% 50%';
-      heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous is-visible';
-    }
-    heroCurrentImage.src = nextSrc;
-    heroCurrentImage.alt = nextAlt;
-    heroCurrentImage.style.objectPosition = nextPosition;
-    heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current';
-    heroPhotoIndex = normalizedIndex;
-    setHeroThumbState(heroPhotoIndex, 'active');
-
-    requestAnimationFrame(() => {
-      heroGallery?.classList.add('is-transitioning');
-      if (!videoWasVisible) heroPreviousImage.classList.add('is-leaving');
-      heroCurrentImage.classList.add('is-visible');
-    });
-
-    window.setTimeout(() => {
-      heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous';
-      heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current is-visible';
-      heroPhotoAnimating = false;
-      const queuedIndex = queuedHeroPhotoIndex;
-      queuedHeroPhotoIndex = null;
-      heroGallery?.classList.remove('is-transitioning');
-      if (queuedIndex !== null && queuedIndex !== heroPhotoIndex) {
-        showHeroPhoto(queuedIndex);
-        return;
-      }
-      scheduleHeroAutoplay();
-    }, motionQuery.matches ? 0 : 430);
-  }
-
-  function releaseDrag() {
-    pointerId = null;
-    isDragging = false;
-    heroGallery?.classList.remove('is-dragging');
-  }
-
-  heroPhotoThumbs.forEach((btn) => {
-    if (btn.dataset.kind === 'video') return;
-    const src = btn.dataset.img;
-    if (src) preloadHeroImage(src).catch(() => {});
-  });
-
-  heroPhotoThumbs.forEach((btn, index) => {
-    const onClick = () => {
-      stopHeroAutoplay();
-      if (index === heroPhotoIndex && btn.dataset.kind === 'video') heroVideo?.play().catch(() => {});
-      else if (index === heroPhotoIndex) scheduleHeroAutoplay();
-      else showHeroPhoto(index);
-    };
-    btn.addEventListener('click', onClick);
-    btn.addEventListener('mouseenter', stopHeroAutoplay);
-    btn.addEventListener('mouseleave', scheduleHeroAutoplay);
-    cleanups.push(() => {
-      btn.removeEventListener('click', onClick);
-      btn.removeEventListener('mouseenter', stopHeroAutoplay);
-      btn.removeEventListener('mouseleave', scheduleHeroAutoplay);
-    });
-  });
-
-  if (heroPhotoThumbs.length > 1 && !motionQuery.matches) {
-    scheduleHeroAutoplay();
-    cleanups.push(stopHeroAutoplay);
-  }
-
-  if (heroVideo) {
-    heroVideo.muted = true;
-    heroVideo.defaultMuted = true;
-
-    const skipOpeningBlackFrame = () => {
-      if (heroVideo.currentTime >= HERO_VIDEO_START_SECONDS || Number.isNaN(heroVideo.duration)) return;
-      heroVideo.currentTime = Math.min(HERO_VIDEO_START_SECONDS, Math.max(0, heroVideo.duration - 0.1));
-    };
-    const markHeroVideoReady = () => {
-      skipOpeningBlackFrame();
-      heroVideo.classList.add('is-ready');
-    };
-    const startHeroVideo = () => {
-      if (heroPhotoThumbs[heroPhotoIndex]?.dataset.kind !== 'video') return;
-      if (heroVideo.readyState >= 2) markHeroVideoReady();
-      heroVideo.play().catch(() => {});
-    };
-    const onVisibilityChange = () => {
-      if (document.visibilityState === 'visible') startHeroVideo();
-    };
-
-    startHeroVideo();
-    heroVideo.addEventListener('loadedmetadata', skipOpeningBlackFrame);
-    heroVideo.addEventListener('loadeddata', markHeroVideoReady);
-    heroVideo.addEventListener('canplay', startHeroVideo);
-    document.addEventListener('visibilitychange', onVisibilityChange);
-    cleanups.push(() => {
-      heroVideo.removeEventListener('loadedmetadata', skipOpeningBlackFrame);
-      heroVideo.removeEventListener('loadeddata', markHeroVideoReady);
-      heroVideo.removeEventListener('canplay', startHeroVideo);
-      document.removeEventListener('visibilitychange', onVisibilityChange);
-      heroVideo.pause();
-    });
-  }
-
-  const onMotionPreferenceChange = () => {
-    if (motionQuery.matches) stopHeroAutoplay();
-    else scheduleHeroAutoplay();
+  const syncVideoUi = () => {
+    const videoIsActive = thumbs[activeIndex]?.dataset.kind === 'video';
+    videoBadge?.classList.toggle('is-visible', videoIsActive);
+    videoPlayButton?.classList.toggle('is-hidden', !videoIsActive || !video.paused);
   };
-  motionQuery.addEventListener('change', onMotionPreferenceChange);
-  cleanups.push(() => motionQuery.removeEventListener('change', onMotionPreferenceChange));
 
-  if (!heroGallery) return;
-
-  const onPointerDown = (event) => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    pointerId = event.pointerId;
-    startX = event.clientX;
-    startY = event.clientY;
-    dragX = 0;
-    isDragging = false;
-    stopHeroAutoplay();
-    heroGallery.setPointerCapture(pointerId);
-  };
-  const onPointerMove = (event) => {
-    if (pointerId !== event.pointerId) return;
-    dragX = event.clientX - startX;
-    const dragY = event.clientY - startY;
-    if (!isDragging) {
-      if (Math.abs(dragX) < 8 || Math.abs(dragX) < Math.abs(dragY)) return;
-      isDragging = true;
-      heroGallery.classList.add('is-dragging');
+  const playActiveVideo = () => {
+    if (
+      reducedMotion
+      || !heroInView
+      || document.visibilityState !== 'visible'
+      || thumbs[activeIndex]?.dataset.kind !== 'video'
+    ) {
+      syncVideoUi();
+      return;
     }
-    event.preventDefault();
+    video.play().then(syncVideoUi).catch(syncVideoUi);
   };
-  const onPointerUp = (event) => {
-    if (pointerId !== event.pointerId) return;
-    if (isDragging && Math.abs(dragX) > 64) {
-      showHeroPhoto(dragX < 0 ? heroPhotoIndex + 1 : heroPhotoIndex - 1);
+
+  const selectMedia = (index) => {
+    const next = thumbs[index];
+    if (!next) return;
+    thumbs.forEach((button, itemIndex) => {
+      button.classList.toggle('active', itemIndex === index);
+      button.setAttribute('aria-pressed', itemIndex === index ? 'true' : 'false');
+    });
+    activeIndex = index;
+
+    if (next.dataset.kind === 'video') {
+      window.clearTimeout(transitionTimer);
+      image.classList.remove('is-visible');
+      video.classList.add('is-visible');
+      playActiveVideo();
+      syncVideoUi();
+      return;
+    }
+
+    const swapImage = () => {
+      image.src = next.dataset.img;
+      image.alt = next.dataset.alt || imagePreviewFallback;
+      image.style.objectPosition = next.dataset.position || '50% 50%';
+      video.pause();
+      video.classList.remove('is-visible');
+      image.classList.add('is-visible');
+      syncVideoUi();
+    };
+
+    if (reducedMotion) {
+      swapImage();
     } else {
-      scheduleHeroAutoplay();
+      image.classList.remove('is-visible');
+      window.clearTimeout(transitionTimer);
+      transitionTimer = window.setTimeout(swapImage, 150);
     }
-    releaseDrag();
-  };
-  const onPointerCancel = () => {
-    releaseDrag();
-    scheduleHeroAutoplay();
   };
 
-  heroGallery.addEventListener('pointerdown', onPointerDown);
-  heroGallery.addEventListener('pointermove', onPointerMove, { passive: false });
-  heroGallery.addEventListener('pointerup', onPointerUp);
-  heroGallery.addEventListener('pointercancel', onPointerCancel);
-  heroGallery.addEventListener('lostpointercapture', releaseDrag);
+  thumbs.forEach((button, index) => {
+    const onClick = () => selectMedia(index);
+    button.setAttribute('aria-pressed', index === activeIndex ? 'true' : 'false');
+    button.addEventListener('click', onClick);
+    cleanups.push(() => button.removeEventListener('click', onClick));
+  });
+
+  const onVideoReady = () => playActiveVideo();
+  const onVideoStateChange = () => syncVideoUi();
+  const onVideoPlayClick = () => {
+    video.play().then(syncVideoUi).catch(syncVideoUi);
+  };
+  const onVisibilityChange = () => {
+    if (document.visibilityState === 'visible') playActiveVideo();
+    else video.pause();
+  };
+
+  video.addEventListener('loadeddata', onVideoReady);
+  video.addEventListener('canplay', onVideoReady);
+  video.addEventListener('play', onVideoStateChange);
+  video.addEventListener('pause', onVideoStateChange);
+  video.addEventListener('ended', onVideoStateChange);
+  videoPlayButton?.addEventListener('click', onVideoPlayClick);
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
+  if (hero && 'IntersectionObserver' in window) {
+    const heroVideoObserver = new IntersectionObserver((entries) => {
+      heroInView = entries.some((entry) => entry.isIntersecting);
+      if (heroInView) playActiveVideo();
+      else video.pause();
+    }, { threshold: 0.15 });
+    heroVideoObserver.observe(hero);
+    cleanups.push(() => heroVideoObserver.disconnect());
+  }
+
+  selectMedia(activeIndex);
+
+  const onKeyDown = (event) => {
+    if (!['ArrowLeft', 'ArrowRight'].includes(event.key) || !gallery.contains(document.activeElement)) return;
+    event.preventDefault();
+    const direction = event.key === 'ArrowRight' ? 1 : -1;
+    const nextIndex = (activeIndex + direction + thumbs.length) % thumbs.length;
+    selectMedia(nextIndex);
+    thumbs[nextIndex].focus();
+  };
+  gallery.addEventListener('keydown', onKeyDown);
   cleanups.push(() => {
-    heroGallery.removeEventListener('pointerdown', onPointerDown);
-    heroGallery.removeEventListener('pointermove', onPointerMove);
-    heroGallery.removeEventListener('pointerup', onPointerUp);
-    heroGallery.removeEventListener('pointercancel', onPointerCancel);
-    heroGallery.removeEventListener('lostpointercapture', releaseDrag);
+    gallery.removeEventListener('keydown', onKeyDown);
+    video.removeEventListener('loadeddata', onVideoReady);
+    video.removeEventListener('canplay', onVideoReady);
+    video.removeEventListener('play', onVideoStateChange);
+    video.removeEventListener('pause', onVideoStateChange);
+    video.removeEventListener('ended', onVideoStateChange);
+    videoPlayButton?.removeEventListener('click', onVideoPlayClick);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    window.clearTimeout(transitionTimer);
+    video.pause();
+  });
+}
+
+function setupLightbox(cleanups, imagePreviewFallback) {
+  const modal = document.getElementById('modal');
+  if (!modal) return;
+  const previewImage = modal.querySelector('img');
+  const closeButton = modal.querySelector('.modal-close');
+  let previousFocus = null;
+
+  const open = (event) => {
+    previousFocus = event.currentTarget;
+    previewImage.src = event.currentTarget.dataset.lightboxSrc;
+    previewImage.alt = event.currentTarget.dataset.lightboxAlt || imagePreviewFallback;
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    closeButton?.focus();
+  };
+
+  const close = () => {
+    if (modal.hidden) return;
+    modal.hidden = true;
+    document.body.classList.remove('modal-open');
+    previewImage.removeAttribute('src');
+    previewImage.alt = '';
+    previousFocus?.focus();
+  };
+
+  document.querySelectorAll('.lightbox').forEach((button) => {
+    button.addEventListener('click', open);
+    cleanups.push(() => button.removeEventListener('click', open));
+  });
+
+  const onModalClick = (event) => {
+    if (event.target === modal || event.target.closest('.modal-close')) close();
+  };
+  const onKeyDown = (event) => {
+    if (modal.hidden) return;
+    if (event.key === 'Escape') close();
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      closeButton?.focus();
+    }
+  };
+
+  modal.addEventListener('click', onModalClick);
+  window.addEventListener('keydown', onKeyDown);
+  cleanups.push(() => {
+    modal.removeEventListener('click', onModalClick);
+    window.removeEventListener('keydown', onKeyDown);
+    document.body.classList.remove('modal-open');
   });
 }
 
 function setupStickyCta(cleanups) {
-  const checkoutSection = document.getElementById('checkout');
-  const footer = document.querySelector('footer');
+  const stickyCta = document.querySelector('.mobile-sticky-cta');
   const heroCta = document.querySelector('[data-hero-cta]');
-  const inlineOrderCtas = [...document.querySelectorAll('a.btn.primary[href="#checkout"]')];
+  const videoSection = document.getElementById('video');
+  const checkout = document.getElementById('checkout');
+  const footer = document.querySelector('footer');
+  if (!stickyCta || !('IntersectionObserver' in window)) return;
 
-  function setHeroCtaVisibilityState(isVisible) {
-    document.body.classList.add('sticky-cta-ready');
-    document.body.classList.toggle('hero-cta-in-view', isVisible);
-  }
+  const state = { hero: true, video: false, checkout: false, footer: false };
+  const update = () => {
+    stickyCta.classList.toggle('is-visible', !state.hero && !state.video && !state.checkout && !state.footer);
+  };
+  const observe = (element, key, threshold = 0.01) => {
+    if (!element) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => { state[key] = entry.isIntersecting; });
+      update();
+    }, { threshold });
+    observer.observe(element);
+    cleanups.push(() => observer.disconnect());
+  };
 
-  function setInlineOrderCtaVisibilityState() {
-    const hasVisibleOrderCta = inlineOrderCtas.some((cta) => {
-      const rect = cta.getBoundingClientRect();
-      return rect.bottom > 0 && rect.top < window.innerHeight;
-    });
-    document.body.classList.add('sticky-cta-ready');
-    document.body.classList.toggle('order-cta-in-view', hasVisibleOrderCta);
-  }
-
-  if (heroCta) {
-    const heroCtaObserver = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => setHeroCtaVisibilityState(entry.isIntersecting)),
-      { threshold: 0.01 },
-    );
-    heroCtaObserver.observe(heroCta);
-    cleanups.push(() => heroCtaObserver.disconnect());
-  }
-
-  if (inlineOrderCtas.length) {
-    const inlineOrderCtaObserver = new IntersectionObserver(setInlineOrderCtaVisibilityState, { threshold: 0.01 });
-    inlineOrderCtas.forEach((cta) => inlineOrderCtaObserver.observe(cta));
-    setInlineOrderCtaVisibilityState();
-    window.addEventListener('scroll', setInlineOrderCtaVisibilityState, { passive: true });
-    window.addEventListener('resize', setInlineOrderCtaVisibilityState);
-    cleanups.push(() => {
-      inlineOrderCtaObserver.disconnect();
-      window.removeEventListener('scroll', setInlineOrderCtaVisibilityState);
-      window.removeEventListener('resize', setInlineOrderCtaVisibilityState);
-    });
-  }
-
-  if (checkoutSection) {
-    const checkoutObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          document.body.classList.toggle('checkout-in-view', entry.isIntersecting);
-        });
-      },
-      { threshold: 0.08 },
-    );
-    checkoutObserver.observe(checkoutSection);
-    cleanups.push(() => checkoutObserver.disconnect());
-  }
-
-  if (footer) {
-    const footerObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => document.body.classList.toggle('footer-in-view', entry.isIntersecting));
-      },
-      { threshold: 0.01 },
-    );
-    footerObserver.observe(footer);
-    cleanups.push(() => footerObserver.disconnect());
-  }
+  observe(heroCta, 'hero');
+  observe(videoSection, 'video', 0.08);
+  observe(checkout, 'checkout', 0.05);
+  observe(footer, 'footer');
 }

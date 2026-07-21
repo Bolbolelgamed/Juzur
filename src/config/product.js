@@ -5,16 +5,13 @@ export const product = Object.freeze({
   finalUnitPrice: 2000,
   material: 'Zan wood',
   deliveryTime: 'Within 4–7 days',
-  deliveryFeeMessage: 'No confirmation call required',
+  deliveryFeeMessage: 'Calculated by governorate; no confirmation call required',
   paymentMethod: 'Cash on Delivery',
 });
 
-const numberFormatter = new Intl.NumberFormat('en-EG', {
-  maximumFractionDigits: 0,
-});
+const numberFormatter = new Intl.NumberFormat('en-EG', { maximumFractionDigits: 0 });
 
 export function formatPrice(value, language = 'en') {
-  return language === 'ar'
-    ? `${numberFormatter.format(value)} جنيه`
-    : `EGP ${numberFormatter.format(value)}`;
+  const amount = numberFormatter.format(value);
+  return language === 'ar' ? `${amount} جنيه` : `EGP ${amount}`;
 }
