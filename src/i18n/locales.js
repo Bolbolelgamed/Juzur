@@ -32,3 +32,51 @@ export const locales = {
     governorates: ['الإسكندرية','أسوان','أسيوط','البحيرة','بني سويف','القاهرة','الدقهلية','دمياط','الفيوم','الغربية','الجيزة','الإسماعيلية','كفر الشيخ','الأقصر','مطروح','المنيا','المنوفية','الوادي الجديد','شمال سيناء','بورسعيد','القليوبية','قنا','البحر الأحمر','الشرقية','سوهاج','جنوب سيناء','السويس'],
   },
 };
+
+locales.en.hero.special = 'Current price';
+locales.en.hero.priceLabel = 'Current price EGP 2,000, previously EGP 2,500. Save EGP 500.';
+locales.en.checkout.price = 'Current price';
+locales.en.checkout.offerLabel = 'Current price EGP 2,000, previously EGP 2,500. Save EGP 500.';
+locales.en.checkout.intro = 'Enter your details and confirm your order. It will be registered automatically.';
+locales.en.checkout.statuses.success = 'Your order has been registered successfully. No confirmation call is required.';
+locales.en.faq.items[0][1] = 'Delivery usually takes 4–7 days from the time your order is registered.';
+locales.en.faq.items[4][1] = 'The delivery fee is calculated by governorate without a confirmation call.';
+
+locales.ar.hero.special = 'السعر الحالي';
+locales.ar.hero.priceLabel = 'السعر الحالي ٢٬٠٠٠ جنيه، بدلًا من ٢٬٥٠٠ جنيه. وفر ٥٠٠ جنيه.';
+locales.ar.hero.view = 'شوفها وهي بتستخدم';
+locales.ar.video.eyebrow = 'شاهدها وهي بتستخدم';
+locales.ar.gift.title = 'هدية أنيقة هتستخدم كل يوم';
+locales.ar.product.features[0] = 'تصميم قابل للفتح والطي';
+locales.ar.product.features[1] = 'مكان مخصص للكوب وحامل للموبايل';
+locales.ar.faq.items[2] = ['إيه اللي ممكن أرتبه عليها؟', 'مكانها معمول للكوب، الموبايل، الريموت، التسالي والحاجات الصغيرة اللي بتحب تفضل جنبك.'];
+locales.ar.material.text = 'صنعنا طرابيزة ذراع الأريكة من جذور باستخدام خشب الزان المعروف بقوته وجمال تفاصيله، علشان تعيش معاك وتضيف لمسة دافئة وأنيقة لديكور بيتك.';
+locales.ar.checkout.price = 'السعر الحالي';
+locales.ar.checkout.offerLabel = 'السعر الحالي ٢٬٠٠٠ جنيه، بدلًا من ٢٬٥٠٠ جنيه. وفر ٥٠٠ جنيه.';
+locales.ar.checkout.intro = 'اكتب بياناتك واضغط تأكيد الطلب، وطلبك هيتسجل تلقائيًا.';
+locales.ar.checkout.statuses.success = 'تم تسجيل طلبك بنجاح، ومش محتاج تعمل أي خطوة تانية.';
+locales.ar.faq.items[0][1] = 'التوصيل بيتم عادة خلال ٤–٧ أيام من وقت تسجيل الطلب.';
+locales.ar.faq.items[4][1] = 'تكلفة التوصيل بتتحسب حسب المحافظة، من غير مكالمة لتأكيد الطلب.';
+
+function replaceProductName(value, replacements) {
+  if (typeof value === 'string') {
+    return replacements.reduce((text, [from, to]) => text.replaceAll(from, to), value);
+  }
+  if (Array.isArray(value)) return value.map((item) => replaceProductName(item, replacements));
+  if (value && typeof value === 'object') {
+    Object.keys(value).forEach((key) => {
+      value[key] = replaceProductName(value[key], replacements);
+    });
+  }
+  return value;
+}
+
+replaceProductName(locales.en, [
+  ['SofaTray by Juzur', 'Juzur Sofa tray'],
+  ['SofaTray', 'Juzur Sofa tray'],
+  ['Sofa Tray', 'Juzur Sofa tray'],
+]);
+replaceProductName(locales.ar, [
+  ['SofaTray', 'طرابيزة ذراع الأريكة'],
+  ['من Juzur', 'من جذور'],
+]);
