@@ -777,6 +777,55 @@ html[lang='ar'] .scroll-hint {
   gap: 9px;
 }
 
+.brand-wordmark {
+  min-width: 118px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  line-height: 1;
+}
+
+.brand-wordmark .brand-name {
+  color: #fff;
+  font-family: 'Noto Kufi Arabic', Inter, system-ui, sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.brand-wordmark .brand-tagline {
+  margin-top: 5px;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+}
+
+.footer-brand {
+  display: grid;
+  gap: 5px;
+}
+
+.footer-brand h3 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Noto Kufi Arabic', Inter, system-ui, sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.footer-brand p {
+  margin: 0;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+}
+
 .language-switch,
 .menu-toggle {
   min-height: 44px;
@@ -800,7 +849,20 @@ html[lang='ar'] .scroll-hint {
 .mobile-language-switch,
 .menu-toggle { display: none; }
 
-html[dir='rtl'] .nav nav { margin-left: 0; margin-right: auto; }
+html[dir='rtl'] .nav {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .nav nav {
+  margin-right: 0;
+  margin-left: auto;
+  direction: rtl;
+}
+
+html[dir='rtl'] .nav-actions {
+  flex-direction: row-reverse;
+}
+
 html[dir='rtl'] .showcase-copy ul { padding-left: 0; padding-right: 20px; }
 html[dir='rtl'] .modal-close { right: auto; left: 10px; }
 html[dir='rtl'] .checkout-price-panel .price-main { text-align: right; }
@@ -946,6 +1008,11 @@ html[dir='rtl'] .launch-price .price-comparison {
   .nav-actions { gap: 6px; }
   .nav-cta { padding: 9px 11px; font-size: 12px; }
   .brand-logo { max-width: 94px; object-fit: contain; }
+  .brand-wordmark { min-width: 92px; }
+  .brand-wordmark .brand-name,
+  .footer-brand h3 { font-size: 24px; }
+  .brand-wordmark .brand-tagline,
+  .footer-brand p { font-size: 9px; letter-spacing: 0.12em; }
   .hero-price.launch-price { width: 100%; gap: 14px; padding: 17px 16px; border-radius: 18px; }
   .hero-price.launch-price .price-comparison { gap: 9px; }
   .hero-price.launch-price .price-comparison strong { font-size: 36px; }

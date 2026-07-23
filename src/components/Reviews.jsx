@@ -19,7 +19,7 @@ export default function Reviews() {
       <div className="section-head reveal">
         <p className="eyebrow">Customer reviews</p>
         <h2>Simple moments, better organized.</h2>
-        <p>Early feedback from homes using Juzur Sofa tray for coffee, remotes, snacks, and quiet living-room routines.</p>
+        <p>Early feedback from homes using چذور Sofa tray for coffee, remotes, snacks, and quiet living-room routines.</p>
       </div>
       <div className="review-grid reveal">
         {reviews.map(([quote, author]) => (

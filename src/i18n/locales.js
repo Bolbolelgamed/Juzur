@@ -51,3 +51,14 @@ locales.en.checkout.intro = 'Enter your details and confirm your order. It will 
 locales.en.checkout.statuses.success = 'Your order has been registered successfully. No confirmation call is required.';
 locales.en.faq.items[0][1] = 'Delivery usually takes 4–7 days from the time your order is registered.';
 locales.en.faq.items[4][1] = 'The delivery fee is calculated by governorate without a confirmation call.';
+
+function replaceVisibleBrand(value, key = '') {
+  if (key === 'meta') return value;
+  if (typeof value === 'string') return value.replaceAll('JUZUR', 'چذور').replaceAll('Juzur', 'چذور');
+  if (Array.isArray(value)) return value.map((item) => replaceVisibleBrand(item));
+  if (value && typeof value === 'object') Object.keys(value).forEach((childKey) => { value[childKey] = replaceVisibleBrand(value[childKey], childKey); });
+  return value;
+}
+
+replaceVisibleBrand(locales.en);
+replaceVisibleBrand(locales.ar);
