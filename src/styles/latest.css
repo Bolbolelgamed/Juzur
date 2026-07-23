@@ -379,6 +379,23 @@
   box-shadow: none;
 }
 
+.checkout-trust-badge {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: -4px 0 0;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(13, 43, 29, .07);
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+  text-align: center;
+}
+
 .form-note {
   min-height: 24px;
   margin: 0;
