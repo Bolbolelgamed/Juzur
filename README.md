@@ -14,7 +14,6 @@ Full editable Vite/React project for the Juzur SofaTray website.
 - `public/` - public files copied directly into the website
 - `public/assets/` - product photos and brand images
 - `google-apps-script-order-email.gs` - Google Apps Script helper for order emails
-- `legacy-static-index.html` - backup of the original static HTML version
 
 ## Commands
 

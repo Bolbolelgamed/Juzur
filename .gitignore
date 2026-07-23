@@ -1,5 +1,7 @@
 node_modules/
 dist/
+docs/
+assets/
 .vite/
 .env
 .env.local
