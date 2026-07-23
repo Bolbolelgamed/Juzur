@@ -29,3 +29,16 @@ Manual check URL while the dev server is running:
 ```text
 http://127.0.0.1:5173/
 ```
+
+## Cloudflare Pages
+
+Cloudflare Pages should stay connected to the GitHub `main` branch.
+
+Use these production build settings:
+
+```text
+Build command: npm run build
+Build output directory: dist/client
+```
+
+The same output directory is also saved in `wrangler.toml` as `pages_build_output_dir = "./dist/client"` so future deployments keep using the correct built website folder.
