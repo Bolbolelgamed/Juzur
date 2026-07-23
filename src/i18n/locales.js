@@ -51,6 +51,12 @@ locales.en.checkout.intro = 'Enter your details and confirm your order. It will 
 locales.en.checkout.statuses.success = 'Your order has been registered successfully. No confirmation call is required.';
 locales.en.faq.items[0][1] = 'Delivery usually takes 4–7 days from the time your order is registered.';
 locales.en.faq.items[4][1] = 'The delivery fee is calculated by governorate without a confirmation call.';
+locales.en.product.eyebrow = 'Everyday use';
+locales.en.product.title = 'Less clutter. More comfort.';
+locales.en.product.text = 'Keep your drink, phone, remote and small essentials close without adding another side table.';
+locales.ar.product.eyebrow = 'استخدام يومي';
+locales.ar.product.title = 'راحة أكتر. زحمة أقل.';
+locales.ar.product.text = 'خلّي الكوب، الموبايل، الريموت والحاجات الصغيرة جنبك من غير ترابيزة زيادة.';
 
 function replaceVisibleBrand(value, key = '') {
   if (key === 'meta') return value;
