@@ -826,6 +826,13 @@ html[lang='ar'] .scroll-hint {
   line-height: 1.2;
 }
 
+.footer-logo {
+  display: block;
+  width: 118px;
+  height: auto;
+  object-fit: contain;
+}
+
 .language-switch,
 .menu-toggle {
   min-height: 44px;
