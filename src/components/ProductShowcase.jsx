@@ -10,6 +10,10 @@ export default function ProductShowcase() {
         <p>{t.product.text}</p>
         <ul className="feature-list">
           {t.product.features.map((feature) => <li key={feature}>{feature}</li>)}
+          <li className="product-dimensions">
+            <span>{t.product.dimensions}</span>
+            <bdi>{t.product.dimensionValue}</bdi>
+          </li>
         </ul>
         <a className="btn primary dark" href="#checkout">{t.nav.order}</a>
       </div>

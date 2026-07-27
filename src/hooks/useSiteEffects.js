@@ -78,6 +78,7 @@ export function useSiteEffects(language, imagePreviewFallback) {
 function setupHeroGallery(cleanups) {
   const heroPhotoThumbs = [...document.querySelectorAll('.hero-media-thumb')];
   const heroGallery = document.getElementById('heroGallery');
+  const heroSwipeSurface = heroGallery?.querySelector('.hero-main-photo');
   const heroVideo = document.getElementById('heroVideo');
   const heroPreviousImage = document.getElementById('heroPreviousImage');
   const heroCurrentImage = document.getElementById('heroCurrentImage');
@@ -211,7 +212,13 @@ function setupHeroGallery(cleanups) {
     }, motionQuery.matches ? 0 : 430);
   }
 
-  function releaseDrag() {
+  function releaseDrag(event) {
+    if (
+      event
+      && heroSwipeSurface?.hasPointerCapture?.(event.pointerId)
+    ) {
+      heroSwipeSurface.releasePointerCapture(event.pointerId);
+    }
     pointerId = null;
     isDragging = false;
     heroGallery?.classList.remove('is-dragging');
@@ -287,17 +294,18 @@ function setupHeroGallery(cleanups) {
   motionQuery.addEventListener('change', onMotionPreferenceChange);
   cleanups.push(() => motionQuery.removeEventListener('change', onMotionPreferenceChange));
 
-  if (!heroGallery) return;
+  if (!heroGallery || !heroSwipeSurface) return;
 
   const onPointerDown = (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (event.target.closest('a, button, video, input, select, textarea')) return;
     pointerId = event.pointerId;
     startX = event.clientX;
     startY = event.clientY;
     dragX = 0;
     isDragging = false;
     stopHeroAutoplay();
-    heroGallery.setPointerCapture(pointerId);
+    heroSwipeSurface.setPointerCapture(pointerId);
   };
   const onPointerMove = (event) => {
     if (pointerId !== event.pointerId) return;
@@ -317,24 +325,29 @@ function setupHeroGallery(cleanups) {
     } else {
       scheduleHeroAutoplay();
     }
-    releaseDrag();
+    releaseDrag(event);
   };
-  const onPointerCancel = () => {
+  const onPointerCancel = (event) => {
+    releaseDrag(event);
+    scheduleHeroAutoplay();
+  };
+  const onLostPointerCapture = (event) => {
+    if (pointerId !== event.pointerId) return;
     releaseDrag();
     scheduleHeroAutoplay();
   };
 
-  heroGallery.addEventListener('pointerdown', onPointerDown);
-  heroGallery.addEventListener('pointermove', onPointerMove, { passive: false });
-  heroGallery.addEventListener('pointerup', onPointerUp);
-  heroGallery.addEventListener('pointercancel', onPointerCancel);
-  heroGallery.addEventListener('lostpointercapture', releaseDrag);
+  heroSwipeSurface.addEventListener('pointerdown', onPointerDown);
+  heroSwipeSurface.addEventListener('pointermove', onPointerMove, { passive: false });
+  heroSwipeSurface.addEventListener('pointerup', onPointerUp);
+  heroSwipeSurface.addEventListener('pointercancel', onPointerCancel);
+  heroSwipeSurface.addEventListener('lostpointercapture', onLostPointerCapture);
   cleanups.push(() => {
-    heroGallery.removeEventListener('pointerdown', onPointerDown);
-    heroGallery.removeEventListener('pointermove', onPointerMove);
-    heroGallery.removeEventListener('pointerup', onPointerUp);
-    heroGallery.removeEventListener('pointercancel', onPointerCancel);
-    heroGallery.removeEventListener('lostpointercapture', releaseDrag);
+    heroSwipeSurface.removeEventListener('pointerdown', onPointerDown);
+    heroSwipeSurface.removeEventListener('pointermove', onPointerMove);
+    heroSwipeSurface.removeEventListener('pointerup', onPointerUp);
+    heroSwipeSurface.removeEventListener('pointercancel', onPointerCancel);
+    heroSwipeSurface.removeEventListener('lostpointercapture', onLostPointerCapture);
   });
 }
 

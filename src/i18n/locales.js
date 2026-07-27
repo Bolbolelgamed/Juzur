@@ -21,7 +21,7 @@ export const locales = {
     hero: { label: 'ترابيزة الكنبة من Juzur', eyebrow: 'ترابيزة خشبية لذراع الكنبة، بتصميم عملي وأنيق', title1: 'كل حاجة بتحبها...', title2: 'جنبك', support: 'راحة أكتر في كل لحظة', text: 'قهوتك، موبايلك، والريموت... كل حاجة مرتبة وفي متناول إيدك.', view: 'شوفها وهي بتُستخدم', special: 'السعر بعد الخصم', priceLabel: 'السعر بعد الخصم 2,000 جنيه، بدلًا من 2,500 جنيه. وفّر 500 جنيه.', trustLabel: 'مميزات الشراء', wood: 'مصنوعة يدويًا من خشب الزان', payment: 'الدفع عند الاستلام', delivery: 'التوصيل خلال ٤–٧ أيام', scroll: 'اكتشف التفاصيل', mediaLabel: 'اختر صورة أو فيديو للمنتج', videoPlay: 'شغّل فيديو ترابيزة الكنبة', videoAlt: 'ترابيزة الكنبة من Juzur أثناء الاستخدام' },
     images: { studio: 'ترابيزة الكنبة من Juzur في الاستوديو', side: 'تفاصيل ترابيزة الكنبة المصنوعة يدويًا من الجانب', lifestyle: 'ترابيزة الكنبة مجهزة للحظات الراحة', top: 'ترابيزة الكنبة من الأعلى', details: 'تفاصيل ترابيزة الكنبة على خلفية بسيطة', cozy: 'ترابيزة الكنبة مع القهوة والموبايل والريموت في غرفة المعيشة', boxOpen: 'علبة هدايا Juzur مفتوحة وبداخلها ترابيزة الكنبة', sofa: 'ترابيزة Juzur على ذراع الكنبة', boxClosed: 'علبة Juzur مغلقة', packaging: 'تغليف Juzur في أجواء منزلية طبيعية', enlarge: 'كبّر الصورة', preview: 'معاينة صورة ترابيزة الكنبة' },
     video: { eyebrow: 'شوفها وهي بتُستخدم', title: 'راحة أكتر... وكل حاجة في مكانها', text: 'شوف إزاي ترابيزة الكنبة من Juzur بتخلّي كل حاجتك مرتبة وجنبك، من غير زحمة ومن غير ما تقوم كل شوية.', demoLabel: 'فيديو توضيحي لترابيزة الكنبة', unsupported: 'للأسف، متصفحك مش بيدعم تشغيل الفيديو.', play: 'شغّل الفيديو', soonLabel: 'قريبًا', soon: 'هنضيف الفيديو قريبًا.', items: [] },
-    gift: { eyebrow: 'هدية عملية ومميزة', title: 'هدية أنيقة هتُستخدم كل يوم', text: 'مش بس شكلها أنيق؛ دي هدية عملية بتضيف راحة ولمسة دافية لكل لحظة في البيت.', reasons: 'مميزات الهدية', points: ['عملية للاستخدام اليومي', 'خشب طبيعي بلمسة فاخرة', 'تغليف أنيق وجاهز للإهداء'], cta: 'اطلبها هدية', photos: 'صور تقديم الهدية', ready: 'جاهزة للإهداء', presented: 'عناية في كل تفصيلة', caption: 'تغليف Juzur الأنيق بيخلّي الهدية مميزة من أول لحظة.', boxAlt: 'ترابيزة الكنبة داخل علبة هدايا Juzur' },
+    gift: { eyebrow: 'هدية عملية ومميزة', title: 'هدية أنيقة هتُستخدم كل يوم', text: 'مش بس هدية أنيقة، دي قطعة عملية ليها استخدام كل يوم.', reasons: 'مميزات الهدية', points: ['عملية للاستخدام اليومي', 'خشب طبيعي بلمسة فاخرة', 'تغليف أنيق وجاهز للإهداء'], cta: 'اطلبها هدية', photos: 'صور تقديم الهدية', ready: 'جاهزة للإهداء', presented: 'عناية في كل تفصيلة', caption: 'تغليف Juzur الأنيق بيخلّي الهدية مميزة من أول لحظة.', boxAlt: 'ترابيزة الكنبة داخل علبة هدايا Juzur' },
     material: { eyebrow: 'ليه اخترنا خشب الزان؟', title: 'متانة طبيعية وشكل يليق ببيتك', text: 'اخترنا خشب الزان لقوته وشكله الطبيعي الجميل، علشان ترابيزة الكنبة تعيش معاك وتضيف لمسة دافية وأنيقة لبيتك.' },
     product: { eyebrow: 'عملية في كل تفصيلة', title: 'كل احتياجاتك مرتبة وفي متناول إيدك', text: 'تصميم مرن بيتحط بسهولة على ذراع الكنبة، وبيجمع حاجتك اليومية في مكان واحد، علشان تستمتع بوقت راحتك من غير زحمة.', features: ['تصميم مرن وسهل الطي', 'مكان للكوب وحامل للموبايل', 'مساحة للريموت، والتسالي، والحاجات الصغيرة', 'خشب زان طبيعي، بحواف ناعمة وتشطيب يدوي'], dimensions: 'أبعاد المنتج' },
     gallery: { eyebrow: 'اكتشف التفاصيل', title: 'صناعة يدوية بعناية في كل تفصيلة' },
@@ -54,9 +54,25 @@ locales.en.faq.items[4][1] = locales.en.checkout.shippingEstimate;
 locales.en.product.eyebrow = 'Everyday use';
 locales.en.product.title = 'Less mess. More comfort.';
 locales.en.product.text = 'Keep your drink, phone, remote and small essentials close without adding another side table.';
+locales.en.product.dimensions = 'Dimensions:';
+locales.en.product.dimensionValue = '36 × 24 × 4.5 cm';
+locales.en.material = {
+  eyebrow: 'Why Zan wood',
+  title: 'Natural Zan wood, crafted to last',
+  text: 'Chosen for its strength, natural grain and warm character. Every piece is carefully finished for a smooth feel, dependable daily use and a premium presence in your home.',
+  points: ['Natural Zan wood', 'Made for daily use', 'Smooth finish', 'Naturally unique grain'],
+};
+locales.ar.material = {
+  eyebrow: 'ليه اخترنا خشب الزان؟',
+  title: 'خشب زان طبيعي... معمول علشان يعيش',
+  text: 'اخترنا خشب الزان لقوته ومتانته وجمال عروقه الطبيعية. كل قطعة تُشطب بعناية لتمنحك ملمسًا ناعمًا، ثباتًا في الاستخدام وشكلًا يضيف دفئًا وأناقة لبيتك.',
+  points: ['زان طبيعي', 'مناسب للاستخدام اليومي', 'تشطيب ناعم', 'كل قطعة بطابع طبيعي مميز'],
+};
 locales.ar.product.eyebrow = 'استخدام يومي';
 locales.ar.product.title = 'راحة أكتر. زحمة أقل.';
 locales.ar.product.text = 'خلّي الكوب، الموبايل، الريموت والحاجات الصغيرة جنبك من غير ترابيزة زيادة.';
+locales.ar.product.dimensions = 'الأبعاد:';
+locales.ar.product.dimensionValue = '٣٦ × ٢٤ × ٤٫٥ سم';
 
 function replaceVisibleBrand(value, key = '') {
   if (key === 'meta') return value;

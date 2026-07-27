@@ -1,2 +1,2 @@
 import { useLanguage } from '../i18n/LanguageContext.jsx';
-export default function MaterialSection() { const { t } = useLanguage(); return <section className="intro split reveal" id="material"><div><p className="eyebrow dark">{t.material.eyebrow}</p><h2>{t.material.title}</h2></div><p>{t.material.text}</p></section>; }
+export default function MaterialSection() { const { t } = useLanguage(); return <section className="intro split material-section reveal" id="material"><div><p className="eyebrow dark">{t.material.eyebrow}</p><h2>{t.material.title}</h2></div><div className="material-content"><p>{t.material.text}</p><ul className="material-benefits">{t.material.points.map((point) => <li key={point}>{point}</li>)}</ul></div></section>; }
