@@ -20,6 +20,15 @@ test('proxy returns a verified acknowledgement', async () => {
   assert.deepEqual(await response.json(), { ok: true, orderId: 'JUZUR-TEST' });
 });
 
+test('proxy accepts the legacy successful acknowledgement', async () => {
+  const response = await handleOrderRequest(orderRequest(), env, {
+    fetchImpl: async () => Response.json({ ok: true, emailStatus: 'sent' }),
+  });
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true, orderId: 'JUZUR-TEST' });
+});
+
 test('proxy rejects a mismatched orderId', async () => {
   const response = await handleOrderRequest(orderRequest(), env, {
     fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'JUZUR-WRONG' })),
