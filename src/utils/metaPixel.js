@@ -1,4 +1,5 @@
-const pixelId = String(import.meta.env.VITE_META_PIXEL_ID || '').trim();
+const DEFAULT_META_PIXEL_ID = '3389496444555145';
+const pixelId = String(import.meta.env.VITE_META_PIXEL_ID || DEFAULT_META_PIXEL_ID).trim();
 
 let initialized = false;
 let initialPageViewTracked = false;
