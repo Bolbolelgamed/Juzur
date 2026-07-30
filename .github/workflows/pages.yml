@@ -33,6 +33,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_META_PIXEL_ID: "1595629875679020"
 
       - name: Disable Jekyll
         run: touch dist/client/.nojekyll
