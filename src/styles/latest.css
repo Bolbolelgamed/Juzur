@@ -501,6 +501,20 @@ textarea:focus-visible {
   outline-offset: 3px;
 }
 
+.modal-open {
+  overflow: hidden;
+}
+
+@media (forced-colors: active) {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid CanvasText;
+  }
+}
+
 .checkout-form input:focus-visible,
 .checkout-form select:focus-visible,
 .checkout-form textarea:focus-visible {
@@ -923,6 +937,29 @@ html[lang='ar'] .scroll-hint {
   font-size: 12px;
   line-height: 1;
 }
+
+/* Keep the bilingual desktop menu centered and prevent label-width shifts. */
+@media (min-width: 921px) {
+  .nav nav,
+  html[dir='rtl'] .nav nav {
+    position: absolute;
+    left: 50%;
+    width: min(650px, calc(100% - 390px));
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    margin: 0;
+    transform: translateX(-50%);
+  }
+
+  .nav nav a {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
 .mobile-language-switch,
 .menu-toggle { display: none; }
 

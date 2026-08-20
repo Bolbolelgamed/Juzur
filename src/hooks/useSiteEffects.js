@@ -46,6 +46,7 @@ export function useSiteEffects(language, imagePreviewFallback) {
       previewImage.src = event.currentTarget.dataset.lightboxSrc;
       previewImage.alt = event.currentTarget.dataset.lightboxAlt || imagePreviewFallback;
       modal.classList.add('open');
+      document.body.classList.add('modal-open');
       modal.querySelector('.modal-close')?.focus();
     };
     document.querySelectorAll('.lightbox').forEach((button) => {
@@ -55,13 +56,19 @@ export function useSiteEffects(language, imagePreviewFallback) {
 
     const closeModal = () => {
       modal?.classList.remove('open');
+      document.body.classList.remove('modal-open');
       previousModalFocus?.focus();
     };
     const onModalClick = (event) => {
       if (event.target === modal || event.target.closest('.modal-close')) closeModal();
     };
     const onKeyDown = (event) => {
-      if (event.key === 'Escape' && modal?.classList.contains('open')) closeModal();
+      if (!modal?.classList.contains('open')) return;
+      if (event.key === 'Escape') closeModal();
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        modal.querySelector('.modal-close')?.focus();
+      }
     };
     modal?.addEventListener('click', onModalClick);
     window.addEventListener('keydown', onKeyDown);

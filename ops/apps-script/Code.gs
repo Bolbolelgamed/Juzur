@@ -39,24 +39,30 @@ function doPost(e) {
       return errorOutput_('An order with this orderId already exists.');
     }
 
+    const originalUnitPrice = Number(data.listUnitPrice) || 2500;
+    const originalPrice = originalUnitPrice * validation.quantity;
+    const discount = originalPrice - validation.subtotal;
+    const address = [
+      data.detailedAddress || data.address || '',
+      data.areaCity || '',
+      data.governorate || '',
+      data.landmark || ''
+    ].filter(Boolean).join(', ');
+
     sheet.appendRow([
       orderId,
       submittedAt,
       data.fullName || data.name || '',
       data.phone || '',
-      data.governorate || '',
-      data.areaCity || '',
-      data.detailedAddress || data.address || '',
-      data.landmark || '',
+      address,
       validation.quantity,
-      validation.unitPrice,
+      originalPrice,
+      discount,
       validation.subtotal,
-      data.paymentMethod || '',
-      ''
+      'Website order'
     ]);
 
     SpreadsheetApp.flush();
-    const row = sheet.getLastRow();
     let emailStatus = 'not-configured';
 
     if (config.notificationEmail) {
@@ -72,10 +78,7 @@ function doPost(e) {
       }
     }
 
-    sheet.getRange(row, 13).setValue(emailStatus);
-    SpreadsheetApp.flush();
-
-    return jsonOutput_({ ok: true, orderId: orderId });
+    return jsonOutput_({ ok: true, orderId: orderId, emailStatus: emailStatus });
   } catch (error) {
     return errorOutput_(error && error.message ? error.message : 'The order could not be saved.');
   }
@@ -131,21 +134,18 @@ function getOrdersSheet_(config) {
 
   if (!sheet) {
     sheet = spreadsheet.insertSheet(config.sheetName);
-    sheet.appendRow([
+    sheet.getRange('A1:J1').setValues([[
       'Order ID',
       'Submitted At',
-      'Name',
+      'Customer Name',
       'Phone',
-      'Governorate',
-      'Area / City',
-      'Detailed Address',
-      'Landmark',
-      'Quantity',
-      'Unit Price',
-      'Subtotal',
-      'Payment Method',
-      'Email Status'
-    ]);
+      'Address',
+      'Units',
+      'Original Price',
+      'Discount',
+      'Final Price',
+      'Website / WhatsApp Status'
+    ]]);
   }
 
   return sheet;
