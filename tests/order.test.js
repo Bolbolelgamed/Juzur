@@ -30,22 +30,20 @@ for (const quantity of [1, 2, 3]) {
   });
 }
 
-test('verified acknowledgement resolves', async () => {
-  const payload = { orderId: 'JUZUR-OK' };
+test('successful acknowledgement resolves with the backend orderId', async () => {
+  const payload = { orderId: 'JUZUR-TEMP' };
   const result = await submitOrder(payload, {
-    fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: payload.orderId })),
+    fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'ST-000001', emailStatus: 'sent' })),
   });
-  assert.deepEqual(result, { ok: true, orderId: payload.orderId });
+  assert.deepEqual(result, { ok: true, orderId: 'ST-000001', emailStatus: 'sent' });
 });
 
-test('mismatched orderId is rejected', async () => {
-  await assert.rejects(
-    submitOrder(
-      { orderId: 'JUZUR-EXPECTED' },
-      { fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'JUZUR-OTHER' })) },
-    ),
-    /acknowledgement/,
+test('successful acknowledgement does not require matching the temporary orderId', async () => {
+  const result = await submitOrder(
+    { orderId: 'JUZUR-EXPECTED' },
+    { fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'ST-000002' })) },
   );
+  assert.equal(result.orderId, 'ST-000002');
 });
 
 test('unverified response is rejected', async () => {
@@ -55,6 +53,16 @@ test('unverified response is rejected', async () => {
       { fetchImpl: async () => new Response(JSON.stringify({ ok: false, orderId: 'JUZUR-EXPECTED' })) },
     ),
     /acknowledgement/,
+  );
+});
+
+test('backend error message is preserved', async () => {
+  await assert.rejects(
+    submitOrder(
+      { orderId: 'JUZUR-EXPECTED' },
+      { fetchImpl: async () => new Response(JSON.stringify({ ok: false, error: 'quantity is invalid' })) },
+    ),
+    /quantity is invalid/,
   );
 });
 

@@ -52,14 +52,14 @@ export async function handleOrderRequest(
       return jsonResponse({ ok: false, error: 'Order service returned invalid JSON.' }, 502);
     }
 
-    if (
-      result?.ok !== true
-      || (result.orderId !== undefined && result.orderId !== payload.orderId)
-    ) {
-      return jsonResponse({ ok: false, error: 'Order acknowledgement was not verified.' }, 502);
+    if (result?.ok !== true) {
+      return jsonResponse(
+        { ok: false, error: result?.error || 'Order acknowledgement was not verified.' },
+        502,
+      );
     }
 
-    return jsonResponse({ ok: true, orderId: payload.orderId });
+    return jsonResponse({ ...result, orderId: result.orderId || payload.orderId });
   } catch (error) {
     const timedOut = error?.name === 'AbortError';
     return jsonResponse(

@@ -12,12 +12,12 @@ function orderRequest(orderId = 'JUZUR-TEST') {
   });
 }
 
-test('proxy returns a verified acknowledgement', async () => {
+test('proxy returns the backend-generated orderId', async () => {
   const response = await handleOrderRequest(orderRequest(), env, {
-    fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'JUZUR-TEST' })),
+    fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'ST-000001', emailStatus: 'sent' })),
   });
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { ok: true, orderId: 'JUZUR-TEST' });
+  assert.deepEqual(await response.json(), { ok: true, orderId: 'ST-000001', emailStatus: 'sent' });
 });
 
 test('proxy accepts the legacy successful acknowledgement', async () => {
@@ -26,15 +26,23 @@ test('proxy accepts the legacy successful acknowledgement', async () => {
   });
 
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { ok: true, orderId: 'JUZUR-TEST' });
+  assert.deepEqual(await response.json(), { ok: true, emailStatus: 'sent', orderId: 'JUZUR-TEST' });
 });
 
-test('proxy rejects a mismatched orderId', async () => {
+test('proxy accepts a backend orderId that differs from the temporary orderId', async () => {
   const response = await handleOrderRequest(orderRequest(), env, {
-    fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'JUZUR-WRONG' })),
+    fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'ST-000002' })),
+  });
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true, orderId: 'ST-000002' });
+});
+
+test('proxy preserves backend failure messages', async () => {
+  const response = await handleOrderRequest(orderRequest(), env, {
+    fetchImpl: async () => Response.json({ ok: false, error: 'quantity is invalid' }),
   });
   assert.equal(response.status, 502);
-  assert.equal((await response.json()).ok, false);
+  assert.deepEqual(await response.json(), { ok: false, error: 'quantity is invalid' });
 });
 
 test('proxy rejects an upstream HTTP failure', async () => {

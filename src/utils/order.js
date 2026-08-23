@@ -86,11 +86,11 @@ export async function submitOrder(
       throw new Error('Order endpoint returned invalid JSON.');
     }
 
-    if (result?.ok !== true || result.orderId !== payload.orderId) {
-      throw new Error('Order acknowledgement could not be verified.');
+    if (result?.ok !== true) {
+      throw new Error(result?.error || 'Order acknowledgement could not be verified.');
     }
 
-    return result;
+    return { ...result, orderId: result.orderId || payload.orderId };
   } finally {
     globalThis.clearTimeout(timeout);
   }
