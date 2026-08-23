@@ -7,9 +7,16 @@ const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 test('production metadata uses the canonical storefront domain', async () => {
   const html = await read('index.html');
   assert.match(html, /rel="canonical" href="https:\/\/www\.techwood-art\.com\/"/);
-  assert.doesNotMatch(html, /bolbolelgamed\.github\.io/);
+  assert.doesNotMatch(html, /rel="canonical" href="https:\/\/bolbolelgamed\.github\.io/);
   assert.match(html, /"@type": "Product"/);
   assert.match(html, /"price": "2000"/);
+});
+
+test('the GitHub Pages mirror redirects checkout traffic to the production storefront', async () => {
+  const html = await read('index.html');
+  assert.match(html, /window\.location\.hostname === 'bolbolelgamed\.github\.io'/);
+  assert.match(html, /new URL\('https:\/\/www\.techwood-art\.com\/'\)/);
+  assert.match(html, /window\.location\.replace\(destination\.toString\(\)\)/);
 });
 
 test('crawler files point to the production storefront', async () => {
