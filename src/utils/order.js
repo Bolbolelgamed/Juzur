@@ -62,6 +62,11 @@ export function createOrderPayload({ form, language, quantity, product, now = Da
   };
 }
 
+export function createOrderSuccessMessage({ successMessage, language, orderId }) {
+  const orderLabel = language === 'ar' ? 'رقم الطلب:' : 'Order ID:';
+  return `${successMessage} ${orderLabel} ${orderId}`;
+}
+
 export async function submitOrder(
   payload,
   { fetchImpl = fetch, timeoutMs = ORDER_TIMEOUT_MS } = {},

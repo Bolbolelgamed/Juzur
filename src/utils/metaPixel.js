@@ -1,5 +1,5 @@
 const DEFAULT_META_PIXEL_ID = '3389496444555145';
-const pixelId = String(import.meta.env.VITE_META_PIXEL_ID || DEFAULT_META_PIXEL_ID).trim();
+const pixelId = String(import.meta.env?.VITE_META_PIXEL_ID || DEFAULT_META_PIXEL_ID).trim();
 
 let initialized = false;
 let initialPageViewTracked = false;
@@ -37,12 +37,29 @@ export function initializeMetaPixel() {
   return true;
 }
 
-export function trackMetaEvent(eventName, parameters = {}) {
+export function createMetaPurchaseParameters({ orderId, product, quantity, subtotal }) {
+  return {
+    order_id: orderId,
+    content_ids: ['juzur-sofa-tray'],
+    content_name: product.name,
+    content_type: 'product',
+    contents: [{ id: 'juzur-sofa-tray', quantity, item_price: product.finalUnitPrice }],
+    currency: 'EGP',
+    num_items: quantity,
+    value: subtotal,
+  };
+}
+
+export function trackMetaEvent(eventName, parameters = {}, options) {
   if (!initializeMetaPixel()) {
     if (!initialized) return false;
   }
 
-  window.fbq('track', eventName, parameters);
+  if (options) {
+    window.fbq('track', eventName, parameters, options);
+  } else {
+    window.fbq('track', eventName, parameters);
+  }
   return true;
 }
 

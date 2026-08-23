@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { product } from '../src/config/product.js';
-import { createOrderPayload, createSubmissionGate, submitOrder } from '../src/utils/order.js';
+import { createMetaPurchaseParameters } from '../src/utils/metaPixel.js';
+import { createOrderPayload, createOrderSuccessMessage, createSubmissionGate, submitOrder } from '../src/utils/order.js';
 
 const form = {
   fullName: 'Test Customer',
@@ -33,17 +34,40 @@ for (const quantity of [1, 2, 3]) {
 test('successful acknowledgement resolves with the backend orderId', async () => {
   const payload = { orderId: 'JUZUR-TEMP' };
   const result = await submitOrder(payload, {
-    fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'ST-000001', emailStatus: 'sent' })),
+    fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'ST-583500', emailStatus: 'sent' })),
   });
-  assert.deepEqual(result, { ok: true, orderId: 'ST-000001', emailStatus: 'sent' });
+  assert.deepEqual(result, { ok: true, orderId: 'ST-583500', emailStatus: 'sent' });
 });
 
 test('successful acknowledgement does not require matching the temporary orderId', async () => {
   const result = await submitOrder(
     { orderId: 'JUZUR-EXPECTED' },
-    { fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'ST-000002' })) },
+    { fetchImpl: async () => new Response(JSON.stringify({ ok: true, orderId: 'ST-583501' })) },
   );
-  assert.equal(result.orderId, 'ST-000002');
+  assert.equal(result.orderId, 'ST-583501');
+});
+
+test('Meta Purchase data uses the official backend orderId', () => {
+  const parameters = createMetaPurchaseParameters({
+    orderId: 'ST-583500',
+    product,
+    quantity: 2,
+    subtotal: 4000,
+  });
+
+  assert.equal(parameters.order_id, 'ST-583500');
+  assert.equal(parameters.num_items, 2);
+  assert.equal(parameters.value, 4000);
+});
+
+test('customer success message displays the official backend orderId', () => {
+  const message = createOrderSuccessMessage({
+    successMessage: 'Your order has been registered successfully.',
+    language: 'en',
+    orderId: 'ST-583500',
+  });
+
+  assert.equal(message, 'Your order has been registered successfully. Order ID: ST-583500');
 });
 
 test('unverified response is rejected', async () => {
