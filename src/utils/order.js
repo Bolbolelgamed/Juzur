@@ -56,7 +56,27 @@ export function createOrderPayload({
       ? decodeURIComponent(match.split('=').slice(1).join('='))
       : '';
   };
+const getMetaFbc = () => {
+  const existingFbc = getCookieValue('_fbc');
 
+  if (existingFbc) {
+    return existingFbc;
+  }
+
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  const fbclid =
+    new URLSearchParams(window.location.search).get('fbclid');
+
+  if (!fbclid) {
+    return '';
+  }
+
+  return `fb.1.${Date.now()}.${fbclid}`;
+};
+  
   return {
     orderId: `JUZUR-${timestamp}-${random()
       .toString(36)
