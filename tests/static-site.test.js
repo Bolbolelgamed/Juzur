@@ -50,3 +50,19 @@ test('heavy media is deferred and storefront images use WebP', async () => {
   assert.doesNotMatch(`${hero}${gallery}${gift}`, /\.jpg/);
   assert.match(`${hero}${gallery}${gift}`, /\.webp/);
 });
+
+test('fonts are self-hosted and responsive images are available', async () => {
+  const [html, fonts, gallery, gift] = await Promise.all([
+    read('index.html'),
+    read('src/styles/fonts.css'),
+    read('src/components/Gallery.jsx'),
+    read('src/components/GiftSection.jsx'),
+  ]);
+
+  assert.doesNotMatch(html, /fonts\.googleapis\.com|fonts\.gstatic\.com/);
+  assert.match(html, /noto-kufi-arabic\.woff2/);
+  assert.match(fonts, /inter-latin\.woff2/);
+  assert.match(fonts, /playfair-latin\.woff2/);
+  assert.match(`${gallery}${gift}`, /srcSet=/);
+  assert.match(`${gallery}${gift}`, /sizes=/);
+});
