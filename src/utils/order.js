@@ -99,49 +99,13 @@ const getMetaFbc = () => {
     submissionTimestamp,
 
     fbp: getCookieValue('_fbp'),
-    fbc: getCookieValue('_fbc'),
+    fbc: getMetaFbc(),
 
     userAgent:
       typeof navigator !== 'undefined'
         ? navigator.userAgent
         : '',
 
-    eventSourceUrl:
-      typeof window !== 'undefined'
-        ? window.location.href
-        : '',
-
-    name: form.fullName.trim(),
-    address: `${form.detailedAddress.trim()}, ${form.areaCity.trim()}, ${form.governorate}`,
-    pieces: String(quantity),
-    finalPrice: formatPrice(subtotal, 'en'),
-    submittedAt: submissionTimestamp,
-    language,
-  };
-}
-
-  return {
-    orderId: `JUZUR-${timestamp}-${random().toString(36).slice(2, 8).toUpperCase()}`,
-    productName: product.name,
-    fullName: form.fullName.trim(),
-    phone: normalizeEgyptianMobile(form.phone),
-    governorate: form.governorate,
-    areaCity: form.areaCity.trim(),
-    detailedAddress: form.detailedAddress.trim(),
-    landmark: form.landmark.trim(),
-    quantity,
-    unitPrice: product.finalUnitPrice,
-    subtotal,
-    paymentMethod: product.paymentMethod,
-    deliveryNote: product.deliveryFeeMessage,
-    submissionTimestamp,
-
-    fbp: getCookieValue('_fbp'),
-    fbc: getCookieValue('_fbc'),
-    userAgent:
-      typeof navigator !== 'undefined'
-        ? navigator.userAgent
-        : '',
     eventSourceUrl:
       typeof window !== 'undefined'
         ? window.location.href

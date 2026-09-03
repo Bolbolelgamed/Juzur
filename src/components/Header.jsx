@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <header className="nav" id="nav">
       <a className="brand" href="#top" aria-label="Juzur - Crafted for Better Living" onClick={closeMenu}>
-        <img className="brand-logo" src={`${assetsBase}juzur-logo-header.png`} alt="Juzur" />
+        <img className="brand-logo" src={`${assetsBase}juzur-logo-header.png`} alt="Juzur" width="427" height="200" decoding="async" />
       </a>
       <nav id="primary-navigation" className={menuOpen ? 'mobile-menu-open' : ''} aria-label={t.nav.label}>
         {navItems.map(([href, label]) => <a key={href} href={href} onClick={closeMenu}>{label}</a>)}

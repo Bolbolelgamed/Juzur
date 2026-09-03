@@ -41,7 +41,7 @@ export default function Footer() {
   return (
     <footer>
       <div className="footer-brand">
-        <img className="footer-logo" src={`${assetsBase}juzur-logo-header.png`} alt="Juzur" />
+        <img className="footer-logo" src={`${assetsBase}juzur-logo-header.png`} alt="Juzur" width="427" height="200" loading="lazy" decoding="async" />
         <span>{t.footer.tagline}</span>
       </div>
       <div className="footer-links" aria-label={t.footer.contactLabel}>

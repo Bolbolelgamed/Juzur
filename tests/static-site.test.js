@@ -35,3 +35,18 @@ test('Cloudflare security headers include core browser protections', async () =>
   assert.match(headers, /frame-ancestors 'none'/);
   assert.match(headers, /Permissions-Policy:/);
 });
+
+test('heavy media is deferred and storefront images use WebP', async () => {
+  const [hero, videoSection, gallery, gift] = await Promise.all([
+    read('src/components/Hero.jsx'),
+    read('src/components/VideoSection.jsx'),
+    read('src/components/Gallery.jsx'),
+    read('src/components/GiftSection.jsx'),
+  ]);
+
+  assert.doesNotMatch(hero, /autoPlay/);
+  assert.match(hero, /preload="none"/);
+  assert.match(videoSection, /preload="none"/);
+  assert.doesNotMatch(`${hero}${gallery}${gift}`, /\.jpg/);
+  assert.match(`${hero}${gallery}${gift}`, /\.webp/);
+});

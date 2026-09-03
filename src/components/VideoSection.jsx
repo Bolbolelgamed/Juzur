@@ -13,7 +13,7 @@ export default function VideoSection() {
       </div>
       <div className="video-grid video-grid-single reveal">
         <div className="video-card main-video">
-          <video className="main-video-player" controls playsInline preload="auto" aria-label={t.video.demoLabel}>
+          <video className="main-video-player" controls playsInline preload="none" poster={`${assetsBase}juzur-tray-studio.webp`} aria-label={t.video.demoLabel}>
             <source src={`${assetsBase}juzur-sofatray-demo.mp4`} type="video/mp4" />
             {t.video.unsupported}
           </video>
