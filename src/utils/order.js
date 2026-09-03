@@ -33,19 +33,72 @@ export function createSubmissionGate() {
   };
 }
 
-export function createOrderPayload({ form, language, quantity, product, now = Date.now, random = Math.random }) {
+export function createOrderPayload({
+  form,
+  language,
+  quantity,
+  product,
+  now = Date.now,
+  random = Math.random
+}) {
   const subtotal = product.finalUnitPrice * quantity;
   const timestamp = now();
   const submissionTimestamp = new Date(timestamp).toISOString();
 
   const getCookieValue = (name) => {
     if (typeof document === 'undefined') return '';
+
     const match = document.cookie
       .split('; ')
       .find((row) => row.startsWith(`${name}=`));
 
-    return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : '';
+    return match
+      ? decodeURIComponent(match.split('=').slice(1).join('='))
+      : '';
   };
+
+  return {
+    orderId: `JUZUR-${timestamp}-${random()
+      .toString(36)
+      .slice(2, 8)
+      .toUpperCase()}`,
+
+    productName: product.name,
+    fullName: form.fullName.trim(),
+    phone: normalizeEgyptianMobile(form.phone),
+    governorate: form.governorate,
+    areaCity: form.areaCity.trim(),
+    detailedAddress: form.detailedAddress.trim(),
+    landmark: form.landmark.trim(),
+
+    quantity,
+    unitPrice: product.finalUnitPrice,
+    subtotal,
+    paymentMethod: product.paymentMethod,
+    deliveryNote: product.deliveryFeeMessage,
+    submissionTimestamp,
+
+    fbp: getCookieValue('_fbp'),
+    fbc: getCookieValue('_fbc'),
+
+    userAgent:
+      typeof navigator !== 'undefined'
+        ? navigator.userAgent
+        : '',
+
+    eventSourceUrl:
+      typeof window !== 'undefined'
+        ? window.location.href
+        : '',
+
+    name: form.fullName.trim(),
+    address: `${form.detailedAddress.trim()}, ${form.areaCity.trim()}, ${form.governorate}`,
+    pieces: String(quantity),
+    finalPrice: formatPrice(subtotal, 'en'),
+    submittedAt: submissionTimestamp,
+    language,
+  };
+}
 
   return {
     orderId: `JUZUR-${timestamp}-${random().toString(36).slice(2, 8).toUpperCase()}`,
