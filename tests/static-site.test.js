@@ -37,8 +37,9 @@ test('Cloudflare security headers include core browser protections', async () =>
 });
 
 test('heavy media is deferred and storefront images use WebP', async () => {
-  const [hero, videoSection, gallery, gift] = await Promise.all([
+  const [hero, effects, videoSection, gallery, gift] = await Promise.all([
     read('src/components/Hero.jsx'),
+    read('src/hooks/useSiteEffects.js'),
     read('src/components/VideoSection.jsx'),
     read('src/components/Gallery.jsx'),
     read('src/components/GiftSection.jsx'),
@@ -46,6 +47,8 @@ test('heavy media is deferred and storefront images use WebP', async () => {
 
   assert.doesNotMatch(hero, /autoPlay/);
   assert.match(hero, /preload="none"/);
+  assert.match(effects, /requestIdleCallback\(startHeroVideo/);
+  assert.match(effects, /heroVideo\.play\(\)/);
   assert.match(videoSection, /preload="none"/);
   assert.doesNotMatch(`${hero}${gallery}${gift}`, /\.jpg/);
   assert.match(`${hero}${gallery}${gift}`, /\.webp/);
