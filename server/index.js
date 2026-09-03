@@ -26,12 +26,18 @@ export async function handleOrderRequest(
   }
 
   if (!payload?.orderId || typeof payload.orderId !== 'string') {
-    return jsonResponse({ ok: false, error: 'A valid orderId is required.' }, 400);
-  }
+  return jsonResponse({ ok: false, error: 'A valid orderId is required.' }, 400);
+}
 
-  const controller = new AbortController();
-  const timeout = globalThis.setTimeout(() => controller.abort(), timeoutMs);
+const clientIp =
+  request.headers.get('CF-Connecting-IP') ||
+  request.headers.get('X-Forwarded-For') ||
+  '';
 
+payload.clientIp = clientIp.split(',')[0].trim();
+
+const controller = new AbortController();
+const timeout = globalThis.setTimeout(() => controller.abort(), timeoutMs);
   try {
     const upstream = await fetchImpl(env.APPS_SCRIPT_ORDER_URL, {
       method: 'POST',
