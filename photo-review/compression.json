@@ -1,0 +1,272 @@
+[
+  {
+    "source": "photo-originals/Untitled.png",
+    "originalBytes": 1433287,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-01-480.webp",
+        "bytes": 44464,
+        "width": 480,
+        "height": 590,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-01-960.webp",
+        "bytes": 80148,
+        "width": 702,
+        "height": 863,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-01.webp",
+        "bytes": 80148,
+        "width": 702,
+        "height": 863,
+        "quality": 84
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00001 (2).jpeg",
+    "originalBytes": 3480711,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-02-480.webp",
+        "bytes": 46170,
+        "width": 480,
+        "height": 640,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-02-960.webp",
+        "bytes": 117570,
+        "width": 960,
+        "height": 1280,
+        "quality": 76
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-02.webp",
+        "bytes": 242656,
+        "width": 1484,
+        "height": 1979,
+        "quality": 76
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00002 (2).jpeg",
+    "originalBytes": 3419974,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-03-480.webp",
+        "bytes": 44974,
+        "width": 480,
+        "height": 640,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-03-960.webp",
+        "bytes": 119980,
+        "width": 960,
+        "height": 1280,
+        "quality": 76
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-03.webp",
+        "bytes": 242172,
+        "width": 1484,
+        "height": 1979,
+        "quality": 76
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00005.jpeg",
+    "originalBytes": 3307682,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-04-480.webp",
+        "bytes": 41712,
+        "width": 480,
+        "height": 640,
+        "quality": 80
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-04-960.webp",
+        "bytes": 128248,
+        "width": 960,
+        "height": 1280,
+        "quality": 68
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-04.webp",
+        "bytes": 264014,
+        "width": 1484,
+        "height": 1979,
+        "quality": 64
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00006 (2).jpeg",
+    "originalBytes": 3611267,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-05-480.webp",
+        "bytes": 43716,
+        "width": 480,
+        "height": 640,
+        "quality": 80
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-05-960.webp",
+        "bytes": 122210,
+        "width": 960,
+        "height": 1280,
+        "quality": 64
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-05.webp",
+        "bytes": 260152,
+        "width": 1484,
+        "height": 1979,
+        "quality": 64
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00009 (2).jpeg",
+    "originalBytes": 3623005,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-06-480.webp",
+        "bytes": 41522,
+        "width": 480,
+        "height": 640,
+        "quality": 76
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-06-960.webp",
+        "bytes": 128460,
+        "width": 960,
+        "height": 1280,
+        "quality": 64
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-06.webp",
+        "bytes": 251556,
+        "width": 1484,
+        "height": 1979,
+        "quality": 64
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00012 (2).jpeg",
+    "originalBytes": 3578781,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-07-480.webp",
+        "bytes": 41310,
+        "width": 480,
+        "height": 640,
+        "quality": 80
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-07-960.webp",
+        "bytes": 122776,
+        "width": 960,
+        "height": 1280,
+        "quality": 68
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-07.webp",
+        "bytes": 245598,
+        "width": 1484,
+        "height": 1979,
+        "quality": 64
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00014 (2).jpeg",
+    "originalBytes": 1860143,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-08-480.webp",
+        "bytes": 19958,
+        "width": 480,
+        "height": 360,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-08-960.webp",
+        "bytes": 73050,
+        "width": 960,
+        "height": 720,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-08.webp",
+        "bytes": 150610,
+        "width": 1484,
+        "height": 1113,
+        "quality": 84
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00023.jpeg",
+    "originalBytes": 3022808,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-09-480.webp",
+        "bytes": 21878,
+        "width": 480,
+        "height": 360,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-09-960.webp",
+        "bytes": 96740,
+        "width": 960,
+        "height": 720,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-09.webp",
+        "bytes": 212844,
+        "width": 1484,
+        "height": 1113,
+        "quality": 84
+      }
+    ]
+  },
+  {
+    "source": "photo-originals/image00025.jpeg",
+    "originalBytes": 3615812,
+    "outputs": [
+      {
+        "file": "public/assets/new-photos/juzur-photo-10-480.webp",
+        "bytes": 35154,
+        "width": 480,
+        "height": 360,
+        "quality": 84
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-10-960.webp",
+        "bytes": 117584,
+        "width": 960,
+        "height": 720,
+        "quality": 76
+      },
+      {
+        "file": "public/assets/new-photos/juzur-photo-10.webp",
+        "bytes": 244220,
+        "width": 1484,
+        "height": 1113,
+        "quality": 76
+      }
+    ]
+  }
+]
