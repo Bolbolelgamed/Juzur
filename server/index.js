@@ -1,5 +1,5 @@
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
-const UPSTREAM_TIMEOUT_MS = 10000;
+const UPSTREAM_TIMEOUT_MS = 25000;
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
@@ -26,18 +26,19 @@ export async function handleOrderRequest(
   }
 
   if (!payload?.orderId || typeof payload.orderId !== 'string') {
-  return jsonResponse({ ok: false, error: 'A valid orderId is required.' }, 400);
-}
+    return jsonResponse({ ok: false, error: 'A valid orderId is required.' }, 400);
+  }
 
-const clientIp =
-  request.headers.get('CF-Connecting-IP') ||
-  request.headers.get('X-Forwarded-For') ||
-  '';
+  const clientIp =
+    request.headers.get('CF-Connecting-IP') ||
+    request.headers.get('X-Forwarded-For') ||
+    '';
 
-payload.clientIp = clientIp.split(',')[0].trim();
+  payload.clientIp = clientIp.split(',')[0].trim();
 
-const controller = new AbortController();
-const timeout = globalThis.setTimeout(() => controller.abort(), timeoutMs);
+  const controller = new AbortController();
+  const timeout = globalThis.setTimeout(() => controller.abort(), timeoutMs);
+
   try {
     const upstream = await fetchImpl(env.APPS_SCRIPT_ORDER_URL, {
       method: 'POST',
