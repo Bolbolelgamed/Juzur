@@ -7,7 +7,7 @@ export default function GiftSection() {
   const photos = [
     [`${assetsBase}juzur-packaging-open.webp`, t.images.boxOpen, '50% 50%'],
     [`${assetsBase}juzur-packaging-natural.webp`, t.images.packaging, '50% 52%'],
-    [`${assetsBase}juzur-tray-lifestyle.webp`, t.images.lifestyle, '50% 72%'],
+    [`${assetsBase}new-photos/juzur-photo-01.webp`, t.images.lifestyle, '50% 50%'],
   ];
   const featuredImage = `${assetsBase}juzur-packaging-closed.webp`;
 
