@@ -56,27 +56,27 @@ export function createOrderPayload({
       ? decodeURIComponent(match.split('=').slice(1).join('='))
       : '';
   };
-const getMetaFbc = () => {
-  const existingFbc = getCookieValue('_fbc');
 
-  if (existingFbc) {
-    return existingFbc;
-  }
+  const getMetaFbc = () => {
+    const existingFbc = getCookieValue('_fbc');
 
-  if (typeof window === 'undefined') {
-    return '';
-  }
+    if (existingFbc) {
+      return existingFbc;
+    }
 
-  const fbclid =
-    new URLSearchParams(window.location.search).get('fbclid');
+    if (typeof window === 'undefined') {
+      return '';
+    }
 
-  if (!fbclid) {
-    return '';
-  }
+    const fbclid = new URLSearchParams(window.location.search).get('fbclid');
 
-  return `fb.1.${Date.now()}.${fbclid}`;
-};
-  
+    if (!fbclid) {
+      return '';
+    }
+
+    return `fb.1.${Date.now()}.${fbclid}`;
+  };
+
   return {
     orderId: `JUZUR-${timestamp}-${random()
       .toString(36)
@@ -140,13 +140,15 @@ export async function submitOrder(
       signal: controller.signal,
     });
 
-    if (!response.ok) throw new Error('Order endpoint returned an error response.');
-
-    let result;
+    let result = null;
     try {
       result = await response.json();
     } catch {
-      throw new Error('Order endpoint returned invalid JSON.');
+      // Keep a useful fallback below when the endpoint returns non-JSON.
+    }
+
+    if (!response.ok) {
+      throw new Error(result?.error || `Order endpoint returned an error response (${response.status}).`);
     }
 
     if (result?.ok !== true) {
@@ -154,6 +156,11 @@ export async function submitOrder(
     }
 
     return { ...result, orderId: result.orderId || payload.orderId };
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      throw new Error('Order confirmation timed out. Please do not submit again immediately; your order may already have been received.');
+    }
+    throw error;
   } finally {
     globalThis.clearTimeout(timeout);
   }
