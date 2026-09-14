@@ -1,0 +1,73 @@
+name: Optimize product photos
+on:
+  push:
+    branches: [codex/optimized-product-photos]
+    paths:
+      - '.github/workflows/optimize-photos.yml'
+      - 'photo-originals/**'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: optimize-product-photos
+  cancel-in-progress: false
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/optimized-product-photos
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install Pillow==11.3.0
+      - name: Compress photos and create review sheet
+        run: |
+          python - <<'PY'
+          from PIL import Image, ImageOps, ImageDraw
+          from pathlib import Path
+          import json
+          sources = sorted(p for p in Path('photo-originals').iterdir() if p.suffix.lower() in ('.jpg', '.jpeg', '.png'))
+          assert sources, 'No source images'
+          out = Path('public/assets/new-photos')
+          out.mkdir(parents=True, exist_ok=True)
+          review = Path('photo-review')
+          review.mkdir(exist_ok=True)
+          sheet = Image.new('RGB', (1000, ((len(sources)+3)//4)*240), 'white')
+          draw = ImageDraw.Draw(sheet)
+          report = []
+          for index, source in enumerate(sources, 1):
+              with Image.open(source) as raw:
+                  im = ImageOps.exif_transpose(raw).convert('RGB')
+              name = f'juzur-photo-{index:02}'
+              sizes = []
+              for width, suffix, budget in [(480, '-480', 50000), (960, '-960', 130000), (1484, '', 250000)]:
+                  width = min(width, im.width)
+                  scaled = im.resize((width, round(im.height*width/im.width)), Image.Resampling.LANCZOS)
+                  dest = out / (name+suffix+'.webp')
+                  quality = 84
+                  while True:
+                      scaled.save(dest, 'WEBP', quality=quality, method=6)
+                      if dest.stat().st_size <= budget or quality <= 64:
+                          break
+                      quality -= 4
+                  sizes.append({'file': str(dest), 'bytes': dest.stat().st_size, 'width': scaled.width, 'height': scaled.height, 'quality': quality})
+              thumb = ImageOps.contain(im, (242, 205))
+              x, y = ((index-1)%4)*250, ((index-1)//4)*240
+              sheet.paste(thumb, (x+(250-thumb.width)//2, y))
+              draw.text((x+5,y+208), f'{index:02}: {source.name}', fill='black')
+              report.append({'source': str(source), 'originalBytes': source.stat().st_size, 'outputs': sizes})
+          sheet.save(review/'contact-sheet.jpg', quality=80)
+          (review/'compression.json').write_text(json.dumps(report, indent=2))
+          print(json.dumps(report, indent=2))
+          PY
+      - name: Commit optimized assets for review
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/assets/new-photos photo-review
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate optimized responsive product photos"
+            git push origin HEAD:codex/optimized-product-photos
+          fi
