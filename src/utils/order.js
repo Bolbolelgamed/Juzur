@@ -140,11 +140,11 @@ export async function submitOrder(
       signal: controller.signal,
     });
 
-    let result = null;
+    let result;
     try {
       result = await response.json();
     } catch {
-      // Keep a useful fallback below when the endpoint returns non-JSON.
+      throw new Error('Order endpoint returned invalid JSON.');
     }
 
     if (!response.ok) {
@@ -158,7 +158,7 @@ export async function submitOrder(
     return { ...result, orderId: result.orderId || payload.orderId };
   } catch (error) {
     if (error?.name === 'AbortError') {
-      throw new Error('Order confirmation timed out. Please do not submit again immediately; your order may already have been received.');
+      throw new Error('Timed out while waiting for order confirmation. Please do not submit again immediately; your order may already have been received.');
     }
     throw error;
   } finally {
