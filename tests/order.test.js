@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { product } from '../src/config/product.js';
 import { createMetaPurchaseParameters } from '../src/utils/metaPixel.js';
-import { createOrderPayload, createOrderSuccessMessage, createSubmissionGate, submitOrder } from '../src/utils/order.js';
+import { createOrderHelpUrl, createOrderPayload, createOrderSuccessMessage, createSubmissionGate, submitOrder } from '../src/utils/order.js';
 
 const form = {
   fullName: 'Test Customer',
@@ -68,6 +68,18 @@ test('customer success message displays the official backend orderId', () => {
   });
 
   assert.equal(message, 'Your order has been registered successfully. Order ID: ST-583500');
+});
+
+test('uncertain order handoff includes the original attempt reference and delivery details', () => {
+  const payload = createOrderPayload({ form, language: 'ar', quantity: 2, product, now: () => 1000, random: () => 0.5 });
+  const url = new URL(createOrderHelpUrl(payload, 'ar'));
+  const message = url.searchParams.get('text');
+  assert.equal(url.origin, 'https://wa.me');
+  assert.match(message, new RegExp(payload.orderId));
+  assert.match(message, /01012345678/);
+  assert.match(message, /1 Test Street, Nasr City, Cairo/);
+  assert.match(message, /EGP 4,000/);
+  assert.match(message, /قبل إنشاء طلب جديد/);
 });
 
 test('unverified response is rejected', async () => {

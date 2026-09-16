@@ -511,6 +511,12 @@
   color: #8f351f;
 }
 
+.checkout-help {
+  grid-column: 1 / -1;
+  justify-self: start;
+  text-align: center;
+}
+
 .modal-content {
   position: relative;
   max-width: min(100%, 980px);

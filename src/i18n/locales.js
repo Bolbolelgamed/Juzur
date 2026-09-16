@@ -96,3 +96,8 @@ locales.ar.footer.whatsapp = '\u0648\u0627\u062a\u0633\u0627\u0628';
 locales.ar.footer.facebook = '\u0641\u064a\u0633\u0628\u0648\u0643';
 locales.ar.footer.instagram = '\u0627\u0646\u0633\u062a\u062c\u0631\u0627\u0645';
 locales.ar.footer.call = '\u0627\u062a\u0635\u0644 \u0628\u0640 Juzur \u0639\u0644\u0649 01042511891';
+
+locales.en.checkout.statuses.uncertain = 'We could not confirm whether your order was recorded. Please send the prepared WhatsApp message so we can check it. Do not place another order yet.';
+locales.en.checkout.statuses.whatsappHelp = 'Check my order on WhatsApp';
+locales.ar.checkout.statuses.uncertain = 'ماقدرناش نتأكد إذا كان طلبك اتسجل. ابعت لنا الرسالة الجاهزة على واتساب عشان نراجعه. من فضلك ما تعملش طلب تاني دلوقتي.';
+locales.ar.checkout.statuses.whatsappHelp = 'راجع طلبي على واتساب';

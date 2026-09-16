@@ -1,5 +1,5 @@
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
-const UPSTREAM_TIMEOUT_MS = 25000;
+const UPSTREAM_TIMEOUT_MS = 45000;
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
