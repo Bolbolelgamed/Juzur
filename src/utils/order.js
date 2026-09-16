@@ -1,7 +1,8 @@
 import { formatPrice } from '../config/product.js';
+import { contact } from '../config/contact.js';
 
 export const ORDER_ENDPOINT = '/api/orders';
-export const ORDER_TIMEOUT_MS = 30000;
+export const ORDER_TIMEOUT_MS = 50000;
 
 export function normalizeEgyptianMobile(value) {
   let compact = String(value).trim().replace(/[\s()-]/g, '');
@@ -123,6 +124,13 @@ export function createOrderPayload({
 export function createOrderSuccessMessage({ successMessage, language, orderId }) {
   const orderLabel = language === 'ar' ? 'رقم الطلب:' : 'Order ID:';
   return `${successMessage} ${orderLabel} ${orderId}`;
+}
+
+export function createOrderHelpUrl(payload, language) {
+  const lines = language === 'ar'
+    ? ['مرحبًا جذور، حاولت أطلب من الموقع ولم يظهر لي تأكيد. من فضلكم تحققوا إذا تم تسجيل الطلب قبل إنشاء طلب جديد.', `مرجع المحاولة: ${payload.orderId}`, `الاسم: ${payload.fullName}`, `الموبايل: ${payload.phone}`, `العنوان: ${payload.detailedAddress}, ${payload.areaCity}, ${payload.governorate}`, `علامة مميزة: ${payload.landmark || '-'}`, `عدد القطع: ${payload.quantity}`, `الإجمالي قبل الشحن: ${payload.finalPrice}`, 'الدفع عند الاستلام.']
+    : ['Hi Juzur, I tried to order on the website but did not receive confirmation. Please check whether it was recorded before creating another order.', `Attempt reference: ${payload.orderId}`, `Name: ${payload.fullName}`, `Phone: ${payload.phone}`, `Address: ${payload.detailedAddress}, ${payload.areaCity}, ${payload.governorate}`, `Landmark: ${payload.landmark || '-'}`, `Quantity: ${payload.quantity}`, `Total before delivery: ${payload.finalPrice}`, 'Cash on delivery.'];
+  return `${contact.whatsappUrl}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 
 export async function submitOrder(
