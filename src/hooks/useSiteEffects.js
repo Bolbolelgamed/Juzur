@@ -224,16 +224,19 @@ function setupHeroGallery(cleanups) {
     window.clearTimeout(transitionTimer);
     previous.src = current.getAttribute('src');
     previous.style.objectPosition = current.style.objectPosition || '50% 50%';
+    previous.style.objectFit = current.style.objectFit || 'cover';
     previous.className = 'hero-gallery-layer hero-gallery-layer-previous is-visible';
     current.className = 'hero-gallery-layer hero-gallery-layer-current';
     current.src = src;
     current.alt = target.dataset.alt || '';
     current.style.objectPosition = target.dataset.position || '50% 50%';
+    current.style.objectFit = target.dataset.fit || 'cover';
     index = next;
     thumbs.forEach((thumb, thumbIndex) => {
       thumb.classList.toggle('active', thumbIndex === next);
       thumb.setAttribute('aria-pressed', String(thumbIndex === next));
     });
+    target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
     requestAnimationFrame(() => {
       current.classList.add('is-visible');
       previous.classList.add('is-leaving');

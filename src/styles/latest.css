@@ -1384,6 +1384,20 @@ html[dir='rtl'] .launch-price .price-comparison {
   max-width: 650px;
   justify-self: auto;
 }
+#heroGallery .hero-photo-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 8px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) transparent;
+}
+#heroGallery .hero-photo-thumb {
+  flex: 0 0 calc((100% - 24px) / 4);
+  scroll-snap-align: center;
+}
 #heroGallery .hero-photo-nav {
   position: absolute;
   top: 50%;

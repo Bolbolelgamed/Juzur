@@ -17,9 +17,18 @@ export default function Hero() {
 }
 
 export function HeroPhotos() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const assetsBase = `${import.meta.env.BASE_URL}assets/`;
-  const heroPhotos = [[`${assetsBase}new-photos/juzur-photo-08.webp`, t.images.top, '50% 50%'], [`${assetsBase}new-photos/juzur-photo-10.webp`, t.images.side, '50% 50%'], [`${assetsBase}new-photos/juzur-photo-01.webp`, t.images.lifestyle, '50% 50%'], [`${assetsBase}new-photos/juzur-photo-02.webp`, t.images.details, '50% 50%']];
+  const heroPhotos = [
+    [`${assetsBase}new-photos/juzur-photo-08.webp`, t.images.top],
+    [`${assetsBase}new-photos/juzur-photo-10.webp`, t.images.side],
+    [`${assetsBase}new-photos/juzur-photo-01.webp`, t.images.lifestyle],
+    [`${assetsBase}new-photos/juzur-photo-02.webp`, t.images.details],
+    [`${assetsBase}new-photos/juzur-extra-3680.webp`, language === 'ar' ? 'ترابيزة جذور على ذراع الكنبة من الأعلى' : 'Juzur tray on the sofa arm from above'],
+    [`${assetsBase}new-photos/juzur-extra-3672.webp`, language === 'ar' ? 'ترابيزة جذور مفتوحة توضح الأجزاء الخشبية' : 'Opened Juzur tray showing its wooden parts', 'contain'],
+    [`${assetsBase}new-photos/juzur-extra-3688.webp`, language === 'ar' ? 'ترابيزة جذور مفتوحة توضح مساحة التخزين' : 'Opened Juzur tray showing the storage space', 'contain'],
+    [`${assetsBase}new-photos/juzur-extra-3697.webp`, language === 'ar' ? 'ترابيزة جذور على ذراع الكنبة من الجانب' : 'Juzur tray on the sofa arm from the side'],
+  ];
   return <section className="hero-photos-section" aria-label={t.hero.mediaLabel}>
     <div className="hero-product-gallery reveal" id="heroGallery">
       <div className="hero-main-photo">
@@ -28,7 +37,7 @@ export function HeroPhotos() {
         <button className="hero-photo-nav hero-photo-prev" type="button" aria-label={t.modal.previous}>&#8249;</button>
         <button className="hero-photo-nav hero-photo-next" type="button" aria-label={t.modal.next}>&#8250;</button>
       </div>
-      <div className="hero-photo-thumbs" aria-label={t.hero.mediaLabel}>{heroPhotos.map(([src, alt, position], index) => <button key={src} className={`hero-photo-thumb hero-media-thumb${index === 0 ? ' active' : ''}`} type="button" data-img={src} data-alt={alt} data-position={position} aria-label={alt} aria-pressed={index === 0}><img src={thumbnailImage(src)} alt="" width="480" height="343" loading="lazy" decoding="async" style={{ objectPosition: position }} /></button>)}</div>
+      <div className="hero-photo-thumbs" aria-label={t.hero.mediaLabel}>{heroPhotos.map(([src, alt, fit], index) => <button key={src} className={`hero-photo-thumb hero-media-thumb${index === 0 ? ' active' : ''}`} type="button" data-img={src} data-alt={alt} data-fit={fit || 'cover'} aria-label={alt} aria-pressed={index === 0}><img src={thumbnailImage(src)} alt="" width="480" height="343" loading="lazy" decoding="async" /></button>)}</div>
     </div>
   </section>;
 }
