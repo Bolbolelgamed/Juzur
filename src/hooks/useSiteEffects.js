@@ -117,6 +117,7 @@ export function useSiteEffects(language, imagePreviewFallback) {
     cleanups.push(() => modal?.removeEventListener('touchend', onTouchEnd));
     cleanups.push(() => window.removeEventListener('keydown', onKeyDown));
 
+    setupHeroVideo(cleanups);
     setupHeroGallery(cleanups);
     setupStickyCta(cleanups);
 
@@ -124,287 +125,191 @@ export function useSiteEffects(language, imagePreviewFallback) {
   }, [language, imagePreviewFallback]);
 }
 
-function setupHeroGallery(cleanups) {
-  const heroPhotoThumbs = [...document.querySelectorAll('.hero-media-thumb')];
-  const heroGallery = document.getElementById('heroGallery');
-  const heroSwipeSurface = heroGallery?.querySelector('.hero-main-photo');
+function setupHeroVideo(cleanups) {
   const heroVideo = document.getElementById('heroVideo');
-  const heroPreviousImage = document.getElementById('heroPreviousImage');
-  const heroCurrentImage = document.getElementById('heroCurrentImage');
-  const heroImageCache = new Map();
-  const HERO_PHOTO_ROTATION_MS = 3000;
-  const HERO_VIDEO_START_SECONDS = 0.25;
+  if (!heroVideo) return;
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let heroPhotoIndex = heroPhotoThumbs.findIndex((btn) => btn.classList.contains('active'));
-  let heroPhotoIdleTimer;
-  let heroPhotoAnimating = false;
-  let queuedHeroPhotoIndex = null;
+  let startTimer;
+  let idleId;
+  let started = false;
+
+  heroVideo.muted = true;
+  heroVideo.defaultMuted = true;
+  const skipOpeningFrame = () => {
+    if (heroVideo.currentTime < 0.25 && Number.isFinite(heroVideo.duration)) {
+      heroVideo.currentTime = Math.min(0.25, Math.max(0, heroVideo.duration - 0.1));
+    }
+  };
+  const startHeroVideo = () => {
+    if (motionQuery.matches || document.visibilityState !== 'visible') return;
+    started = true;
+    heroVideo.play().catch(() => {});
+  };
+  const scheduleStart = () => {
+    startTimer = window.setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(startHeroVideo, { timeout: 2500 });
+      } else startHeroVideo();
+    }, 400);
+  };
+  const onVisibilityChange = () => {
+    if (started && document.visibilityState === 'visible') startHeroVideo();
+  };
+  const onMotionChange = () => {
+    if (motionQuery.matches) heroVideo.pause();
+    else startHeroVideo();
+  };
+
+  if (document.readyState === 'complete') scheduleStart();
+  else window.addEventListener('load', scheduleStart, { once: true });
+  heroVideo.addEventListener('loadedmetadata', skipOpeningFrame);
+  document.addEventListener('visibilitychange', onVisibilityChange);
+  motionQuery.addEventListener('change', onMotionChange);
+  cleanups.push(() => {
+    window.removeEventListener('load', scheduleStart);
+    window.clearTimeout(startTimer);
+    if (idleId) window.cancelIdleCallback?.(idleId);
+    heroVideo.removeEventListener('loadedmetadata', skipOpeningFrame);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    motionQuery.removeEventListener('change', onMotionChange);
+    heroVideo.pause();
+  });
+}
+
+function setupHeroGallery(cleanups) {
+  const gallery = document.getElementById('heroGallery');
+  const surface = gallery?.querySelector('.hero-main-photo');
+  const current = document.getElementById('heroCurrentImage');
+  const previous = document.getElementById('heroPreviousImage');
+  const thumbs = [...(gallery?.querySelectorAll('.hero-media-thumb') || [])];
+  if (!gallery || !surface || !current || !previous || !thumbs.length) return;
+
+  let index = 0;
+  let requestId = 0;
+  let transitionTimer;
   let pointerId = null;
   let startX = 0;
   let startY = 0;
   let dragX = 0;
-  let isDragging = false;
+  let dragging = false;
+  const cache = new Map();
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  if (heroPhotoIndex < 0) heroPhotoIndex = 0;
-
-  function preloadHeroImage(src) {
-    if (heroImageCache.has(src)) return heroImageCache.get(src);
-    const request = new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(src);
-      img.onerror = reject;
-      img.decoding = 'async';
-      img.src = src;
-    });
-    heroImageCache.set(src, request);
-    return request;
+  function preload(src) {
+    if (!cache.has(src)) cache.set(src, new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = resolve;
+      image.onerror = reject;
+      image.src = src;
+    }));
+    return cache.get(src);
   }
 
-  function stopHeroAutoplay() {
-    window.clearTimeout(heroPhotoIdleTimer);
-  }
-
-  function scheduleHeroAutoplay() {
-    stopHeroAutoplay();
-    if (heroPhotoThumbs.length < 2 || motionQuery.matches) return;
-    if (heroPhotoThumbs[heroPhotoIndex]?.dataset.kind === 'video') return;
-    heroPhotoIdleTimer = window.setTimeout(
-      () => showHeroPhoto(heroPhotoIndex + 1),
-      HERO_PHOTO_ROTATION_MS,
-    );
-  }
-
-  function setHeroThumbState(index, state) {
-    heroPhotoThumbs.forEach((item, itemIndex) => {
-      item.classList.toggle('active', itemIndex === index && state === 'active');
-      item.classList.toggle('is-pending', itemIndex === index && state === 'pending');
-    });
-  }
-
-  async function showHeroPhoto(index) {
-    if (!heroPreviousImage || !heroCurrentImage || !heroPhotoThumbs.length) return;
-    const normalizedIndex = (index + heroPhotoThumbs.length) % heroPhotoThumbs.length;
-    if (heroPhotoAnimating) {
-      queuedHeroPhotoIndex = normalizedIndex;
-      return;
-    }
-    const btn = heroPhotoThumbs[normalizedIndex];
-    const isVideo = btn.dataset.kind === 'video';
-    if (isVideo) {
-      stopHeroAutoplay();
-      queuedHeroPhotoIndex = null;
-      heroPhotoAnimating = false;
-      heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous';
-      heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current is-visible';
-      heroVideo?.classList.add('is-visible');
-      if (heroVideo?.readyState >= 2) heroVideo.classList.add('is-ready');
-      heroVideo?.play().catch(() => {});
-      heroPhotoIndex = normalizedIndex;
-      setHeroThumbState(heroPhotoIndex, 'active');
-      heroGallery?.classList.remove('is-transitioning');
-      return;
-    }
-    const nextSrc = btn.dataset.img;
-    const nextAlt = btn.dataset.alt || 'Juzur Sofa tray product view';
-    const nextPosition = btn.dataset.position || '50% 50%';
-    const videoWasVisible = heroVideo?.classList.contains('is-visible');
-    if (!nextSrc || (!videoWasVisible && heroCurrentImage.src.endsWith(nextSrc))) {
-      scheduleHeroAutoplay();
-      return;
-    }
-
-    stopHeroAutoplay();
-    setHeroThumbState(normalizedIndex, 'pending');
-
+  async function show(nextIndex) {
+    const next = (nextIndex + thumbs.length) % thumbs.length;
+    if (next === index) return;
+    const target = thumbs[next];
+    const src = target.dataset.img;
+    const ticket = ++requestId;
+    target.classList.add('is-pending');
     try {
-      await preloadHeroImage(nextSrc);
+      await preload(src);
     } catch {
-      setHeroThumbState(heroPhotoIndex, 'active');
-      scheduleHeroAutoplay();
+      target.classList.remove('is-pending');
       return;
     }
+    target.classList.remove('is-pending');
+    if (ticket !== requestId) return;
 
-    heroPhotoAnimating = true;
-    heroVideo?.pause();
-    heroVideo?.classList.remove('is-visible');
-    const oldSrc = heroCurrentImage.getAttribute('src');
-    if (!videoWasVisible) {
-      heroPreviousImage.src = oldSrc;
-      heroPreviousImage.style.objectPosition = heroCurrentImage.style.objectPosition || '50% 50%';
-      heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous is-visible';
-    }
-    heroCurrentImage.src = nextSrc;
-    heroCurrentImage.alt = nextAlt;
-    heroCurrentImage.style.objectPosition = nextPosition;
-    heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current';
-    heroPhotoIndex = normalizedIndex;
-    setHeroThumbState(heroPhotoIndex, 'active');
-
-    requestAnimationFrame(() => {
-      heroGallery?.classList.add('is-transitioning');
-      if (!videoWasVisible) heroPreviousImage.classList.add('is-leaving');
-      heroCurrentImage.classList.add('is-visible');
+    window.clearTimeout(transitionTimer);
+    previous.src = current.getAttribute('src');
+    previous.style.objectPosition = current.style.objectPosition || '50% 50%';
+    previous.className = 'hero-gallery-layer hero-gallery-layer-previous is-visible';
+    current.className = 'hero-gallery-layer hero-gallery-layer-current';
+    current.src = src;
+    current.alt = target.dataset.alt || '';
+    current.style.objectPosition = target.dataset.position || '50% 50%';
+    index = next;
+    thumbs.forEach((thumb, thumbIndex) => {
+      thumb.classList.toggle('active', thumbIndex === next);
+      thumb.setAttribute('aria-pressed', String(thumbIndex === next));
     });
-
-    window.setTimeout(() => {
-      heroPreviousImage.className = 'hero-gallery-layer hero-gallery-layer-previous';
-      heroCurrentImage.className = 'hero-gallery-layer hero-gallery-layer-current is-visible';
-      heroPhotoAnimating = false;
-      const queuedIndex = queuedHeroPhotoIndex;
-      queuedHeroPhotoIndex = null;
-      heroGallery?.classList.remove('is-transitioning');
-      if (queuedIndex !== null && queuedIndex !== heroPhotoIndex) {
-        showHeroPhoto(queuedIndex);
-        return;
-      }
-      scheduleHeroAutoplay();
+    requestAnimationFrame(() => {
+      current.classList.add('is-visible');
+      previous.classList.add('is-leaving');
+    });
+    transitionTimer = window.setTimeout(() => {
+      previous.className = 'hero-gallery-layer hero-gallery-layer-previous';
     }, motionQuery.matches ? 0 : 430);
   }
 
-  function releaseDrag(event) {
-    if (
-      event
-      && heroSwipeSurface?.hasPointerCapture?.(event.pointerId)
-    ) {
-      heroSwipeSurface.releasePointerCapture(event.pointerId);
-    }
-    pointerId = null;
-    isDragging = false;
-    heroGallery?.classList.remove('is-dragging');
-  }
-
-  heroPhotoThumbs.forEach((btn, index) => {
-    const onClick = () => {
-      stopHeroAutoplay();
-      if (index === heroPhotoIndex && btn.dataset.kind === 'video') heroVideo?.play().catch(() => {});
-      else if (index === heroPhotoIndex) scheduleHeroAutoplay();
-      else showHeroPhoto(index);
-    };
-    btn.addEventListener('click', onClick);
-    btn.addEventListener('mouseenter', stopHeroAutoplay);
-    btn.addEventListener('mouseleave', scheduleHeroAutoplay);
-    cleanups.push(() => {
-      btn.removeEventListener('click', onClick);
-      btn.removeEventListener('mouseenter', stopHeroAutoplay);
-      btn.removeEventListener('mouseleave', scheduleHeroAutoplay);
-    });
+  thumbs.forEach((thumb, thumbIndex) => {
+    const onClick = () => show(thumbIndex);
+    thumb.addEventListener('click', onClick);
+    cleanups.push(() => thumb.removeEventListener('click', onClick));
   });
 
-  if (heroPhotoThumbs.length > 1 && !motionQuery.matches) {
-    scheduleHeroAutoplay();
-    cleanups.push(stopHeroAutoplay);
-  }
+  const prev = gallery.querySelector('.hero-photo-prev');
+  const next = gallery.querySelector('.hero-photo-next');
+  const onPrev = () => show(index - 1);
+  const onNext = () => show(index + 1);
+  prev?.addEventListener('click', onPrev);
+  next?.addEventListener('click', onNext);
+  cleanups.push(() => {
+    prev?.removeEventListener('click', onPrev);
+    next?.removeEventListener('click', onNext);
+    window.clearTimeout(transitionTimer);
+  });
 
-  if (heroVideo) {
-    heroVideo.muted = true;
-    heroVideo.defaultMuted = true;
-    let deferredStartTimer;
-    let deferredIdleId;
-    let autoplayStarted = false;
-
-    const skipOpeningBlackFrame = () => {
-      if (heroVideo.currentTime >= HERO_VIDEO_START_SECONDS || Number.isNaN(heroVideo.duration)) return;
-      heroVideo.currentTime = Math.min(HERO_VIDEO_START_SECONDS, Math.max(0, heroVideo.duration - 0.1));
-    };
-    const markHeroVideoReady = () => {
-      skipOpeningBlackFrame();
-      heroVideo.classList.add('is-ready');
-    };
-    const startHeroVideo = () => {
-      if (motionQuery.matches || heroPhotoThumbs[heroPhotoIndex]?.dataset.kind !== 'video') return;
-      autoplayStarted = true;
-      heroVideo.play().catch(() => {});
-    };
-    const scheduleDeferredAutoplay = () => {
-      deferredStartTimer = window.setTimeout(() => {
-        if ('requestIdleCallback' in window) {
-          deferredIdleId = window.requestIdleCallback(startHeroVideo, { timeout: 2500 });
-        } else {
-          startHeroVideo();
-        }
-      }, 400);
-    };
-    const resumeStartedVideo = () => {
-      if (document.visibilityState === 'visible' && autoplayStarted) startHeroVideo();
-    };
-
-    if (document.readyState === 'complete') scheduleDeferredAutoplay();
-    else window.addEventListener('load', scheduleDeferredAutoplay, { once: true });
-    heroVideo.addEventListener('loadedmetadata', skipOpeningBlackFrame);
-    heroVideo.addEventListener('loadeddata', markHeroVideoReady);
-    document.addEventListener('visibilitychange', resumeStartedVideo);
-    cleanups.push(() => {
-      window.removeEventListener('load', scheduleDeferredAutoplay);
-      window.clearTimeout(deferredStartTimer);
-      if (deferredIdleId) window.cancelIdleCallback?.(deferredIdleId);
-      heroVideo.removeEventListener('loadedmetadata', skipOpeningBlackFrame);
-      heroVideo.removeEventListener('loadeddata', markHeroVideoReady);
-      document.removeEventListener('visibilitychange', resumeStartedVideo);
-      heroVideo.pause();
-    });
-  }
-
-  const onMotionPreferenceChange = () => {
-    if (motionQuery.matches) stopHeroAutoplay();
-    else scheduleHeroAutoplay();
+  const release = (event) => {
+    if (event && surface.hasPointerCapture?.(event.pointerId)) {
+      surface.releasePointerCapture(event.pointerId);
+    }
+    pointerId = null;
+    dragging = false;
+    gallery.classList.remove('is-dragging');
   };
-  motionQuery.addEventListener('change', onMotionPreferenceChange);
-  cleanups.push(() => motionQuery.removeEventListener('change', onMotionPreferenceChange));
-
-  if (!heroGallery || !heroSwipeSurface) return;
-
   const onPointerDown = (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
-    if (event.target.closest('a, button, video, input, select, textarea')) return;
+    if (event.target.closest('button')) return;
     pointerId = event.pointerId;
     startX = event.clientX;
     startY = event.clientY;
     dragX = 0;
-    isDragging = false;
-    stopHeroAutoplay();
-    heroSwipeSurface.setPointerCapture(pointerId);
+    dragging = false;
+    surface.setPointerCapture(pointerId);
   };
   const onPointerMove = (event) => {
     if (pointerId !== event.pointerId) return;
     dragX = event.clientX - startX;
     const dragY = event.clientY - startY;
-    if (!isDragging) {
+    if (!dragging) {
       if (Math.abs(dragX) < 8 || Math.abs(dragX) < Math.abs(dragY)) return;
-      isDragging = true;
-      heroGallery.classList.add('is-dragging');
+      dragging = true;
+      gallery.classList.add('is-dragging');
     }
     event.preventDefault();
   };
   const onPointerUp = (event) => {
     if (pointerId !== event.pointerId) return;
-    if (isDragging && Math.abs(dragX) > 64) {
-      showHeroPhoto(dragX < 0 ? heroPhotoIndex + 1 : heroPhotoIndex - 1);
-    } else {
-      scheduleHeroAutoplay();
-    }
-    releaseDrag(event);
+    if (dragging && Math.abs(dragX) > 64) show(index + (dragX < 0 ? 1 : -1));
+    release(event);
   };
-  const onPointerCancel = (event) => {
-    releaseDrag(event);
-    scheduleHeroAutoplay();
-  };
+  const onPointerCancel = (event) => release(event);
   const onLostPointerCapture = (event) => {
-    if (pointerId !== event.pointerId) return;
-    releaseDrag();
-    scheduleHeroAutoplay();
+    if (pointerId === event.pointerId) release();
   };
-
-  heroSwipeSurface.addEventListener('pointerdown', onPointerDown);
-  heroSwipeSurface.addEventListener('pointermove', onPointerMove, { passive: false });
-  heroSwipeSurface.addEventListener('pointerup', onPointerUp);
-  heroSwipeSurface.addEventListener('pointercancel', onPointerCancel);
-  heroSwipeSurface.addEventListener('lostpointercapture', onLostPointerCapture);
+  surface.addEventListener('pointerdown', onPointerDown);
+  surface.addEventListener('pointermove', onPointerMove, { passive: false });
+  surface.addEventListener('pointerup', onPointerUp);
+  surface.addEventListener('pointercancel', onPointerCancel);
+  surface.addEventListener('lostpointercapture', onLostPointerCapture);
   cleanups.push(() => {
-    heroSwipeSurface.removeEventListener('pointerdown', onPointerDown);
-    heroSwipeSurface.removeEventListener('pointermove', onPointerMove);
-    heroSwipeSurface.removeEventListener('pointerup', onPointerUp);
-    heroSwipeSurface.removeEventListener('pointercancel', onPointerCancel);
-    heroSwipeSurface.removeEventListener('lostpointercapture', onLostPointerCapture);
+    surface.removeEventListener('pointerdown', onPointerDown);
+    surface.removeEventListener('pointermove', onPointerMove);
+    surface.removeEventListener('pointerup', onPointerUp);
+    surface.removeEventListener('pointercancel', onPointerCancel);
+    surface.removeEventListener('lostpointercapture', onLostPointerCapture);
   });
 }
 

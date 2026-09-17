@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Header from './components/Header.jsx';
-import Hero from './components/Hero.jsx';
+import Hero, { HeroPhotos } from './components/Hero.jsx';
 import VideoSection from './components/VideoSection.jsx';
 import GiftSection from './components/GiftSection.jsx';
 import MaterialSection from './components/MaterialSection.jsx';
@@ -55,6 +55,7 @@ export default function App() {
       <Header />
       <main id="top">
         <Hero />
+        <HeroPhotos />
         <VideoSection />
         <GiftSection />
         <MaterialSection />

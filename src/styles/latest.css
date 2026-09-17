@@ -187,30 +187,27 @@
   min-width: 0;
 }
 
-#heroGallery .hero-main-photo {
+#heroVideoCard .hero-main-photo {
   min-height: 340px;
 }
 
-#heroGallery .hero-gallery-video {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
+#heroVideoCard .hero-main-photo {
+  position: relative;
+  aspect-ratio: 1.28 / 1;
+  overflow: hidden;
+  background: #07130d;
+}
+
+#heroVideoCard .hero-gallery-video {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   background: #07130d;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 400ms ease;
-}
-
-#heroGallery .hero-gallery-video.is-visible {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .hero-photo-thumbs {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .hero-photo-thumb video {
@@ -689,7 +686,7 @@ textarea:focus-visible {
   }
 
   .hero-photo-thumbs {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
     margin-top: 10px;
   }
@@ -1374,6 +1371,53 @@ html[dir='rtl'] .launch-price .price-comparison {
 
 #heroGallery .hero-main-photo {
   touch-action: pan-y;
+}
+
+/* The video stays in the hero card; product photos live in their own gallery below. */
+.hero-photos-section {
+  position: relative;
+  padding: 0 24px 80px;
+  background: #0d2b1d;
+}
+.hero-photos-section .hero-product-gallery {
+  margin: 0 auto;
+  max-width: 650px;
+  justify-self: auto;
+}
+#heroGallery .hero-photo-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0 0 4px;
+  border: 1px solid rgba(217, 179, 106, .6);
+  border-radius: 50%;
+  background: rgba(13, 43, 29, .83);
+  color: #fff;
+  font: 38px/1 Georgia, serif;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background .2s ease, transform .2s ease;
+}
+#heroGallery .hero-photo-nav:hover {
+  background: #0d2b1d;
+  transform: translateY(-50%) scale(1.06);
+}
+#heroGallery .hero-photo-nav:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+#heroGallery .hero-photo-prev { left: 14px; }
+#heroGallery .hero-photo-next { right: 14px; }
+@media (max-width: 680px) {
+  .hero-photos-section { padding: 0 18px 52px; }
+  #heroVideoCard .hero-main-photo { min-height: 240px; }
+  #heroGallery .hero-photo-nav { width: 44px; height: 44px; }
+  #heroGallery .hero-photo-prev { left: 8px; }
+  #heroGallery .hero-photo-next { right: 8px; }
 }
 
 @media (max-width: 680px) {
