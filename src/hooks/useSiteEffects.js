@@ -39,17 +39,35 @@ export function useSiteEffects(language, imagePreviewFallback) {
       cleanups.push(() => revealObserver.disconnect());
     }
 
+    const lightboxButtons = [...document.querySelectorAll('.lightbox')];
+    let activePhotos = [];
+    let activePhotoIndex = 0;
+    let touchStartX = null;
+
+    const showModalPhoto = (index) => {
+      if (!modal || !activePhotos.length) return;
+      activePhotoIndex = (index + activePhotos.length) % activePhotos.length;
+      const photo = activePhotos[activePhotoIndex];
+      const previewImage = modal.querySelector('.modal-content img');
+      previewImage.src = photo.dataset.lightboxSrc;
+      previewImage.alt = photo.dataset.lightboxAlt || imagePreviewFallback;
+      modal.querySelectorAll('.modal-nav').forEach((button) => {
+        button.hidden = activePhotos.length < 2;
+      });
+    };
     const openLightbox = (event) => {
       if (!modal) return;
-      const previewImage = modal.querySelector('img');
-      previousModalFocus = event.currentTarget;
-      previewImage.src = event.currentTarget.dataset.lightboxSrc;
-      previewImage.alt = event.currentTarget.dataset.lightboxAlt || imagePreviewFallback;
+      const button = event.currentTarget;
+      previousModalFocus = button;
+      // The gift strip and product grid each keep their own photo order.
+      const group = button.closest('.gift-photo-strip, .gallery-grid');
+      activePhotos = group ? [...group.querySelectorAll('.lightbox')] : lightboxButtons;
+      showModalPhoto(activePhotos.indexOf(button));
       modal.classList.add('open');
       document.body.classList.add('modal-open');
       modal.querySelector('.modal-close')?.focus();
     };
-    document.querySelectorAll('.lightbox').forEach((button) => {
+    lightboxButtons.forEach((button) => {
       button.addEventListener('click', openLightbox);
       cleanups.push(() => button.removeEventListener('click', openLightbox));
     });
@@ -57,22 +75,46 @@ export function useSiteEffects(language, imagePreviewFallback) {
     const closeModal = () => {
       modal?.classList.remove('open');
       document.body.classList.remove('modal-open');
+      activePhotos = [];
       previousModalFocus?.focus();
     };
     const onModalClick = (event) => {
       if (event.target === modal || event.target.closest('.modal-close')) closeModal();
+      else if (event.target.closest('.modal-prev')) showModalPhoto(activePhotoIndex - 1);
+      else if (event.target.closest('.modal-next')) showModalPhoto(activePhotoIndex + 1);
     };
     const onKeyDown = (event) => {
       if (!modal?.classList.contains('open')) return;
       if (event.key === 'Escape') closeModal();
+      if (event.key === 'ArrowLeft') { event.preventDefault(); showModalPhoto(activePhotoIndex - 1); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); showModalPhoto(activePhotoIndex + 1); }
       if (event.key === 'Tab') {
-        event.preventDefault();
-        modal.querySelector('.modal-close')?.focus();
+        const controls = [...modal.querySelectorAll('button:not([hidden])')];
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
       }
     };
+    const onTouchStart = (event) => { touchStartX = event.touches[0]?.clientX ?? null; };
+    const onTouchEnd = (event) => {
+      if (touchStartX === null) return;
+      const distance = (event.changedTouches[0]?.clientX ?? touchStartX) - touchStartX;
+      touchStartX = null;
+      if (Math.abs(distance) > 50) showModalPhoto(activePhotoIndex + (distance < 0 ? 1 : -1));
+    };
     modal?.addEventListener('click', onModalClick);
+    modal?.addEventListener('touchstart', onTouchStart, { passive: true });
+    modal?.addEventListener('touchend', onTouchEnd, { passive: true });
     window.addEventListener('keydown', onKeyDown);
     cleanups.push(() => modal?.removeEventListener('click', onModalClick));
+    cleanups.push(() => modal?.removeEventListener('touchstart', onTouchStart));
+    cleanups.push(() => modal?.removeEventListener('touchend', onTouchEnd));
     cleanups.push(() => window.removeEventListener('keydown', onKeyDown));
 
     setupHeroGallery(cleanups);

@@ -1592,3 +1592,44 @@ html[dir='rtl'] .showcase-copy .feature-list li::before {
     text-align: start;
   }
 }
+
+/* Photo preview navigation stays within the image on narrow screens. */
+.modal-content {
+  width: max-content;
+  max-width: min(100%, 980px);
+}
+.modal-content img {
+  display: block;
+  max-width: 100%;
+  max-height: min(88vh, 88dvh);
+  object-fit: contain;
+}
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: 50%;
+  background: rgba(7, 19, 13, .82);
+  color: #fff;
+  font: inherit;
+  font-size: 40px;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.modal-nav[hidden] { display: none; }
+.modal-prev { left: 10px; }
+.modal-next { right: 10px; }
+.modal-nav:hover { background: #173d2b; }
+@media (max-width: 680px) {
+  .modal { padding: 12px; }
+  .modal-nav { width: 44px; height: 44px; font-size: 36px; }
+  .modal-prev { left: 6px; }
+  .modal-next { right: 6px; }
+}
