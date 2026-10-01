@@ -45,6 +45,7 @@ export default function Footer() {
         <span>{t.footer.tagline}</span>
       </div>
       <div className="footer-links" aria-label={t.footer.contactLabel}>
+        <a className="footer-privacy" href={`${import.meta.env.BASE_URL}privacy.html`}>{t.footer.privacy}</a>
         <p className="footer-support">{t.footer.support}</p>
         <div className="footer-contact-list">
           {contactItems.map((item) => (

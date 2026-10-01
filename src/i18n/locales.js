@@ -101,3 +101,8 @@ locales.en.checkout.statuses.uncertain = 'We could not confirm whether your orde
 locales.en.checkout.statuses.whatsappHelp = 'Check my order on WhatsApp';
 locales.ar.checkout.statuses.uncertain = 'ماقدرناش نتأكد إذا كان طلبك اتسجل. ابعت لنا الرسالة الجاهزة على واتساب عشان نراجعه. من فضلك ما تعملش طلب تاني دلوقتي.';
 locales.ar.checkout.statuses.whatsappHelp = 'راجع طلبي على واتساب';
+
+locales.en.faq.items.push(['How far does the tray open?', 'The tray opens up to 40 cm. Measure your sofa arm before ordering. For help checking the fit, contact us on WhatsApp.']);
+locales.ar.faq.items.push(['الترابيزة بتتفتح لحد كام؟', 'الترابيزة بتتفتح لحد ٤٠ سم. قيس ذراع الكنبة قبل الطلب، ولو محتاج تتأكد من المقاس، تواصل معانا على واتساب.']);
+locales.en.footer.privacy = 'Privacy policy';
+locales.ar.footer.privacy = 'سياسة الخصوصية';

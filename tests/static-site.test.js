@@ -13,7 +13,7 @@ test('production metadata uses the canonical storefront domain', async () => {
 });
 
 test('the GitHub Pages mirror redirects checkout traffic to the production storefront', async () => {
-  const html = await read('index.html');
+  const html = await read('public/storefront-redirect.js');
   assert.match(html, /window\.location\.hostname === 'bolbolelgamed\.github\.io'/);
   assert.match(html, /new URL\('https:\/\/www\.techwood-art\.com\/'\)/);
   assert.match(html, /window\.location\.replace\(destination\.toString\(\)\)/);
