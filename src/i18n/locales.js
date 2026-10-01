@@ -106,3 +106,18 @@ locales.en.faq.items.push(['How far does the tray open?', 'The tray opens up to 
 locales.ar.faq.items.push(['الترابيزة بتتفتح لحد كام؟', 'الترابيزة بتتفتح لحد ٤٠ سم. قيس ذراع الكنبة قبل الطلب، ولو محتاج تتأكد من المقاس، تواصل معانا على واتساب.']);
 locales.en.footer.privacy = 'Privacy policy';
 locales.ar.footer.privacy = 'سياسة الخصوصية';
+
+locales.en.checkout.summary = {
+  title: 'Order summary',
+  subtotal: 'Product subtotal',
+  shipping: 'Shipping',
+  total: 'Total including shipping',
+  selectGovernorate: 'Select your governorate',
+};
+locales.ar.checkout.summary = {
+  title: 'ملخص الطلب',
+  subtotal: 'سعر المنتجات',
+  shipping: 'الشحن',
+  total: 'الإجمالي شامل الشحن',
+  selectGovernorate: 'اختار محافظتك',
+};

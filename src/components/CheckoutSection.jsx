@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { formatPrice, product } from '../config/product.js';
+import { calculateOrderTotals, formatPrice, product } from '../config/product.js';
 import { createOrderHelpUrl, createOrderPayload, createOrderSuccessMessage, createSubmissionGate, isValidEgyptianMobile, submitOrder } from '../utils/order.js';
 import { createMetaPurchaseParameters, trackMetaEvent } from '../utils/metaPixel.js';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
@@ -8,7 +8,7 @@ const initialForm = { fullName:'', phone:'', governorate:'', areaCity:'', detail
 function fieldError(name, value) { const valueText = String(value).trim(); if (name === 'fullName' && !valueText) return 'fullName'; if (name === 'phone') { if (!valueText) return 'phoneEmpty'; if (!isValidEgyptianMobile(valueText)) return 'phoneInvalid'; } if (name === 'governorate' && !valueText) return 'governorate'; if (name === 'areaCity' && !valueText) return 'areaCity'; if (name === 'detailedAddress' && !valueText) return 'detailedAddress'; if (name === 'quantity' && (!Number.isInteger(Number(value)) || Number(value) < 1)) return 'quantity'; return ''; }
 function FormField({ id, label, error, children, className='' }) { return <div className={`form-field ${className}`.trim()}><label htmlFor={id}>{label}</label>{children}{error && <p className="field-error" id={`${id}-error`}>{error}</p>}</div>; }
 export default function CheckoutSection() {
-  const { language, t } = useLanguage(); const [form,setForm] = useState(initialForm); const [errors,setErrors] = useState({}); const [status,setStatus] = useState({key:'',type:''}); const [helpPayload,setHelpPayload] = useState(null); const [isSubmitting,setIsSubmitting] = useState(false); const submittingRef = useRef(createSubmissionGate()); const quantity = Math.max(1,Number(form.quantity)||1); const subtotal = product.finalUnitPrice*quantity;
+  const { language, t } = useLanguage(); const [form,setForm] = useState(initialForm); const [errors,setErrors] = useState({}); const [status,setStatus] = useState({key:'',type:''}); const [helpPayload,setHelpPayload] = useState(null); const [isSubmitting,setIsSubmitting] = useState(false); const submittingRef = useRef(createSubmissionGate()); const quantity = Math.max(1,Number(form.quantity)||1); const { subtotal, shippingFee, total } = calculateOrderTotals({ quantity, governorate: form.governorate });
   const helpUrl = helpPayload ? createOrderHelpUrl(helpPayload, language) : '';
   const statusMessage = status.key === 'summary' ? t.checkout.errors.summary : status.key === 'success' ? createOrderSuccessMessage({successMessage:t.checkout.statuses.success,language,orderId:status.orderId}) : status.key ? t.checkout.statuses[status.key] : '';
   const updateField = ({target:{name,value}}) => { setForm((current)=>({...current,[name]:value})); if(errors[name]) setErrors((current)=>({...current,[name]:fieldError(name,value)})); };
@@ -22,5 +22,15 @@ export default function CheckoutSection() {
     <FormField id="areaCity" label={t.checkout.labels.areaCity} error={t.checkout.errors[errors.areaCity]}><input {...fieldProps('areaCity')} type="text" autoComplete="address-level2" required /></FormField>
     <FormField id="detailedAddress" label={t.checkout.labels.detailedAddress} error={t.checkout.errors[errors.detailedAddress]} className="full-width"><textarea {...fieldProps('detailedAddress')} rows="3" autoComplete="street-address" required /></FormField>
     <FormField id="landmark" label={t.checkout.labels.landmark} error={t.checkout.errors[errors.landmark]} className="full-width"><input {...fieldProps('landmark')} type="text" autoComplete="address-line2" /></FormField>
-    <FormField id="quantity" label={t.checkout.labels.quantity} error={t.checkout.errors[errors.quantity]}><input {...fieldProps('quantity')} type="number" min="1" step="1" inputMode="numeric" required /></FormField></div><button className="btn primary checkout-submit" type="submit" disabled={isSubmitting || Boolean(helpUrl)}>{isSubmitting?t.checkout.sending:t.checkout.submit}</button><p className="checkout-trust-badge"><span aria-hidden="true">🔒</span>{t.checkout.trustBadge}</p><p className={`form-note ${status.type}`.trim()} aria-live="polite" role="status">{statusMessage}</p>{helpUrl && <a className="btn primary checkout-help" href={helpUrl} target="_blank" rel="noopener noreferrer">{t.checkout.statuses.whatsappHelp}</a>}</form></section>;
+    <FormField id="quantity" label={t.checkout.labels.quantity} error={t.checkout.errors[errors.quantity]}><input {...fieldProps('quantity')} type="number" min="1" step="1" inputMode="numeric" required /></FormField></div>
+    <div className="checkout-order-summary" aria-live="polite" aria-atomic="true">
+      <h3>{t.checkout.summary.title}</h3>
+      <dl>
+        <div><dt>{t.checkout.summary.subtotal}</dt><dd><bdi>{formatPrice(subtotal, language)}</bdi></dd></div>
+        <div><dt>{t.checkout.summary.shipping}</dt><dd>{shippingFee === null ? t.checkout.summary.selectGovernorate : <bdi>{formatPrice(shippingFee, language)}</bdi>}</dd></div>
+        <div className="checkout-order-total"><dt>{t.checkout.summary.total}</dt><dd><bdi>{total === null ? '—' : formatPrice(total, language)}</bdi></dd></div>
+      </dl>
+      <p>{t.checkout.shippingEstimate}</p>
+    </div>
+    <button className="btn primary checkout-submit" type="submit" disabled={isSubmitting || Boolean(helpUrl)}>{isSubmitting?t.checkout.sending:t.checkout.submit}</button><p className="checkout-trust-badge"><span aria-hidden="true">🔒</span>{t.checkout.trustBadge}</p><p className={`form-note ${status.type}`.trim()} aria-live="polite" role="status">{statusMessage}</p>{helpUrl && <a className="btn primary checkout-help" href={helpUrl} target="_blank" rel="noopener noreferrer">{t.checkout.statuses.whatsappHelp}</a>}</form></section>;
 }
