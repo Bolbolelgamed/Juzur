@@ -31,7 +31,7 @@ http://127.0.0.1:5173/
 
 ## Uploaded media
 
-The six photos and three videos added in October 2026 live in `public/assets/uploads/`. Only web-ready derivatives are published; the original PNG, JPEG, and MOV uploads are excluded from the site. Main media files were reduced from 39.6 MB to 4.9 MB (approximately 88% smaller).
+The six photos and two uploaded videos live in `public/assets/uploads/`. Only web-ready derivatives are published; the original PNG, JPEG, and MOV uploads are excluded from the site. The "Explore the tray design" clip and its preview images have been removed at the owner's request.
 
 Photos use WebP with 480 px thumbnails, 960 px variants where appropriate, and full-size previews capped at 200 KB. `src/config/media.js` contains their intrinsic dimensions and Arabic/English descriptions. Videos use 720 px wide H.264/AAC MP4 with the MP4 index at the beginning for streaming, plus WebP preview images. `DeferredVideo` attaches each video URL only when clicked, including the existing opening video. Playing a video pauses the others.
 

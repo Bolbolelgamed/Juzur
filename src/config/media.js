@@ -10,5 +10,4 @@ export const uploadedPhotos = [
 export const uploadedVideos = [
   { file: 'juzur-tray-closeup.mp4', poster: 'juzur-tray-closeup-poster.webp', width: 720, height: 1164, title: { en: 'A closer look at the tray', ar: 'نظرة أقرب على الترابيزة' } },
   { file: 'juzur-tray-in-use.mp4', poster: 'juzur-tray-in-use-poster.webp', width: 720, height: 1280, title: { en: 'Everyday comfort beside you', ar: 'راحة كل يوم جنبك' } },
-  { file: 'juzur-tray-opening.mp4', poster: 'juzur-tray-opening-poster.webp', width: 720, height: 1280, title: { en: 'Explore the tray design', ar: 'اكتشف تصميم الترابيزة' } },
 ];
