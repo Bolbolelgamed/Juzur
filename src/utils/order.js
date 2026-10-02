@@ -1,4 +1,4 @@
-import { formatPrice } from '../config/product.js';
+import { calculateOrderTotals, formatPrice } from '../config/product.js';
 import { contact } from '../config/contact.js';
 
 export const ORDER_ENDPOINT = '/api/orders';
@@ -42,7 +42,11 @@ export function createOrderPayload({
   now = Date.now,
   random = Math.random
 }) {
-  const subtotal = product.finalUnitPrice * quantity;
+  const { subtotal, shippingFee, total } = calculateOrderTotals({
+    quantity,
+    governorate: form.governorate,
+    unitPrice: product.finalUnitPrice,
+  });
   const timestamp = now();
   const submissionTimestamp = new Date(timestamp).toISOString();
 
@@ -95,8 +99,10 @@ export function createOrderPayload({
     quantity,
     unitPrice: product.finalUnitPrice,
     subtotal,
+    shippingFee,
+    total,
     paymentMethod: product.paymentMethod,
-    deliveryNote: product.deliveryFeeMessage,
+    deliveryNote: `${product.deliveryFeeMessage}. Shipping: ${formatPrice(shippingFee, 'en')}. Total including shipping: ${formatPrice(total, 'en')}.`,
     submissionTimestamp,
 
     fbp: getCookieValue('_fbp'),
@@ -115,7 +121,7 @@ export function createOrderPayload({
     name: form.fullName.trim(),
     address: `${form.detailedAddress.trim()}, ${form.areaCity.trim()}, ${form.governorate}`,
     pieces: String(quantity),
-    finalPrice: formatPrice(subtotal, 'en'),
+    finalPrice: formatPrice(total, 'en'),
     submittedAt: submissionTimestamp,
     language,
   };
@@ -128,8 +134,8 @@ export function createOrderSuccessMessage({ successMessage, language, orderId })
 
 export function createOrderHelpUrl(payload, language) {
   const lines = language === 'ar'
-    ? ['مرحبًا جذور، حاولت أطلب من الموقع ولم يظهر لي تأكيد. من فضلكم تحققوا إذا تم تسجيل الطلب قبل إنشاء طلب جديد.', `مرجع المحاولة: ${payload.orderId}`, `الاسم: ${payload.fullName}`, `الموبايل: ${payload.phone}`, `العنوان: ${payload.detailedAddress}, ${payload.areaCity}, ${payload.governorate}`, `علامة مميزة: ${payload.landmark || '-'}`, `عدد القطع: ${payload.quantity}`, `الإجمالي قبل الشحن: ${payload.finalPrice}`, 'الدفع عند الاستلام.']
-    : ['Hi Juzur, I tried to order on the website but did not receive confirmation. Please check whether it was recorded before creating another order.', `Attempt reference: ${payload.orderId}`, `Name: ${payload.fullName}`, `Phone: ${payload.phone}`, `Address: ${payload.detailedAddress}, ${payload.areaCity}, ${payload.governorate}`, `Landmark: ${payload.landmark || '-'}`, `Quantity: ${payload.quantity}`, `Total before delivery: ${payload.finalPrice}`, 'Cash on delivery.'];
+    ? ['مرحبًا جذور، حاولت أطلب من الموقع ولم يظهر لي تأكيد. من فضلكم تحققوا إذا تم تسجيل الطلب قبل إنشاء طلب جديد.', `مرجع المحاولة: ${payload.orderId}`, `الاسم: ${payload.fullName}`, `الموبايل: ${payload.phone}`, `العنوان: ${payload.detailedAddress}, ${payload.areaCity}, ${payload.governorate}`, `علامة مميزة: ${payload.landmark || '-'}`, `عدد القطع: ${payload.quantity}`, `سعر المنتجات: ${formatPrice(payload.subtotal, 'ar')}`, `الشحن: ${formatPrice(payload.shippingFee, 'ar')}`, `الإجمالي شامل الشحن: ${formatPrice(payload.total, 'ar')}`, 'الدفع عند الاستلام.']
+    : ['Hi Juzur, I tried to order on the website but did not receive confirmation. Please check whether it was recorded before creating another order.', `Attempt reference: ${payload.orderId}`, `Name: ${payload.fullName}`, `Phone: ${payload.phone}`, `Address: ${payload.detailedAddress}, ${payload.areaCity}, ${payload.governorate}`, `Landmark: ${payload.landmark || '-'}`, `Quantity: ${payload.quantity}`, `Product subtotal: ${formatPrice(payload.subtotal, 'en')}`, `Shipping: ${formatPrice(payload.shippingFee, 'en')}`, `Total including shipping: ${payload.finalPrice}`, 'Cash on delivery.'];
   return `${contact.whatsappUrl}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 

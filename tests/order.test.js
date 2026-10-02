@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { product } from '../src/config/product.js';
+import { calculateOrderTotals, product } from '../src/config/product.js';
 import { createMetaPurchaseParameters } from '../src/utils/metaPixel.js';
 import { createOrderHelpUrl, createOrderPayload, createOrderSuccessMessage, createSubmissionGate, submitOrder } from '../src/utils/order.js';
 
@@ -27,9 +27,30 @@ for (const quantity of [1, 2, 3]) {
     assert.equal(payload.quantity, quantity);
     assert.equal(payload.unitPrice, 2000);
     assert.equal(payload.subtotal, 2000 * quantity);
-    assert.equal(payload.finalPrice, `EGP ${(2000 * quantity).toLocaleString('en-US')}`);
+    assert.equal(payload.shippingFee, 50);
+    assert.equal(payload.total, 2000 * quantity + 50);
+    assert.equal(payload.finalPrice, `EGP ${(2000 * quantity + 50).toLocaleString('en-US')}`);
   });
 }
+
+for (const governorate of ['Cairo', 'Giza', 'Alexandria', 'Aswan', 'Asyut', 'Beheira', 'Beni Suef', 'Dakahlia', 'Damietta', 'Faiyum', 'Gharbia', 'Ismailia', 'Kafr El Sheikh', 'Luxor', 'Matrouh', 'Minya', 'Monufia', 'New Valley', 'North Sinai', 'Port Said', 'Qalyubia', 'Qena', 'Red Sea', 'Sharqia', 'Sohag', 'South Sinai', 'Suez']) {
+  test(`${governorate} charges shipping once per order`, () => {
+    const shippingFee = ['Cairo', 'Giza'].includes(governorate) ? 50 : 75;
+    const payload = createOrderPayload({ form: { ...form, governorate }, language: 'en', quantity: 2, product });
+    assert.equal(payload.shippingFee, shippingFee);
+    assert.equal(payload.subtotal, 4000);
+    assert.equal(payload.total, 4000 + shippingFee);
+    assert.equal(payload.finalPrice, `EGP ${(4000 + shippingFee).toLocaleString('en-US')}`);
+  });
+}
+
+test('shipping and total remain pending before a governorate is selected', () => {
+  assert.deepEqual(calculateOrderTotals({ quantity: 1, governorate: '' }), {
+    subtotal: 2000,
+    shippingFee: null,
+    total: null,
+  });
+});
 
 test('successful acknowledgement resolves with the backend orderId', async () => {
   const payload = { orderId: 'JUZUR-TEMP' };
@@ -78,8 +99,18 @@ test('uncertain order handoff includes the original attempt reference and delive
   assert.match(message, new RegExp(payload.orderId));
   assert.match(message, /01012345678/);
   assert.match(message, /1 Test Street, Nasr City, Cairo/);
-  assert.match(message, /EGP 4,000/);
+  assert.match(message, /سعر المنتجات: 4,000 جنيه/);
+  assert.match(message, /الشحن: 50 جنيه/);
+  assert.match(message, /الإجمالي شامل الشحن: 4,050 جنيه/);
   assert.match(message, /قبل إنشاء طلب جديد/);
+});
+
+test('English order handoff separates products, shipping and the full total', () => {
+  const payload = createOrderPayload({ form: { ...form, governorate: 'Alexandria' }, language: 'en', quantity: 1, product });
+  const message = new URL(createOrderHelpUrl(payload, 'en')).searchParams.get('text');
+  assert.match(message, /Product subtotal: EGP 2,000/);
+  assert.match(message, /Shipping: EGP 75/);
+  assert.match(message, /Total including shipping: EGP 2,075/);
 });
 
 test('unverified response is rejected', async () => {

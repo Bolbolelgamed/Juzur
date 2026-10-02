@@ -18,3 +18,16 @@ export function formatPrice(value, language = 'en') {
     ? `${englishNumberFormatter.format(value)} جنيه`
     : `EGP ${englishNumberFormatter.format(value)}`;
 }
+
+export function calculateOrderTotals({ quantity, governorate, unitPrice = product.finalUnitPrice }) {
+  const subtotal = unitPrice * quantity;
+  const shippingFee = governorate
+    ? (governorate === 'Cairo' || governorate === 'Giza' ? 50 : 75)
+    : null;
+
+  return {
+    subtotal,
+    shippingFee,
+    total: shippingFee === null ? null : subtotal + shippingFee,
+  };
+}

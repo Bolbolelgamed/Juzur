@@ -58,7 +58,7 @@ function doPost(e) {
       validation.quantity,
       originalPrice,
       discount,
-      validation.subtotal,
+      validation.total,
       'Website order'
     ]);
 
@@ -110,7 +110,18 @@ function validateOrder_(data) {
     return { ok: false, error: 'subtotal does not match unitPrice multiplied by quantity.' };
   }
 
-  return { ok: true, quantity: quantity, unitPrice: unitPrice, subtotal: subtotal };
+  const governorate = String(data.governorate || '').trim();
+  if (!governorate) return { ok: false, error: 'governorate is required.' };
+  const shippingFee = governorate === 'Cairo' || governorate === 'Giza' ? 50 : 75;
+  const total = subtotal + shippingFee;
+  if (data.shippingFee !== undefined && Number(data.shippingFee) !== shippingFee) {
+    return { ok: false, error: 'shippingFee does not match the governorate.' };
+  }
+  if (data.total !== undefined && Number(data.total) !== total) {
+    return { ok: false, error: 'total does not match subtotal plus shippingFee.' };
+  }
+
+  return { ok: true, quantity: quantity, unitPrice: unitPrice, subtotal: subtotal, shippingFee: shippingFee, total: total };
 }
 
 function getConfig_() {
@@ -173,6 +184,8 @@ function buildOrderText_(data, order, submittedAt) {
     `Quantity: ${order.quantity}`,
     `Unit Price: ${order.unitPrice}`,
     `Subtotal: ${order.subtotal}`,
+    `Shipping: ${order.shippingFee}`,
+    `Total including shipping: ${order.total}`,
     `Submitted: ${submittedAt}`
   ].join('\n');
 }

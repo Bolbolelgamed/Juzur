@@ -4,6 +4,8 @@ import App from './App.jsx';
 import './styles/fonts.css';
 import './styles/base.css';
 import './styles/latest.css';
+import './styles/checkout.css';
+import './styles/media.css';
 import { LanguageProvider } from './i18n/LanguageContext.jsx';
 
 createRoot(document.getElementById('root')).render(

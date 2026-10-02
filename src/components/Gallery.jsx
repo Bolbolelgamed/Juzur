@@ -1,10 +1,12 @@
 import { useLanguage } from '../i18n/LanguageContext.jsx';
 import { responsiveImageSet } from '../utils/assets.js';
+import { uploadedPhotos } from '../config/media.js';
 
 export default function Gallery() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const assetsBase = `${import.meta.env.BASE_URL}assets/`;
   const images = [
+    ...uploadedPhotos.map((photo) => [`${assetsBase}uploads/${photo.file}`, photo.alt[language], `${photo.width === photo.height ? '' : 'gallery-portrait'}${photo.fit === 'contain' ? ' gallery-fit-contain' : ''}`, photo.width, photo.height]),
     [`${assetsBase}new-photos/juzur-photo-02.webp`, t.images.details, 'gallery-portrait', 1484, 1979],
     [`${assetsBase}new-photos/juzur-photo-01.webp`, t.images.cozy, 'gallery-portrait', 702, 863],
     [`${assetsBase}new-photos/juzur-photo-05.webp`, t.images.details, 'gallery-portrait', 1484, 1979],
