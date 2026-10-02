@@ -117,63 +117,11 @@ export function useSiteEffects(language, imagePreviewFallback) {
     cleanups.push(() => modal?.removeEventListener('touchend', onTouchEnd));
     cleanups.push(() => window.removeEventListener('keydown', onKeyDown));
 
-    setupHeroVideo(cleanups);
     setupHeroGallery(cleanups);
     setupStickyCta(cleanups);
 
     return () => cleanups.forEach((cleanup) => cleanup());
   }, [language, imagePreviewFallback]);
-}
-
-function setupHeroVideo(cleanups) {
-  const heroVideo = document.getElementById('heroVideo');
-  if (!heroVideo) return;
-  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let startTimer;
-  let idleId;
-  let started = false;
-
-  heroVideo.muted = true;
-  heroVideo.defaultMuted = true;
-  const skipOpeningFrame = () => {
-    if (heroVideo.currentTime < 0.25 && Number.isFinite(heroVideo.duration)) {
-      heroVideo.currentTime = Math.min(0.25, Math.max(0, heroVideo.duration - 0.1));
-    }
-  };
-  const startHeroVideo = () => {
-    if (motionQuery.matches || document.visibilityState !== 'visible') return;
-    started = true;
-    heroVideo.play().catch(() => {});
-  };
-  const scheduleStart = () => {
-    startTimer = window.setTimeout(() => {
-      if ('requestIdleCallback' in window) {
-        idleId = window.requestIdleCallback(startHeroVideo, { timeout: 2500 });
-      } else startHeroVideo();
-    }, 400);
-  };
-  const onVisibilityChange = () => {
-    if (started && document.visibilityState === 'visible') startHeroVideo();
-  };
-  const onMotionChange = () => {
-    if (motionQuery.matches) heroVideo.pause();
-    else startHeroVideo();
-  };
-
-  if (document.readyState === 'complete') scheduleStart();
-  else window.addEventListener('load', scheduleStart, { once: true });
-  heroVideo.addEventListener('loadedmetadata', skipOpeningFrame);
-  document.addEventListener('visibilitychange', onVisibilityChange);
-  motionQuery.addEventListener('change', onMotionChange);
-  cleanups.push(() => {
-    window.removeEventListener('load', scheduleStart);
-    window.clearTimeout(startTimer);
-    if (idleId) window.cancelIdleCallback?.(idleId);
-    heroVideo.removeEventListener('loadedmetadata', skipOpeningFrame);
-    document.removeEventListener('visibilitychange', onVisibilityChange);
-    motionQuery.removeEventListener('change', onMotionChange);
-    heroVideo.pause();
-  });
 }
 
 function setupHeroGallery(cleanups) {
@@ -195,11 +143,13 @@ function setupHeroGallery(cleanups) {
   const cache = new Map();
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  function preload(src) {
+  function preload(src, srcSet, sizes) {
     if (!cache.has(src)) cache.set(src, new Promise((resolve, reject) => {
       const image = new Image();
       image.onload = resolve;
       image.onerror = reject;
+      image.srcset = srcSet || '';
+      image.sizes = sizes || '';
       image.src = src;
     }));
     return cache.get(src);
@@ -213,7 +163,7 @@ function setupHeroGallery(cleanups) {
     const ticket = ++requestId;
     target.classList.add('is-pending');
     try {
-      await preload(src);
+      await preload(src, target.dataset.srcset, target.dataset.sizes);
     } catch {
       target.classList.remove('is-pending');
       return;
@@ -223,10 +173,14 @@ function setupHeroGallery(cleanups) {
 
     window.clearTimeout(transitionTimer);
     previous.src = current.getAttribute('src');
+    previous.srcset = current.srcset;
+    previous.sizes = current.sizes;
     previous.style.objectPosition = current.style.objectPosition || '50% 50%';
     previous.style.objectFit = current.style.objectFit || 'cover';
     previous.className = 'hero-gallery-layer hero-gallery-layer-previous is-visible';
     current.className = 'hero-gallery-layer hero-gallery-layer-current';
+    current.srcset = target.dataset.srcset || '';
+    current.sizes = target.dataset.sizes || '';
     current.src = src;
     current.alt = target.dataset.alt || '';
     current.style.objectPosition = target.dataset.position || '50% 50%';

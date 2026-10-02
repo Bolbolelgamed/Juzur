@@ -107,6 +107,9 @@ locales.ar.faq.items.push(['الترابيزة بتتفتح لحد كام؟', '�
 locales.en.footer.privacy = 'Privacy policy';
 locales.ar.footer.privacy = 'سياسة الخصوصية';
 
+locales.en.video.playLabel = 'Play video';
+locales.ar.video.playLabel = 'شغّل الفيديو';
+
 locales.en.checkout.summary = {
   title: 'Order summary',
   subtotal: 'Product subtotal',

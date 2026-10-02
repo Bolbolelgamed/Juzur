@@ -29,7 +29,15 @@ Manual check URL while the dev server is running:
 http://127.0.0.1:5173/
 ```
 
-## Cloudflare Pages
+## Uploaded media
+
+The six photos and three videos added in October 2026 live in `public/assets/uploads/`. Only web-ready derivatives are published; the original PNG, JPEG, and MOV uploads are excluded from the site. Main media files were reduced from 39.6 MB to 4.9 MB (approximately 88% smaller).
+
+Photos use WebP with 480 px thumbnails, 960 px variants where appropriate, and full-size previews capped at 200 KB. `src/config/media.js` contains their intrinsic dimensions and Arabic/English descriptions. Videos use 720 px wide H.264/AAC MP4 with the MP4 index at the beginning for streaming, plus WebP preview images. `DeferredVideo` attaches each video URL only when clicked, including the existing opening video. Playing a video pauses the others.
+
+`npm test` verifies photo/video size budgets and streamable MP4 structure. Shipping calculations remain unchanged by the media update.
+
+## Cloudflare Pages deployment
 
 Cloudflare Pages should stay connected to the GitHub `main` branch.
 
