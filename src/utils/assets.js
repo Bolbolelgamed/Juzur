@@ -16,5 +16,5 @@ export function responsiveImageSet(src) {
 }
 
 export function thumbnailImage(src) {
-  return src.replace('.webp', '-480.webp');
+  return src.replace('.webp', '-thumb.webp');
 }

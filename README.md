@@ -49,3 +49,9 @@ Build output directory: dist/client
 ```
 
 The same output directory is also saved in `wrangler.toml` as `pages_build_output_dir = "./dist/client"` so future deployments keep using the correct built website folder.
+
+## Mobile speed improvements
+
+The production build now pre-renders the existing React page into static HTML and hydrates it in the browser. Arabic is the shared initial render; saved English preferences are restored after hydration. The opening content appears without the reveal animation delay. The hero poster uses responsive candidates with high fetch priority. Gallery thumbnails use dedicated 192 px WebP files; the logo uses lossless WebP. Videos remain click-to-load and Meta tracking behavior is unchanged.
+
+Validation: production build and all 66 existing tests pass. Additional isolated DOM checks verified pre-rendered content, image references, hydration in both saved languages, language switching, deferred video sources, and Cairo shipping totals. The private preview was checked visually and benchmarked separately; its hosting and disabled Meta tracking mean its score is not a production guarantee.

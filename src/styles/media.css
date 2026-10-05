@@ -19,7 +19,8 @@
   object-fit: contain;
 }
 
-.deferred-video[data-active='false'] > video {
+.deferred-video[data-active='false'] > video,
+#heroVideoCard .deferred-video[data-active='false'] > .hero-gallery-video {
   display: none;
 }
 
@@ -110,4 +111,12 @@
 
 @media (max-width: 560px) {
   .video-grid.uploaded-video-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Show the opening content immediately instead of waiting for scroll effects. */
+.hero .reveal,
+.hero .reveal.visible {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }

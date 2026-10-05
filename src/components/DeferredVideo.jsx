@@ -23,7 +23,7 @@ export default function DeferredVideo({ src, poster, posterSrcSet, label, playLa
 
   return <div className="deferred-video" data-active={active} style={{ '--video-ratio': `${width} / ${height}` }}>
     {!active && <>
-      <img className="deferred-video-poster" src={poster} srcSet={posterSrcSet} sizes="(max-width: 680px) calc(100vw - 48px), 360px" alt="" width={width} height={height} loading={eagerPoster ? 'eager' : 'lazy'} decoding="async" />
+      <img className="deferred-video-poster" src={poster} srcSet={posterSrcSet} sizes={eagerPoster ? '(max-width: 680px) calc(100vw - 64px), (max-width: 920px) calc(100vw - 88px), 560px' : '(max-width: 680px) calc(100vw - 48px), 360px'} alt="" width={width} height={height} loading={eagerPoster ? 'eager' : 'lazy'} fetchPriority={eagerPoster ? 'high' : undefined} decoding="async" />
       <button className="deferred-video-play" type="button" onClick={startVideo} aria-label={`${playLabel}: ${label}`}>
         <span className="deferred-video-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5v14l11-7z" /></svg></span>
         <span>{playLabel}</span>
