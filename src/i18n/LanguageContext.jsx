@@ -8,7 +8,13 @@ function initialLanguage() {
 }
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState(initialLanguage);
+  // Match the pre-rendered Arabic HTML before restoring a saved preference.
+  const [language, setLanguage] = useState('ar');
+  const [preferenceReady, setPreferenceReady] = useState(false);
+  useEffect(() => {
+    setLanguage(initialLanguage());
+    setPreferenceReady(true);
+  }, []);
   const value = useMemo(() => ({ language, isRtl: language === 'ar', t: locales[language], toggleLanguage: () => setLanguage((current) => current === 'ar' ? 'en' : 'ar') }), [language]);
 
   useEffect(() => {
@@ -20,8 +26,10 @@ export function LanguageProvider({ children }) {
     document.querySelector('meta[property="og:description"]')?.setAttribute('content', locales[language].meta.description);
     document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', locales[language].meta.title);
     document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', locales[language].meta.description);
-    try { localStorage.setItem('juzur-language', language); } catch { /* Storage can be unavailable in private contexts. */ }
-  }, [language]);
+    if (preferenceReady) {
+      try { localStorage.setItem('juzur-language', language); } catch { /* Storage can be unavailable in private contexts. */ }
+    }
+  }, [language, preferenceReady]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

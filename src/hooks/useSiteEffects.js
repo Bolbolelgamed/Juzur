@@ -9,30 +9,44 @@ export function useSiteEffects(language, imagePreviewFallback) {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let previousModalFocus = null;
 
-    const onScroll = () => {
+    const parallaxElements = reducedMotion ? [] : [...document.querySelectorAll('.parallax')];
+    let scrollFrame = null;
+    const updateScroll = () => {
+      scrollFrame = null;
       nav?.classList.toggle('scrolled', window.scrollY > 30);
-      if (!reducedMotion) {
-        document.querySelectorAll('.parallax').forEach((el) => {
-          el.style.translate = `0 ${window.scrollY * -0.04}px`;
-        });
-      }
+      parallaxElements.forEach((el) => {
+        el.style.translate = `0 ${window.scrollY * -0.04}px`;
+      });
     };
+    const onScroll = () => {
+      if (scrollFrame === null) scrollFrame = window.requestAnimationFrame(updateScroll);
+    };
+    updateScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    cleanups.push(() => window.removeEventListener('scroll', onScroll));
+    cleanups.push(() => {
+      window.removeEventListener('scroll', onScroll);
+      if (scrollFrame !== null) window.cancelAnimationFrame(scrollFrame);
+    });
 
     const onMouseMove = (event) => {
       if (!glow) return;
       glow.style.left = `${event.clientX}px`;
       glow.style.top = `${event.clientY}px`;
     };
-    window.addEventListener('mousemove', onMouseMove);
-    cleanups.push(() => window.removeEventListener('mousemove', onMouseMove));
+    if (glow && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      window.addEventListener('mousemove', onMouseMove);
+      cleanups.push(() => window.removeEventListener('mousemove', onMouseMove));
+    }
 
     if (reducedMotion) {
       document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
     } else {
       const revealObserver = new IntersectionObserver(
-        (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add('visible')),
+        (entries) => entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }),
         { threshold: 0.15 },
       );
       document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
@@ -281,13 +295,15 @@ function setupStickyCta(cleanups) {
     document.body.classList.toggle('hero-cta-in-view', isVisible);
   }
 
-  function setInlineOrderCtaVisibilityState() {
-    const hasVisibleOrderCta = inlineOrderCtas.some((cta) => {
-      const rect = cta.getBoundingClientRect();
-      return rect.bottom > 0 && rect.top < window.innerHeight;
+  // IntersectionObserver reports visibility without forcing layout on every scroll.
+  const visibleOrderCtas = new Set();
+  function setInlineOrderCtaVisibilityState(entries) {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) visibleOrderCtas.add(entry.target);
+      else visibleOrderCtas.delete(entry.target);
     });
     document.body.classList.add('sticky-cta-ready');
-    document.body.classList.toggle('order-cta-in-view', hasVisibleOrderCta);
+    document.body.classList.toggle('order-cta-in-view', visibleOrderCtas.size > 0);
   }
 
   if (heroCta) {
@@ -302,14 +318,7 @@ function setupStickyCta(cleanups) {
   if (inlineOrderCtas.length) {
     const inlineOrderCtaObserver = new IntersectionObserver(setInlineOrderCtaVisibilityState, { threshold: 0.01 });
     inlineOrderCtas.forEach((cta) => inlineOrderCtaObserver.observe(cta));
-    setInlineOrderCtaVisibilityState();
-    window.addEventListener('scroll', setInlineOrderCtaVisibilityState, { passive: true });
-    window.addEventListener('resize', setInlineOrderCtaVisibilityState);
-    cleanups.push(() => {
-      inlineOrderCtaObserver.disconnect();
-      window.removeEventListener('scroll', setInlineOrderCtaVisibilityState);
-      window.removeEventListener('resize', setInlineOrderCtaVisibilityState);
-    });
+    cleanups.push(() => inlineOrderCtaObserver.disconnect());
   }
 
   if (checkoutSection) {

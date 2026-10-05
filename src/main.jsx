@@ -1,5 +1,5 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import App from './App.jsx';
 import './styles/fonts.css';
 import './styles/base.css';
@@ -8,8 +8,11 @@ import './styles/checkout.css';
 import './styles/media.css';
 import { LanguageProvider } from './i18n/LanguageContext.jsx';
 
-createRoot(document.getElementById('root')).render(
+const app = (
   <React.StrictMode>
     <LanguageProvider><App /></LanguageProvider>
   </React.StrictMode>,
 );
+const root = document.getElementById('root');
+if (root.hasChildNodes()) hydrateRoot(root, app);
+else createRoot(root).render(app);
