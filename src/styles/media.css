@@ -74,6 +74,9 @@
 .video-grid.uploaded-video-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Let portrait cards determine row height instead of legacy 250px tracks. */
+  grid-template-rows: none;
+  grid-auto-rows: auto;
   gap: 20px;
   align-items: start;
 }
