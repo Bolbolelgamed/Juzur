@@ -83,10 +83,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/api/orders') return handleOrderRequest(request, env);
 
-    const response = await env.ASSETS.fetch(request);
-    if (response.status !== 404) return response;
-
-    url.pathname = '/index.html';
-    return env.ASSETS.fetch(new Request(url, request));
+    // Missing pages must retain their 404 status instead of duplicating the home page.
+    return env.ASSETS.fetch(request);
   },
 };

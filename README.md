@@ -52,6 +52,14 @@ The same output directory is also saved in `wrangler.toml` as `pages_build_outpu
 
 ## Mobile speed improvements
 
-The production build now pre-renders the existing React page into static HTML and hydrates it in the browser. Arabic is the shared initial render; saved English preferences are restored after hydration. The opening content appears without the reveal animation delay. The hero poster uses responsive candidates with high fetch priority. Gallery thumbnails use dedicated 192 px WebP files; the logo uses lossless WebP. Videos remain click-to-load and Meta tracking behavior is unchanged.
+The production build now pre-renders the existing React page into static HTML and hydrates it in the browser. Arabic is pre-rendered at `/` and English at `/en`. Each page hydrates in the language declared by its HTML. The language switch links to the other URL and preserves campaign parameters and the current section. The opening content appears without the reveal animation delay. The hero poster uses responsive candidates with high fetch priority. Gallery thumbnails use dedicated 192 px WebP files; the logo uses lossless WebP. Videos remain click-to-load and Meta tracking behavior is unchanged.
 
 Validation: production build and all 66 existing tests pass. Additional isolated DOM checks verified pre-rendered content, image references, hydration in both saved languages, language switching, deferred video sources, and Cairo shipping totals. The private preview was checked visually and benchmarked separately; its hosting and disabled Meta tracking mean its score is not a production guarantee.
+
+## SEO
+
+The build pre-renders both languages with self-canonical URLs, reciprocal ar-EG/en-EG and x-default alternates, localized titles/descriptions and product copy. `src/config/seo.js` produces Product, Organization, WebSite and WebPage JSON-LD; offer prices and shipping rates use the checkout configuration. No review or return-policy claims are added.
+
+The sitemap lists both storefronts and the privacy policy. A custom `404.html` disables Cloudflare Pages SPA fallback for missing URLs; the Sites worker also preserves asset 404 responses. The English file is emitted as `en.html`, served at the clean `/en` URL by Cloudflare Pages.
+
+After deployment, verify the domain in Google Search Console, submit `https://www.techwood-art.com/sitemap.xml`, and inspect `/` and `/en`. Search Console access is needed to confirm Google indexing and measure organic clicks, impressions and queries.

@@ -980,6 +980,11 @@ html[lang='ar'] .scroll-hint {
 }
 
 .language-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  text-decoration: none;
   min-width: 40px;
   min-height: 36px;
   padding: 5px 9px;

@@ -10,7 +10,7 @@ import { LanguageProvider } from './i18n/LanguageContext.jsx';
 
 const app = (
   <React.StrictMode>
-    <LanguageProvider><App /></LanguageProvider>
+    <LanguageProvider initialLanguage={document.documentElement.lang.startsWith('en') ? 'en' : 'ar'}><App /></LanguageProvider>
   </React.StrictMode>,
 );
 const root = document.getElementById('root');

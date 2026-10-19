@@ -1,15 +1,15 @@
 export const locales = {
   en: {
     meta: { title: 'Juzur | SofaTray for Modern Homes', description: 'Juzur creates premium wooden SofaTray pieces for coffee, phones, remotes, snacks and relaxed sofa moments in modern homes.' },
-    nav: { label: 'Primary navigation', product: 'Product', video: 'Video', wood: 'Zan Wood', gift: 'Gift', faq: 'FAQ', order: 'Order Now', menuOpen: 'Open menu', menuClose: 'Close menu', switchLanguage: 'Switch to Arabic' },
-    hero: { label: 'SofaTray by Juzur hero', eyebrow: 'Premium Wooden Sofa Tray', title1: 'Everything you need.', title2: 'Right beside you.', support: 'Designed to make life easier.', text: 'Coffee. Phone. Remote. Beautifully organized.', view: 'View Product', special: 'Launch price', priceLabel: 'Launch price: EGP 1,999, previously EGP 2,499', trustLabel: 'Product trust signals', wood: 'Handcrafted Zan Wood', payment: 'Cash on Delivery', delivery: 'Delivery within 4–7 days', scroll: 'Scroll', mediaLabel: 'Choose hero product media', videoPlay: 'Play SofaTray hero video', videoAlt: 'SofaTray by Juzur in use' },
+    nav: { label: 'Primary navigation', product: 'Product', video: 'Video', wood: 'Beech Wood', gift: 'Gift', faq: 'FAQ', order: 'Order Now', menuOpen: 'Open menu', menuClose: 'Close menu', switchLanguage: 'Switch to Arabic' },
+    hero: { label: 'SofaTray by Juzur hero', eyebrow: 'Premium Wooden Sofa Tray', title1: 'Everything you need.', title2: 'Right beside you.', support: 'Designed to make life easier.', text: 'Coffee. Phone. Remote. Beautifully organized.', view: 'View Product', special: 'Launch price', priceLabel: 'Launch price: EGP 1,999, previously EGP 2,499', trustLabel: 'Product trust signals', wood: 'Handcrafted Beech Wood', payment: 'Cash on Delivery', delivery: 'Delivery within 4–7 days', scroll: 'Scroll', mediaLabel: 'Choose hero product media', videoPlay: 'Play SofaTray hero video', videoAlt: 'SofaTray by Juzur in use' },
     images: { studio: 'SofaTray studio product view', side: 'SofaTray handcrafted side view', lifestyle: 'SofaTray arranged for a cozy sofa moment', top: 'SofaTray top view', details: 'SofaTray product details on a clean studio background', cozy: 'SofaTray with coffee, phone and remote in a cozy living room', boxOpen: 'Open Juzur gift box with the SofaTray inside', sofa: 'SofaTray opened across a sofa arm', boxClosed: 'Closed eco-friendly Juzur product box', packaging: 'Juzur product packaging in a natural living space', enlarge: 'Enlarge', preview: 'SofaTray image preview' },
     video: { eyebrow: 'Video', title: 'See SofaTray in action.', text: 'Watch how SofaTray by Juzur keeps your coffee, phone, remote and snacks beside you beautifully, neatly and within easy reach.', demoLabel: 'SofaTray product demonstration', unsupported: 'Your browser does not support embedded video.', play: 'Play', soonLabel: 'video coming soon', soon: 'video will be added soon.', items: [['Coffee setup', 'Short demo video'], ['Daily essentials', 'Phone, remote, snacks, and cup']] },
     gift: { eyebrow: 'Gift idea', title: 'A practical gift that feels personal.', text: 'SofaTray by Juzur is easy to understand the moment it is opened: a warm wooden piece for coffee, phone, remote and relaxed sofa time. It works beautifully for new homes, birthdays, Ramadan gatherings and thoughtful everyday gifting.', reasons: 'Gift reasons', points: ['Useful every day', 'Premium wooden feel', 'Ready for home moments'], cta: 'Order as a Gift', photos: 'Gift presentation photos', ready: 'Gift ready', presented: 'Presented with care', caption: 'Branded packaging makes the first impression feel as thoughtful as the product inside.', boxAlt: 'SofaTray in its branded Juzur gift box' },
-    material: { eyebrow: 'Why Zan wood', title: 'Natural strength with a warm furniture finish.', text: 'Made from Zan wood, SofaTray brings a naturally rich feel to everyday living-room routines while keeping the warm look of real furniture.' },
-    product: { eyebrow: 'Product features', title: 'Daily essentials, beautifully organized.', text: 'A smart wooden sofa tray designed to keep your coffee, phone, remote, snacks and small daily essentials beside you neatly and within easy reach.', features: ['Sliding / folding tray design', 'Cup holder, phone slot and essentials area', 'Premium Zan wood feel with rounded edges'], dimensions: 'Product dimensions' },
+    material: { eyebrow: 'Why beech wood', title: 'Natural strength with a warm furniture finish.', text: 'Made from natural beech wood, SofaTray brings a naturally rich feel to everyday living-room routines while keeping the warm look of real furniture.' },
+    product: { eyebrow: 'Product features', title: 'Daily essentials, beautifully organized.', text: 'A smart wooden sofa tray designed to keep your coffee, phone, remote, snacks and small daily essentials beside you neatly and within easy reach.', features: ['Sliding / folding tray design', 'Cup holder, phone slot and essentials area', 'Natural beech wood with rounded edges'], dimensions: 'Product dimensions' },
     gallery: { eyebrow: 'Gallery', title: 'Handmade details with a premium natural feel.' },
-    faq: { eyebrow: 'FAQ', title: 'Quick answers before you order.', items: [['How long does delivery take?', 'Delivery usually takes 4–7 days after we confirm your order details.'], ['What wood is used?', 'SofaTray is made from Zan wood for a warm, premium furniture feel.'], ['What can it hold?', 'It is made for coffee, phones, remotes, snacks, and small daily essentials beside the sofa.'], ['How do I pay?', 'Payment is Cash on Delivery when your order is delivered.'], ['How is the delivery fee calculated?', 'Shipping: EGP 50 for Cairo and Giza | EGP 75 for all other governorates (Cash on Delivery).']] },
+    faq: { eyebrow: 'FAQ', title: 'Quick answers before you order.', items: [['How long does delivery take?', 'Delivery usually takes 4–7 days after we confirm your order details.'], ['What wood is used?', 'SofaTray is made from natural beech wood for a warm, premium furniture feel.'], ['What can it hold?', 'It is made for coffee, phones, remotes, snacks, and small daily essentials beside the sofa.'], ['How do I pay?', 'Payment is Cash on Delivery when your order is delivered.'], ['How is the delivery fee calculated?', 'Shipping: EGP 50 for Cairo and Giza | EGP 75 for all other governorates (Cash on Delivery).']] },
     checkout: { eyebrow: 'Cash on Delivery', title: 'Complete your order.', delivery: 'Delivery within 4–7 days', offerLabel: 'Launch price: EGP 1,999, previously EGP 2,499', price: 'Launch price', intro: 'Enter your details and we will call you to confirm delivery and the final delivery fee.', shippingEstimate: 'Shipping: EGP 50 for Cairo and Giza | EGP 75 for all other governorates (Cash on Delivery).', trustBadge: 'No online payment is required — pay Cash on Delivery when your order arrives.', labels: { fullName: 'Full name', phone: 'Mobile number', governorate: 'Governorate', areaCity: 'Area / city', detailedAddress: 'Detailed delivery address', landmark: 'Landmark (optional)', quantity: 'Number of pieces' }, select: 'Select governorate', submit: 'Confirm Cash on Delivery Order', sending: 'Sending order...', errors: { fullName: 'Enter your full name.', phoneEmpty: 'Enter your mobile number.', phoneInvalid: 'Enter a valid Egyptian mobile number beginning with 010, 011, 012, or 015.', governorate: 'Select your governorate.', areaCity: 'Enter your area or city.', detailedAddress: 'Enter the detailed delivery address.', quantity: 'Enter a quantity of 1 or more.', summary: 'Please correct the highlighted fields and try again.' }, statuses: { sending: 'Sending your order request...', success: 'Your order request has been sent. We will call you to confirm the delivery details and final delivery fee.', failure: 'We could not send your order. Please check your connection and try again.' } },
     modal: { label: 'Product image preview', close: 'Close image preview', previous: 'Previous photo', next: 'Next photo' },
     footer: { tagline: 'Rooted in natural living. Crafted by Techwood-Art.', contactLabel: 'Contact options', support: 'Have a question? We\u2019re here to help.', contact: 'Contact: 01042511891', email: 'Email', whatsapp: 'WhatsApp', facebook: 'Facebook', instagram: 'Instagram', call: 'Call Juzur at 01042511891' },
@@ -32,6 +32,24 @@ export const locales = {
     governorates: ['الإسكندرية','أسوان','أسيوط','البحيرة','بني سويف','القاهرة','الدقهلية','دمياط','الفيوم','الغربية','الجيزة','الإسماعيلية','كفر الشيخ','الأقصر','مطروح','المنيا','المنوفية','الوادي الجديد','شمال سيناء','بورسعيد','القليوبية','قنا','البحر الأحمر','الشرقية','سوهاج','جنوب سيناء','السويس'],
   },
 };
+
+// Stable, language-specific search copy. Keep product facts visible on the page.
+locales.ar.meta = {
+  title: 'چذور Juzur | ترابيزة ذراع الكنبة من خشب الزان الطبيعي',
+  description: 'ترابيزة چذور لذراع الكنبة من خشب الزان الطبيعي، بحامل للكوباية والموبايل وتخزين مخفي. بسعر ٢٠٠٠ جنيه، دفع عند الاستلام وتوصيل خلال ٤–٧ أيام في مصر.',
+};
+locales.en.meta = {
+  title: 'Juzur | Natural Beech Wood Sofa Arm Tray in Egypt',
+  description: 'Shop the Juzur beech wood sofa arm tray with cup holder, phone holder and hidden storage. EGP 2,000, cash on delivery across Egypt within 4–7 days.',
+};
+locales.ar.hero.title1 = 'ترابيزة ذراع الكنبة';
+locales.ar.hero.title2 = 'كل حاجتك جنبك';
+locales.ar.hero.eyebrow = 'چذور — خشب زان طبيعي';
+locales.ar.hero.text = 'ترابيزة من خشب الزان الطبيعي بتثبت على ذراع الكنبة، بحامل للكوباية وحامل للموبايل ومساحة تخزين مخفية للريموت وحاجاتك الصغيرة.';
+locales.en.hero.title1 = 'Sofa arm tray.';
+locales.en.hero.title2 = 'Made for comfort.';
+locales.en.hero.eyebrow = 'Juzur — Natural beech wood';
+locales.en.hero.text = 'A natural beech wood tray that grips your sofa arm, with a cup holder, phone holder and hidden storage for your remote and small essentials.';
 
 // Current premium offer copy.
 locales.en.hero.special = 'Current price';
@@ -57,10 +75,10 @@ locales.en.product.text = 'Keep your drink, phone, remote and small essentials c
 locales.en.product.dimensions = 'Dimensions:';
 locales.en.product.dimensionValue = '35 × 24 × 4.5 cm';
 locales.en.material = {
-  eyebrow: 'Why Zan wood',
-  title: 'Natural Zan wood, crafted to last',
+  eyebrow: 'Why beech wood',
+  title: 'Natural beech wood, crafted to last',
   text: 'Chosen for its strength, natural grain and warm character. Every piece is carefully finished for a smooth feel, dependable daily use and a premium presence in your home.',
-  points: ['Natural Zan wood', 'Made for daily use', 'Smooth finish', 'Naturally unique grain'],
+  points: ['Natural beech wood', 'Made for daily use', 'Smooth finish', 'Naturally unique grain'],
 };
 locales.ar.material = {
   eyebrow: 'ليه اخترنا خشب الزان؟',
